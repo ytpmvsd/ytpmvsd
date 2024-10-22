@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="sample-box">
+        <div class="sample-player-box">
+            <video class="video" controls>
+                <source src="{{ url_for('static', filename='media/samps/' + sample.filename) }}">
+            </video>
+            <h1>{{ sample.filename }}</h1>
+            <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
+            <script>
+                document.querySelectorAll('.upload-date').forEach(element => {
+                    const utcDate = element.getAttribute('data-utc');
+                    const localTime = moment.utc(utcDate).local();
+                    element.innerText = 'Uploaded ' + localTime.fromNow();
+                });
+            </script>
+        </div>
+        <div class="sample-info-box">
+            <a href="{{ url_for('static', filename='media/samps/' + sample.filename) }}"
+               download="{{ sample.filename }}"
+               class="sample-page-button" style="--hue: 100">
+                <span>Download sample</span>
+            </a>
+            <a class="sample-page-button" style="--hue: 200">
+                <span>Like</span>
+                <span>{{ sample.likes }}</span>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

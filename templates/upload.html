@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="upload-form">
+        {% if current_user.is_uploader %}
+        <form id="uploadForm" action="" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" accept="video/*">
+        </form>
+        <script>
+            document.getElementById('file').addEventListener('change', function () {
+                document.getElementById('uploadForm').submit();
+            });
+        </script>
+        Only .mp4 files are currently supported.
+        {% else %}
+        Only approved users can upload samples.
+        {% endif %}
+    </div>
+
+{% endblock %}

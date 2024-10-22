@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {{ moment.include_moment() }}
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+</head>
+<body>
+
+<div class="home-header">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo">
+    <div class="home-header-text">
+        {% for i in "the ytpmv sample database" %}
+            <div>{{ i }}</div>
+        {% endfor %}
+    </div>
+    <ul>
+        <li><a href="../">Home</a></li>
+        •
+        <li><a href="../samples">Samples</a></li>
+        •
+        <li><a href="../">Sources</a></li>
+        •
+        <li><a href="../upload">Upload</a></li>
+        •
+        {% if current_user.is_authenticated %}
+        <li><a href="../logout">Logout</a></li>
+        {% else %}
+        <li><a href="../login">Login</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
