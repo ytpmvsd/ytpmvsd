@@ -24,11 +24,44 @@
                class="sample-page-button" style="--hue: 100">
                 <span>Download sample</span>
             </a>
-            <a class="sample-page-button" style="--hue: 200">
+            <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
                 <span>Like</span>
-                <span>{{ sample.likes }}</span>
+                <span class="like-count">{{ sample.likes }}</span>
             </a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".like-button").forEach(button => {
+                button.addEventListener("click", function () {
+
+                    {% if current_user.is_authenticated %}
+                        const sampleId = this.getAttribute("data-sample-id");
+                        const likeCountSpan = this.querySelector(".like-count");
+
+                        console.log("Step 1 complete");
+
+                        fetch(`/sample/like/${sampleId}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    likeCountSpan.textContent = data.likes;  // Update like count
+                                    console.log("Like count updated");
+                                }
+                            });
+                        {#window.alert("You are logged in, but I haven't implemented liking yet!");#}
+                    {% else %}
+                        window.alert("You are not logged in!");
+                    {% endif %}
+                });
+            });
+        });
+    </script>
 
 {% endblock %}

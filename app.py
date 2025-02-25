@@ -4,7 +4,7 @@ import time
 
 import dotenv
 import ffmpeg
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -166,6 +166,15 @@ def sample_page(sample_id):
 
     return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader)
 
+@app.route('/sample/like/<int:sample_id>', methods=['POST'])
+@login_required
+def like_sample(sample_id):
+    sample = Sample.query.get(sample_id)
+    if sample:
+        sample.likes += 1
+        db.session.commit()
+        return jsonify(success=True, likes=Sample.query.get(sample_id).likes)
+    return jsonify(success=False)
 
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.7.2', port=5000)
