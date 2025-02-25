@@ -162,8 +162,9 @@ def upload():
 @app.route('/sample/<int:sample_id>')
 def sample_page(sample_id):
     sample = Sample.query.get_or_404(sample_id)
+    uploader = User.query.get_or_404(sample.uploader)
 
-    return render_template('sample.html', title=f"{sample.filename}", sample=sample)
+    return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader)
 
 
 if __name__ == '__main__':
