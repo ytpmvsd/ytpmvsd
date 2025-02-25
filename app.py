@@ -121,6 +121,11 @@ def home_page():
     return render_template('home.html', title='YTPMV Sample Database', top_samples=top_samples,
                            recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC))
 
+@app.route('/samples')
+def all_samples():
+    samples = Sample.query.all()
+    return render_template('samples.html', title='YTPMV Sample Database', samples=samples, date=datetime.datetime.now(datetime.UTC))
+
 
 ALLOWED_UPLOAD_EXTENSIONS = {'mp4'}
 
