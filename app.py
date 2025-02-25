@@ -117,7 +117,7 @@ def page_not_found(e):
 @app.route('/')
 def home_page():
     recent_samples = Sample.query.order_by(Sample.upload_date.desc()).limit(8).all()
-    top_samples = Sample.query.order_by(Sample.likes).limit(8).all()
+    top_samples = Sample.query.order_by(Sample.likes.desc()).limit(8).all()
     return render_template('home.html', title='YTPMV Sample Database', top_samples=top_samples,
                            recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC))
 
