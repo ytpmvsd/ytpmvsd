@@ -94,7 +94,7 @@ def register():
         if User.query.filter(User.email.ilike(email)).first():
             return redirect(url_for('login'))
 
-        user = User(username = username, email = email)
+        user = User(username=username, email=email)
         user.set_password(password)
 
         db.session.add(user)
@@ -121,10 +121,12 @@ def home_page():
     return render_template('home.html', title='YTPMV Sample Database', top_samples=top_samples,
                            recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC))
 
+
 @app.route('/samples')
 def all_samples():
     samples = Sample.query.all()
-    return render_template('samples.html', title='YTPMV Sample Database', samples=samples, date=datetime.datetime.now(datetime.UTC))
+    return render_template('samples.html', title='YTPMV Sample Database', samples=samples,
+                           date=datetime.datetime.now(datetime.UTC))
 
 
 ALLOWED_UPLOAD_EXTENSIONS = {'mp4'}
@@ -166,6 +168,7 @@ def sample_page(sample_id):
 
     return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader)
 
+
 @app.route('/sample/like/<int:sample_id>', methods=['POST'])
 @login_required
 def like_sample(sample_id):
@@ -175,6 +178,7 @@ def like_sample(sample_id):
         db.session.commit()
         return jsonify(success=True, likes=Sample.query.get(sample_id).likes)
     return jsonify(success=False)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.7.2', port=5000)
