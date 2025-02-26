@@ -139,6 +139,14 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_UPLOAD_EXTENSIONS
 
 
+def check_video(upload_path):
+    try:
+        ffmpeg.probe(upload_path)
+        return True
+    except ffmpeg.Error:
+        return False
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -154,6 +162,12 @@ def upload():
             filename = secure_filename(file.filename)
             upload_path = os.path.join('static/media/samps', filename)
             file.save(upload_path)
+
+            if not check_video(upload_path):
+                flash("There is an error in the file. Please make sure it is a valid .mp4 file.", "error")
+                os.remove(upload_path)
+                return redirect(url_for('upload'))
+
             current_time = int(time.time() * 100)
             create_thumbnail(upload_path, f"static/media/thumbs/{current_time}.png")
 
