@@ -88,10 +88,10 @@ def register():
         email = request.form['email']
         password = request.form['password']
 
-        if User.query.filter_by(username=username).first():
+        if User.query.filter(User.username.ilike(username)).first():
             return redirect(url_for('login'))
 
-        if User.query.filter_by(username=email).first():
+        if User.query.filter(User.email.ilike(email)).first():
             return redirect(url_for('login'))
 
         user = User(username = username, email = email)
