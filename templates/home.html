@@ -10,7 +10,7 @@
                     <a href="../sample/{{ sample.id }}"><img
                             src="{{ url_for('static', filename='media/thumbs/' + sample.thumbnail_filename) }}"
                             alt="sample"></a>
-                    <a href="../sample/{{ sample.id }}">{{ sample.filename }}</a>
+                    <a href="../sample/{{ sample.id }}"><div>{{ sample.filename }}</div></a>
                     <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"
                        style="font-size: 14px;"></p>
                 </div>
@@ -26,7 +26,7 @@
                     <a href="../sample/{{ sample.id }}"><img
                             src="{{ url_for('static', filename='media/thumbs/' + sample.thumbnail_filename) }}"
                             alt="sample"></a>
-                    <a href="../sample/{{ sample.id }}">{{ sample.filename }}</a>
+                    <a href="../sample/{{ sample.id }}"><div>{{ sample.filename }}</div></a>
                     <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"
                        style="font-size: 14px;"></p>
                 </div>
