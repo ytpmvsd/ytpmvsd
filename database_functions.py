@@ -4,13 +4,13 @@ import dotenv
 from sqlalchemy import create_engine, text
 
 
-def add_sample_to_db(filename, upload_date, thumbnail):
+def add_sample_to_db(filename, upload_date, thumbnail, uploader):
     with engine.connect() as conn:
         try:
             conn.execute(
                 text(
-                    "INSERT INTO sample (filename, tags, upload_date, thumbnail_filename) VALUES (:filename, :tags, :upload_date, :thumbnail_filename)"),
-                {"filename": filename, "tags": [], "upload_date": upload_date, "thumbnail_filename": thumbnail}
+                    "INSERT INTO sample (filename, tags, upload_date, thumbnail_filename, uploader) VALUES (:filename, :tags, :upload_date, :thumbnail_filename, :uploader)"),
+                {"filename": filename, "tags": [], "upload_date": upload_date, "thumbnail_filename": thumbnail, "uploader": uploader}
             )
             conn.commit()
         except Exception as e:

@@ -153,7 +153,7 @@ def upload():
             create_thumbnail(upload_path, f"static/media/thumbs/{current_time}.png")
 
             database_functions.add_sample_to_db(filename, datetime.datetime.now(datetime.UTC),
-                                                str(current_time) + '.png')
+                                                str(current_time) + '.png', current_user.id)
             return redirect(url_for('home_page'))
 
     return render_template('upload.html', title='YTPMV Sample Database')
