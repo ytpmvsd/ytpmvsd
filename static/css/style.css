@@ -154,3 +154,15 @@ p {
     flex: 1;
     color: black;
 }
+
+.flash {
+    padding: 10px;
+}
+
+.flash.error {
+    color: #721c24;
+}
+
+.flash.success {
+    color: #155724;
+}

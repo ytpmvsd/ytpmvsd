@@ -4,7 +4,7 @@ import time
 
 import dotenv
 import ffmpeg
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -68,7 +68,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('home_page'))
-
+        flash("Login or password incorrect.", "error")
         return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -89,16 +89,19 @@ def register():
         password = request.form['password']
 
         if User.query.filter(User.username.ilike(username)).first():
-            return redirect(url_for('login'))
+            flash("Username is already in use.", "error")
+            return redirect(url_for('register'))
 
         if User.query.filter(User.email.ilike(email)).first():
-            return redirect(url_for('login'))
+            flash("Email is already in use.", "error")
+            return redirect(url_for('register'))
 
         user = User(username=username, email=email)
         user.set_password(password)
 
         db.session.add(user)
         db.session.commit()
+        flash("Successfully registered.", "success")
         return redirect(url_for('login'))
 
     return render_template('register.html')
