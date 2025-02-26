@@ -28,6 +28,11 @@
                 <span>Like</span>
                 <span class="like-count">{{ sample.likes }}</span>
             </a>
+            {% if current_user.is_admin %}
+                <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
+                    <span>Delete sample</span>
+                </a>
+            {% endif %}
         </div>
     </div>
 
@@ -63,5 +68,26 @@
             });
         });
     </script>
+
+    {% if current_user.is_admin %}
+        <script>
+            document.querySelector('.delete-button').addEventListener("click", function () {
+                const sampleId = this.getAttribute("data-sample-id");
+
+                fetch(`/sample/delete/${sampleId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        window.alert(data.message);
+                        window.location = '/';
+                    })
+                    .catch(error => console.error("Error:", error));
+            });
+        </script>
+    {% endif %}
 
 {% endblock %}

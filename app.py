@@ -196,6 +196,21 @@ def like_sample(sample_id):
         return jsonify(success=True, likes=Sample.query.get(sample_id).likes)
     return jsonify(success=False)
 
+@app.route('/sample/delete/<int:sample_id>', methods=['POST'])
+@login_required
+def delete_sample(sample_id):
+    if not current_user.is_admin:
+        return jsonify({"message": "Access denied"}), 403
+
+    sample = Sample.query.get(sample_id)
+    if sample:
+        os.remove(os.path.join('static/media/thumbs', sample.thumbnail_filename))
+        os.remove(os.path.join('static/media/samps', sample.filename))
+        db.session.delete(sample)
+        db.session.commit()
+        return jsonify({"message": "Sample deleted successfully."})
+    return jsonify({"message": "There was an error deleting the sample."})
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.7.2', port=5000)
