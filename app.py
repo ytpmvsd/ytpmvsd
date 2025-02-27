@@ -20,6 +20,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1000 * 1000
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -115,6 +116,12 @@ def inject_user():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', title='YTPMV Sample Database')
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    flash("File too large. Max supported filesize is 10MB.", "error")
+    return redirect(url_for('upload'))
+
 
 
 @app.route('/')
