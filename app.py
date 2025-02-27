@@ -12,7 +12,7 @@ from sqlalchemy import func
 from werkzeug.utils import secure_filename
 
 import database_functions
-from models import db, Sample, User
+from models import db, Sample, User, likes_table
 
 dotenv.load_dotenv()
 
@@ -120,7 +120,14 @@ def page_not_found(e):
 @app.route('/')
 def home_page():
     recent_samples = Sample.query.order_by(Sample.upload_date.desc()).limit(8).all()
-    top_samples = Sample.query.order_by(Sample.likes.desc()).limit(8).all()
+    top_samples = (
+        db.session.query(Sample)
+        .outerjoin(likes_table, Sample.id == likes_table.c.sample_id)
+        .group_by(Sample.id)
+        .order_by(func.count(likes_table.c.user_id).desc())
+        .limit(8)
+        .all()
+    )
     return render_template('home.html', title='YTPMV Sample Database', top_samples=top_samples,
                            recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC))
 
@@ -189,12 +196,18 @@ def sample_page(sample_id):
 @app.route('/sample/like/<int:sample_id>', methods=['POST'])
 @login_required
 def like_sample(sample_id):
-    sample = Sample.query.get(sample_id)
-    if sample:
-        sample.likes += 1
-        db.session.commit()
-        return jsonify(success=True, likes=Sample.query.get(sample_id).likes)
-    return jsonify(success=False)
+    sample = Sample.query.get_or_404(sample_id)
+
+    if current_user in sample.likes:
+        sample.likes.remove(current_user)
+        liked = False
+    else:
+        sample.likes.append(current_user)
+        liked = True
+
+    db.session.commit()
+    return jsonify(success=True, likes=len(sample.likes), liked=liked)
+
 
 @app.route('/sample/delete/<int:sample_id>', methods=['POST'])
 @login_required

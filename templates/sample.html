@@ -25,8 +25,8 @@
                 <span>Download sample</span>
             </a>
             <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
-                <span>Like</span>
-                <span class="like-count">{{ sample.likes }}</span>
+                <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
+                <span class="like-count">{{ sample.likes|length }}</span>
             </a>
             {% if current_user.is_admin %}
                 <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
@@ -56,8 +56,8 @@
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    likeCountSpan.textContent = data.likes;  // Update like count
-                                    console.log("Like count updated");
+                                    likeCountSpan.textContent = data.likes;
+                                    this.querySelector("span").textContent = data.liked ? "Unlike" : "Like";  // Change text
                                 }
                             });
                         {#window.alert("You are logged in, but I haven't implemented liking yet!");#}

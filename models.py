@@ -10,6 +10,12 @@ from sqlalchemy.dialects.postgresql import ARRAY
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 
+likes_table = db.Table(
+    "likes",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
+    db.Column("sample_id", db.Integer, db.ForeignKey("sample.id"), primary_key=True)
+)
+
 
 class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,8 +23,10 @@ class Sample(db.Model):
     tags = db.Column(ARRAY(db.String), nullable=False, default=[])
     upload_date = db.Column(TIMESTAMP(timezone=True) , nullable=False, default=datetime.datetime.now(datetime.UTC))
     thumbnail_filename = db.Column(db.String, nullable=False)
-    likes = db.Column(db.Integer, nullable=False, default=0)
     uploader = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    likes = db.relationship("User", secondary=likes_table, backref="liked_samples")
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
