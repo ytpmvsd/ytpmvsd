@@ -45,7 +45,6 @@
                         const sampleId = this.getAttribute("data-sample-id");
                         const likeCountSpan = this.querySelector(".like-count");
 
-                        console.log("Step 1 complete");
 
                         fetch(`/sample/like/${sampleId}`, {
                             method: "POST",
@@ -60,7 +59,6 @@
                                     this.querySelector("span").textContent = data.liked ? "Unlike" : "Like";  // Change text
                                 }
                             });
-                        {#window.alert("You are logged in, but I haven't implemented liking yet!");#}
                     {% else %}
                         window.alert("You are not logged in!");
                     {% endif %}

@@ -1,8 +1,7 @@
 import datetime
+
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
-
-
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import TIMESTAMP
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -21,7 +20,7 @@ class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String, nullable=False)
     tags = db.Column(ARRAY(db.String), nullable=False, default=[])
-    upload_date = db.Column(TIMESTAMP(timezone=True) , nullable=False, default=datetime.datetime.now(datetime.UTC))
+    upload_date = db.Column(TIMESTAMP(timezone=True), nullable=False, default=datetime.datetime.now(datetime.UTC))
     thumbnail_filename = db.Column(db.String, nullable=False)
     uploader = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
