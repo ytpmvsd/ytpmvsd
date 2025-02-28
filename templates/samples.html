@@ -3,7 +3,25 @@
 {% block content %}
 
     <div class="home-samples-box">
-        <h1 style="padding-bottom: 10px">All Samples</h1>
+        <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
+            <h1>All Samples</h1>
+            <form action="{{ url_for('all_samples') }}" method="GET" style="margin-left: auto">
+                <label>Sort by:
+                    <select name="sort" onchange="this.form.submit()">
+                        <option value="latest" {% if request.args.get('sort') == 'latest' %}selected{% endif %}>
+                            Latest
+                        </option>
+                        <option value="oldest" {% if request.args.get('sort') == 'oldest' %}selected{% endif %}>
+                            Oldest
+                        </option>
+                        <option value="liked" {% if request.args.get('sort', 'liked') == 'liked' %}selected{% endif %}>
+                            Most Liked
+                        </option>
+                    </select>
+                </label>
+            </form>
+        </div>
+
         <div class="home-samples-grid">
             {% for sample in samples %}
                 <div class="home-sample">

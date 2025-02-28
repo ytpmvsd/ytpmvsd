@@ -141,7 +141,23 @@ def home_page():
 
 @app.route('/samples')
 def all_samples():
-    samples = Sample.query.all()
+    sort = request.args.get('sort', 'liked')
+
+    if sort == 'latest':
+        samples = Sample.query.order_by(Sample.upload_date.desc()).all()
+    elif sort == 'oldest':
+        samples = Sample.query.order_by(Sample.upload_date.asc()).all()
+    elif sort == 'liked':
+        samples = (
+            db.session.query(Sample)
+            .outerjoin(likes_table, Sample.id == likes_table.c.sample_id)
+            .group_by(Sample.id)
+            .order_by(func.count(likes_table.c.user_id).desc())
+            .all()
+        )
+    else:
+        samples = Sample.query.all()
+
     return render_template('samples.html', title='YTPMV Sample Database', samples=samples,
                            date=datetime.datetime.now(datetime.UTC))
 
