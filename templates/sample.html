@@ -35,6 +35,17 @@
                     </a>
                 {% endif %}
             </div>
+            <div class="sample-metadata" style="display: flex; flex-flow: column; justify-content: space-around;">
+                <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.format.size|int/1000/1000 ) }}</span>
+
+                <span><b>Resolution:</b> {{ metadata.streams[1].width }}x{{ metadata.streams[1].height }}
+                ({{ metadata.streams[1].display_aspect_ratio }})</span>
+
+                {% set framerate = metadata.streams[1].r_frame_rate.split('/') %}
+                {% set framerate_value = (framerate[0]|int / framerate[1]|int) %}
+                <span><b>Frame rate:</b> {{ framerate_value|int if framerate_value.is_integer() else framerate_value|round(2) }} FPS</span>
+
+            </div>
         </div>
     </div>
 

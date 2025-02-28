@@ -205,7 +205,9 @@ def sample_page(sample_id):
     sample = Sample.query.get_or_404(sample_id)
     uploader = User.query.get_or_404(sample.uploader)
 
-    return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader)
+    metadata = get_metadata(sample.id)
+
+    return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader,
 
 
 @app.route('/sample/like/<int:sample_id>', methods=['POST'])
