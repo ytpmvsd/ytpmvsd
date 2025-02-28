@@ -130,12 +130,21 @@ p {
 }
 
 .sample-info-box {
-    display: flex;
     background-color: hsl(var(--hue), 60%, 65%);
     padding: 15px;
     border-radius: 10px;
-    gap: 10px;
     justify-content: center;
+}
+
+.sample-info-box span {
+    flex: 1;
+    color: black;
+}
+
+.sample-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .sample-page-button {
@@ -157,11 +166,6 @@ p {
 .sample-page-button:hover {
     background-color: hsl(var(--hue), 40%, 55%);
     border: black solid 1px;
-}
-
-.sample-info-box span {
-    flex: 1;
-    color: black;
 }
 
 .flash {

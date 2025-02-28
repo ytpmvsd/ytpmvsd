@@ -19,20 +19,22 @@
             </script>
         </div>
         <div class="sample-info-box">
-            <a href="{{ url_for('static', filename='media/samps/' + sample.filename) }}"
-               download="{{ sample.filename }}"
-               class="sample-page-button" style="--hue: 100">
-                <span>Download sample</span>
-            </a>
-            <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
-                <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
-                <span class="like-count">{{ sample.likes|length }}</span>
-            </a>
-            {% if current_user.is_admin %}
-                <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
-                    <span>Delete sample</span>
+            <div class="sample-buttons">
+                <a href="{{ url_for('static', filename='media/samps/' + sample.filename) }}"
+                   download="{{ sample.filename }}"
+                   class="sample-page-button" style="--hue: 100">
+                    <span>Download sample</span>
                 </a>
-            {% endif %}
+                <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
+                    <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
+                    <span class="like-count">{{ sample.likes|length }}</span>
+                </a>
+                {% if current_user.is_admin %}
+                    <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
+                        <span>Delete sample</span>
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 
