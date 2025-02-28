@@ -191,6 +191,14 @@ def upload():
 
     return render_template('upload.html', title='YTPMV Sample Database')
 
+def get_metadata(sample_id):
+    sample = Sample.query.get_or_404(sample_id)
+    file = os.path.join('static/media/samps', sample.filename)
+
+    probe = ffmpeg.probe(file)
+
+    return probe
+
 
 @app.route('/sample/<int:sample_id>')
 def sample_page(sample_id):
