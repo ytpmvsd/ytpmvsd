@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import shutil
 import time
 import uuid
 
@@ -34,17 +35,21 @@ login_manager.login_view = 'login'  # Redirect users to 'login' page if not auth
 
 
 def create_thumbnail(video_path, thumbnail_path):
+    shutil.copy(video_path, os.getcwd())
+
     try:
-        if not os.path.exists(video_path):
-            raise FileNotFoundError(f"Video file not found: {video_path}")
+        if not os.path.exists(os.path.join(os.getcwd(), os.path.basename(video_path))):
+            raise FileNotFoundError(f"Video file not found: {os.path.join(os.getcwd(), os.path.basename(video_path))}")
 
         (
             ffmpeg
-            .input(video_path, ss=0)
+            .input(os.path.join(os.getcwd(), os.path.basename(video_path)), ss=0)
             .filter('scale', -1, 480)
             .output(thumbnail_path, vframes=1)
             .run(capture_stdout=True, capture_stderr=True)
         )
+
+        os.remove(os.path.join(os.getcwd(), os.path.basename(video_path)))
 
         print(f"Thumbnail saved at {thumbnail_path}")
 
