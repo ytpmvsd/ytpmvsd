@@ -245,6 +245,7 @@ def edit_sample(sample_id):
 
     if request.method == 'POST':
         filename = request.form.get('filename')
+        source_id = request.form.get("source_id")
 
         filename = re.sub(r"[^\w\s]", '', filename)
         filename = re.sub(r"\s+", '_', filename)
@@ -253,8 +254,11 @@ def edit_sample(sample_id):
                   os.path.join('static/media/samps', filename + '.mp4'))
         # tags = request.form.get('tags', '').split(',')
 
+        if source_id == '':
+            source_id = None
+
         database_functions.add_sample_to_db(filename + '.mp4', datetime.datetime.now(datetime.UTC),
-                                            str(thumbnail), current_user.id)
+                                            str(thumbnail), current_user.id, source_id)
 
         session.pop('uploaded_sample_id', None)
         session.pop('filename', None)
@@ -321,6 +325,14 @@ def source_page(source_id):
     return render_template('source.html', title=f'{source.name} - YTPMV Sample Database', samples=samples,
                            source=source,
                            date=datetime.datetime.now(datetime.UTC))
+
+
+@app.route('/search_sources')
+def search_sources():
+    query = request.args.get('q', '')
+    sources = Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
+
+    return jsonify([{"id": s.id, "name": s.name} for s in sources])
 
 
 if __name__ == '__main__':

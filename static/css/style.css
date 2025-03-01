@@ -34,13 +34,13 @@ body {
     margin-top: 20px;
 }
 
-ul {
+.home-header ul {
     list-style-type: none;
     margin: 20px 0;
     text-align: center;
     padding: 0;
     display: flex;
-    align-items: stretch; /* Default */
+    align-items: stretch;
     justify-content: space-between;
 }
 
@@ -188,4 +188,15 @@ p {
 .home-source a {
     text-align: center;
     text-decoration: none;
+}
+
+.suggestions {
+    margin: 0;
+    padding: 0;
+}
+
+.suggestions li {
+    display: block;
+    color: #0000FF;
+    cursor: pointer;
 }
