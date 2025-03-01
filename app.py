@@ -119,11 +119,11 @@ def inject_user():
 def page_not_found(e):
     return render_template('404.html', title='YTPMV Sample Database')
 
+
 @app.errorhandler(413)
 def request_entity_too_large(error):
     flash("File too large. Max supported filesize is 10MB.", "error")
     return redirect(url_for('upload'))
-
 
 
 @app.route('/')
@@ -210,6 +210,7 @@ def upload():
             return redirect(url_for('edit_sample', sample_id=session['uploaded_sample_id']))
 
     return render_template('upload.html', title='YTPMV Sample Database')
+
 
 def get_metadata(sample_id):
     sample = Sample.query.get_or_404(sample_id)
