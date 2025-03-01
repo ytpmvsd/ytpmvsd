@@ -297,5 +297,14 @@ def delete_sample(sample_id):
     return jsonify({"message": "There was an error deleting the sample."})
 
 
+@app.route('/user/<int:user_id>')
+def user_page(user_id):
+    user = User.query.get_or_404(user_id)
+    samples = (Sample.query.filter_by(uploader=user_id).order_by(Sample.upload_date.desc()).all())
+
+    return render_template('user.html', title=f'{user.username} - YTPMV Sample Database', samples=samples, user=user,
+                           date=datetime.datetime.now(datetime.UTC))
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.7.2', port=5000)
