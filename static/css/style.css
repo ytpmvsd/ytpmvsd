@@ -97,12 +97,11 @@ p {
 }
 
 .home-sample div {
-    display: block; /* Ensures it takes up its own line */
-    width: 100%; /* Ensures it doesn't exceed its container */
-    white-space: nowrap; /* Prevents wrapping to a new line */
-    overflow: hidden; /* Hides overflowing text */
-    text-overflow: ellipsis; /* Adds the ellipsis when text overflows */
-
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .home-sample {
