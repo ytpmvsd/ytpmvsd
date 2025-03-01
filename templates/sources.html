@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="home-samples-box">
+        <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
+            <h1>All sources</h1>
+        </div>
+
+        <div class="sources-grid">
+            {% for source in sources %}
+                <div class="home-source">
+                    <a href="../source/{{ source.id }}">
+                        <div>{{ source.name }}</div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

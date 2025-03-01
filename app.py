@@ -14,7 +14,7 @@ from sqlalchemy import func
 from werkzeug.utils import secure_filename
 
 import database_functions
-from models import db, Sample, User, likes_table
+from models import db, Sample, User, likes_table, Source
 
 dotenv.load_dotenv()
 
@@ -304,6 +304,13 @@ def user_page(user_id):
 
     return render_template('user.html', title=f'{user.username} - YTPMV Sample Database', samples=samples, user=user,
                            date=datetime.datetime.now(datetime.UTC))
+
+
+@app.route('/sources')
+def all_sources():
+    sources = Source.query.order_by(Source.name.asc()).all()
+
+    return render_template('sources.html', title='YTPMV Sample Database', sources=sources)
 
 
 if __name__ == '__main__':
