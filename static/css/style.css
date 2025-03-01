@@ -12,6 +12,10 @@ body {
     text-align: center;
 }
 
+a:visited {
+    color: #0000FF;
+}
+
 .home-header {
     display: flex;
     justify-content: center;
