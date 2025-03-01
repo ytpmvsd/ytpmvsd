@@ -52,6 +52,47 @@ def create_thumbnail(video_path, thumbnail_path):
         print(f"An error occurred: {e}")
 
 
+def reencode_video(filename):
+    temp = "temp_" + filename
+
+    filename = os.path.join('static/media/samps', filename + '.mp4')
+    temp = os.path.join('static/media/samps', temp + '.mp4')
+
+    probe = ffmpeg.probe(filename)
+    video_stream = next((stream for stream in probe["streams"] if stream["codec_type"] == "video"), None)
+
+    width = int(video_stream.get("width"))
+    height = int(video_stream.get("height"))
+
+    sar = video_stream.get("sample_aspect_ratio")
+    if not sar or sar == "0:1":
+        sar = f"{width}:{height}"
+    else:
+        sar = sar
+
+    try:
+        (
+            ffmpeg
+            .input(filename)
+            .output(
+                temp,
+                format="mp4",
+                vcodec="libx264",
+                acodec="aac",
+                strict='experimental',
+                preset="medium",
+                vf=f"scale={width}:{height},setsar={sar},setdar={width}/{height}"
+            )
+            .run(overwrite_output=True)
+        )
+        os.replace(temp, filename)
+        return True
+
+    except ffmpeg.Error as e:
+        print(e.stderr)
+        return False
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
