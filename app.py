@@ -313,5 +313,15 @@ def all_sources():
     return render_template('sources.html', title='YTPMV Sample Database', sources=sources)
 
 
+@app.route('/source/<int:source_id>')
+def source_page(source_id):
+    source = Source.query.get_or_404(source_id)
+    samples = (Sample.query.filter_by(source=source).order_by(Sample.upload_date.desc()).all())
+
+    return render_template('source.html', title=f'{source.name} - YTPMV Sample Database', samples=samples,
+                           source=source,
+                           date=datetime.datetime.now(datetime.UTC))
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.7.2', port=5000)

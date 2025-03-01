@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="home-samples-box">
+        <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
+            <h1>{{ source.name }} samples</h1>
+        </div>
+
+        <div class="home-samples-grid">
+            {% for sample in samples %}
+                <div class="home-sample">
+                    <a href="../sample/{{ sample.id }}"><img
+                            src="{{ url_for('static', filename='media/thumbs/' + sample.thumbnail_filename) }}"
+                            alt="sample"></a>
+                    <a href="../sample/{{ sample.id }}"><div>{{ sample.filename }}</div></a>
+                    <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"
+                       style="font-size: 14px;"></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.upload-date').forEach(element => {
+            const utcDate = element.getAttribute('data-utc');
+            const localTime = moment.utc(utcDate).local();
+            element.innerText = localTime.fromNow();
+        });
+    </script>
+
+{% endblock %}
