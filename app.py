@@ -266,7 +266,7 @@ def edit_sample(sample_id):
 
         return redirect(url_for('home_page'))
 
-    return render_template('edit_sample.html', sample_id=sample_id, filename=old_filename, thumbnail=thumbnail)
+    return render_template('edit_sample.html', sample_id=sample_id, filename=old_filename, thumbnail=thumbnail, filename_no_extension=os.path.splitext(old_filename)[0])
 
 
 @app.route('/sample/like/<int:sample_id>', methods=['POST'])
