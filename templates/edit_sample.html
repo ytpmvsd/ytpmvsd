@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Edit Sample Details</h2>
+    <video style="max-width: 600px; width: calc(100% - 100px);" class="video" controls>
+        <source src="{{ url_for('static', filename='media/samps/' + filename) }}">
+    </video>
+    <form method="POST" style="display: block; margin-top: 20px">
+        <div class="edit-fields" style="display: flex; flex-flow: column; gap: 20px">
+            <div>
+                <label for="filename"><b>Filename:</b></label>
+                <input type="text" id="filename" name="filename" required>.mp4
+            </div>
+
+            {#        <label for="tags">Tags (comma-separated):</label>#}
+            {#        <input type="text" id="tags" name="tags">#}
+
+            <div>
+                <button type="submit">Save</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

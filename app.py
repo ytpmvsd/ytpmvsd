@@ -1,10 +1,12 @@
 import datetime
 import os
+import re
 import time
+import uuid
 
 import dotenv
 import ffmpeg
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -201,9 +203,11 @@ def upload():
             current_time = int(time.time() * 100)
             create_thumbnail(upload_path, f"static/media/thumbs/{current_time}.png")
 
-            database_functions.add_sample_to_db(filename, datetime.datetime.now(datetime.UTC),
-                                                str(current_time) + '.png', current_user.id)
-            return redirect(url_for('home_page'))
+            session['uploaded_sample_id'] = str(uuid.uuid4())
+            session['filename'] = filename
+            session['thumbnail'] = str(current_time) + '.png'
+
+            return redirect(url_for('edit_sample', sample_id=session['uploaded_sample_id']))
 
     return render_template('upload.html', title='YTPMV Sample Database')
 
@@ -224,6 +228,40 @@ def sample_page(sample_id):
     metadata = get_metadata(sample.id)
 
     return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader,
+                           metadata=metadata)
+
+
+@app.route('/sample/edit/<sample_id>', methods=['GET', 'POST'])
+@login_required
+def edit_sample(sample_id):
+    uploaded_sample_id = session.get('uploaded_sample_id')
+    old_filename = session.get('filename')
+    thumbnail = session.get('thumbnail')
+
+    if not uploaded_sample_id or uploaded_sample_id != sample_id:
+        flash("Invalid request.", "error")
+        return redirect(url_for('upload'))
+
+    if request.method == 'POST':
+        filename = request.form.get('filename')
+
+        filename = re.sub(r"[^\w\s]", '', filename)
+        filename = re.sub(r"\s+", '_', filename)
+
+        os.rename(os.path.join('static/media/samps', old_filename),
+                  os.path.join('static/media/samps', filename + '.mp4'))
+        # tags = request.form.get('tags', '').split(',')
+
+        database_functions.add_sample_to_db(filename + '.mp4', datetime.datetime.now(datetime.UTC),
+                                            str(thumbnail), current_user.id)
+
+        session.pop('uploaded_sample_id', None)
+        session.pop('filename', None)
+        session.pop('thumbnail', None)
+
+        return redirect(url_for('home_page'))
+
+    return render_template('edit_sample.html', sample_id=sample_id, filename=old_filename, thumbnail=thumbnail)
 
 
 @app.route('/sample/like/<int:sample_id>', methods=['POST'])
