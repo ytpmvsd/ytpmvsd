@@ -178,3 +178,14 @@ p {
 .flash.success {
     color: #155724;
 }
+
+.sources-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.home-source a {
+    text-align: center;
+    text-decoration: none;
+}
