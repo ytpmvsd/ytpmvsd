@@ -36,16 +36,24 @@
                 {% endif %}
             </div>
             <div class="sample-metadata" style="display: flex; flex-flow: column; justify-content: space-around;">
+                {% set ns = namespace(video_stream=None) %}
+                {% for stream in metadata.streams %}
+                    {% if stream.codec_type == "video" %}
+                        {% set ns.video_stream = stream %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+
                 {% if sample.source_id %}
                     <span><b>Source:</b> <a href="../source/{{ sample.source_id }}">{{ sample.source.name }}</a></span>
                 {% endif %}
 
                 <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.format.size|int/1000/1000 ) }}</span>
 
-                <span><b>Resolution:</b> {{ metadata.streams[1].width }}x{{ metadata.streams[1].height }}
-                ({{ metadata.streams[1].display_aspect_ratio }})</span>
+                <span><b>Resolution:</b> {{ ns.video_stream.width }}x{{ ns.video_stream.height }}
+                                                ({{ ns.video_stream.display_aspect_ratio }})</span>
 
-                {% set framerate = metadata.streams[1].r_frame_rate.split('/') %}
+                {% set framerate = ns.video_stream.r_frame_rate.split('/') %}
                 {% set framerate_value = (framerate[0]|int / framerate[1]|int) %}
                 <span><b>Frame rate:</b> {{ framerate_value|int if framerate_value.is_integer() else framerate_value|round(2) }} FPS</span>
 

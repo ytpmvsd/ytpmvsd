@@ -23,6 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1000 * 1000
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 db.init_app(app)
 migrate = Migrate(app, db)
