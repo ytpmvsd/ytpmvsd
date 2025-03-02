@@ -12,3 +12,4 @@ Flask-Moment~=1.0.6
 Flask-SQLAlchemy~=3.1.1
 psycopg2~=2.9.10
 gunicorn
+Markdown~=3.7

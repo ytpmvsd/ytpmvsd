@@ -4,6 +4,7 @@ import re
 import shutil
 import time
 import uuid
+import markdown
 
 import dotenv
 import ffmpeg
@@ -385,6 +386,23 @@ def search_sources():
     sources = Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
 
     return jsonify([{"id": s.id, "name": s.name} for s in sources])
+
+
+@app.route('/wiki/')
+def wiki_main():
+    return render_template('wiki/wiki_home.html')
+
+
+@app.route('/wiki/<page>')
+def wiki_page(page):
+    filepath = os.path.join('static/wiki', f"{page}.md")
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        md_content = f.read()
+
+    html_content = markdown.markdown(md_content, extensions=['tables', 'md_in_html'])
+
+    return render_template("wiki/wiki_page.html", content=html_content, title=page)
 
 
 if __name__ == '__main__':
