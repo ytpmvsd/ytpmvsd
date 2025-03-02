@@ -103,7 +103,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         login_name = request.form['login'].lower()
@@ -124,14 +124,14 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/logout')
+@app.route('/logout/')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home_page'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -188,7 +188,7 @@ def home_page():
                            recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC))
 
 
-@app.route('/samples')
+@app.route('/samples/')
 def all_samples():
     sort = request.args.get('sort', 'liked')
 
@@ -226,7 +226,7 @@ def check_video(upload_path):
         return False
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload/', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -268,7 +268,7 @@ def get_metadata(sample_id):
     return probe
 
 
-@app.route('/sample/<int:sample_id>')
+@app.route('/sample/<int:sample_id>/')
 def sample_page(sample_id):
     sample = Sample.query.get_or_404(sample_id)
     uploader = User.query.get_or_404(sample.uploader)
@@ -279,7 +279,7 @@ def sample_page(sample_id):
                            metadata=metadata)
 
 
-@app.route('/sample/edit/<sample_id>', methods=['GET', 'POST'])
+@app.route('/sample/edit/<sample_id>/', methods=['GET', 'POST'])
 @login_required
 def edit_sample(sample_id):
     uploaded_sample_id = session.get('uploaded_sample_id')
@@ -321,7 +321,7 @@ def edit_sample(sample_id):
                            filename_no_extension=os.path.splitext(old_filename)[0])
 
 
-@app.route('/sample/like/<int:sample_id>', methods=['POST'])
+@app.route('/sample/like/<int:sample_id>/', methods=['POST'])
 @login_required
 def like_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
@@ -337,7 +337,7 @@ def like_sample(sample_id):
     return jsonify(success=True, likes=len(sample.likes), liked=liked)
 
 
-@app.route('/sample/delete/<int:sample_id>', methods=['POST'])
+@app.route('/sample/delete/<int:sample_id>/', methods=['POST'])
 @login_required
 def delete_sample(sample_id):
     if not current_user.is_admin:
@@ -353,7 +353,7 @@ def delete_sample(sample_id):
     return jsonify({"message": "There was an error deleting the sample."})
 
 
-@app.route('/user/<int:user_id>')
+@app.route('/user/<int:user_id>/')
 def user_page(user_id):
     user = User.query.get_or_404(user_id)
     samples = (Sample.query.filter_by(uploader=user_id).order_by(Sample.upload_date.desc()).all())
@@ -362,14 +362,14 @@ def user_page(user_id):
                            date=datetime.datetime.now(datetime.UTC))
 
 
-@app.route('/sources')
+@app.route('/sources/')
 def all_sources():
     sources = Source.query.order_by(Source.name.asc()).all()
 
     return render_template('sources.html', title='YTPMV Sample Database', sources=sources)
 
 
-@app.route('/source/<int:source_id>')
+@app.route('/source/<int:source_id>/')
 def source_page(source_id):
     source = Source.query.get_or_404(source_id)
     samples = (Sample.query.filter_by(source=source).order_by(Sample.upload_date.desc()).all())
@@ -379,7 +379,7 @@ def source_page(source_id):
                            date=datetime.datetime.now(datetime.UTC))
 
 
-@app.route('/search_sources')
+@app.route('/search_sources/')
 def search_sources():
     query = request.args.get('q', '')
     sources = Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
