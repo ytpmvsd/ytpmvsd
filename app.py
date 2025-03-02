@@ -295,15 +295,15 @@ def edit_sample(sample_id):
         source_id = request.form.get("source_id")
         reencode = request.form.get("reencode")
 
-        if reencode:
-            reencode_video(filename)
-
         filename = re.sub(r"[^\w\s]", '', filename)
         filename = re.sub(r"\s+", '_', filename)
 
         os.rename(os.path.join('static/media/samps', old_filename),
                   os.path.join('static/media/samps', filename + '.mp4'))
         # tags = request.form.get('tags', '').split(',')
+
+        if reencode:
+            reencode_video(filename)
 
         if source_id == '':
             source_id = None
