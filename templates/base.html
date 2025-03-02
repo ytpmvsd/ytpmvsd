@@ -18,18 +18,18 @@
         {% endfor %}
     </div>
     <ul>
-        <li><a href="../">Home</a></li>
+        <li><a href="{{ url_for("home_page") }}">Home</a></li>
         •
-        <li><a href="../samples">Samples</a></li>
+        <li><a href="{{ url_for("all_samples") }}">Samples</a></li>
         •
-        <li><a href="../sources">Sources</a></li>
+        <li><a href="{{ url_for("all_sources") }}">Sources</a></li>
         •
-        <li><a href="../upload">Upload</a></li>
+        <li><a href="{{ url_for("upload") }}">Upload</a></li>
         •
         {% if current_user.is_authenticated %}
-            <li><a href="../logout">Logout</a></li>
+            <li><a href="{{ url_for("logout") }}">Logout</a></li>
         {% else %}
-            <li><a href="../login">Login</a></li>
+            <li><a href="{{ url_for("login") }}">Login</a></li>
         {% endif %}
     </ul>
 </div>
