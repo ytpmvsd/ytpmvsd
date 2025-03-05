@@ -208,6 +208,34 @@ p {
     cursor: pointer;
 }
 
+.wiki-content h1 {
+    padding-bottom: 5px;
+    border-bottom: 1px solid hsl(var(--hue), 60%, 50%);
+    margin-bottom: 10px;
+}
+
+.wiki-content h2 {
+    padding-bottom: 5px;
+    border-bottom: 1px solid hsl(var(--hue), 60%, 50%);
+    margin: 20px 0 10px;
+}
+
+.wiki-content h3 {
+    padding-bottom: 5px;
+    border-bottom: 1px solid hsl(var(--hue), 60%, 50%);
+    margin: 20px 0 10px;
+}
+
+.wiki-content p {
+    margin-bottom: 15px;
+}
+
+.wiki-content table {
+    width: 100%;
+    text-align: center;
+    table-layout: fixed;
+    margin-bottom: 15px;
+}
 
 .popup {
     position: fixed;
