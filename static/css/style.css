@@ -237,6 +237,10 @@ p {
     margin-bottom: 15px;
 }
 
+.wiki-content td {
+    vertical-align: top;
+}
+
 .popup {
     position: fixed;
     top: 50%;
