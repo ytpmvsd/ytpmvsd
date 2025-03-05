@@ -207,3 +207,53 @@ p {
     color: #0000FF;
     cursor: pointer;
 }
+
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: hsl(var(--hue), 85%, 95%);
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    max-height: 900px;
+    height: calc(100% - 200px);
+    max-width: 600px;
+    width: calc(100% - 100px);
+    backdrop-filter: brightness(1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup h2 {
+    padding-top: 5px;
+    margin: 0;
+}
+
+.popup button {
+    width: fit-content;
+    align-self: center;
+}
+
+.popup-content {
+    position: relative;
+    overflow: scroll;
+    flex-grow: 1;
+}
+
+.popup-content h3 {
+    padding-top: 5px;
+    margin: 0;
+}
+
+.popup-content p {
+    padding-bottom: 5px;
+}

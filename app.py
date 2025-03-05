@@ -4,10 +4,10 @@ import re
 import shutil
 import time
 import uuid
-import markdown
 
 import dotenv
 import ffmpeg
+import markdown
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
@@ -186,8 +186,21 @@ def home_page():
         .limit(8)
         .all()
     )
+
+    filepath = os.path.join('static/wiki/pages/changelogs', f"{version}.md")
+
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            changelog_md = f.read()
+        changelog = markdown.markdown(changelog_md)
+    except FileNotFoundError:
+        print(f"Changelog {filepath} not found.")
+        changelog = None
+
     return render_template('home.html', title='YTPMV Sample Database', top_samples=top_samples,
-                           recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC))
+                           recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC),
+                           changelog=changelog if changelog else None,
+                           version=version)
 
 
 @app.route('/samples/')

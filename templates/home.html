@@ -2,6 +2,16 @@
 
 {% block content %}
 
+    {% if changelog %}
+        <div id="changelog-popup" class="popup hidden">
+            <h2>Welcome back!</h2>
+            <div class="popup-content">
+                {{ changelog | safe }}
+            </div>
+            <button onclick="closeChangelog()">Kill Clop button</button>
+        </div>
+    {% endif %}
+
     <div class="home-samples-box">
         <h1 style="padding-bottom: 10px">Top Samples</h1>
         <div class="home-samples-grid">
@@ -40,6 +50,22 @@
             const localTime = moment.utc(utcDate).local();  // Convert to local time
             element.innerText = localTime.fromNow();  // Set the relative time
         });
+
+        const currentVer = "{{ version }}";
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const lastSeenVersion = localStorage.getItem("lastSeenVer");
+
+            if (lastSeenVersion !== currentVer) {
+                document.getElementById("changelog-popup").classList.remove("hidden");
+            }
+        });
+
+        function closeChangelog() {
+            localStorage.setItem("lastSeenVer", currentVer);
+            document.getElementById("changelog-popup").classList.add("hidden");
+        }
+
     </script>
 
 {% endblock %}
