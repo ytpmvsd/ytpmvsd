@@ -222,7 +222,7 @@ def all_samples():
     else:
         samples = Sample.query.all()
 
-    return render_template('samples.html', title='YTPMV Sample Database', samples=samples,
+    return render_template('samples.html', title='Samples - YTPMV Sample Database', samples=samples,
                            date=datetime.datetime.now(datetime.UTC))
 
 
@@ -271,7 +271,7 @@ def upload():
 
             return redirect(url_for('edit_sample', sample_id=session['uploaded_sample_id']))
 
-    return render_template('upload.html', title='YTPMV Sample Database')
+    return render_template('upload.html', title='Upload - YTPMV Sample Database')
 
 
 def get_metadata(sample_id):
@@ -290,7 +290,8 @@ def sample_page(sample_id):
 
     metadata = get_metadata(sample.id)
 
-    return render_template('sample.html', title=f"{sample.filename}", sample=sample, uploader=uploader,
+    return render_template('sample.html', title=f"{sample.filename} - YTPMV Sample Database", sample=sample,
+                           uploader=uploader,
                            metadata=metadata)
 
 
@@ -381,7 +382,7 @@ def user_page(user_id):
 def all_sources():
     sources = Source.query.order_by(Source.name.asc()).all()
 
-    return render_template('sources.html', title='YTPMV Sample Database', sources=sources)
+    return render_template('sources.html', title='Sources - YTPMV Sample Database', sources=sources)
 
 
 @app.route('/source/<int:source_id>/')
@@ -414,9 +415,11 @@ def wiki_page(page):
     with open(filepath, "r", encoding="utf-8") as f:
         md_content = f.read()
 
+    title = md_content.split('\n')[0][2:]
+
     html_content = markdown.markdown(md_content, extensions=['tables', 'md_in_html'])
 
-    return render_template("wiki/wiki_page.html", content=html_content, title=page)
+    return render_template("wiki/wiki_page.html", content=html_content, title=title + ' - YTPMVSD Wiki')
 
 
 if __name__ == '__main__':
