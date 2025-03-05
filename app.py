@@ -410,7 +410,7 @@ def wiki_main():
 
 @app.route('/wiki/<page>')
 def wiki_page(page):
-    filepath = os.path.join('static/wiki', f"{page}.md")
+    filepath = os.path.join('static/wiki/pages', f"{page}.md")
 
     with open(filepath, "r", encoding="utf-8") as f:
         md_content = f.read()
