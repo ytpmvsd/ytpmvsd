@@ -8,8 +8,23 @@ import uuid
 import dotenv
 import ffmpeg
 import markdown
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    jsonify,
+    flash,
+    session,
+)
+from flask_login import (
+    LoginManager,
+    login_user,
+    login_required,
+    logout_user,
+    current_user,
+)
 from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
@@ -21,19 +36,21 @@ from models import db, Sample, User, likes_table, Source
 dotenv.load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1000 * 1000
-app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-version = os.getenv('VERSION')
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1000 * 1000
+app.jinja_env.add_extension("jinja2.ext.loopcontrols")
+version = os.getenv("VERSION")
 
 db.init_app(app)
 migrate = Migrate(app, db)
 moment = Moment(app)
 
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'  # Redirect users to 'login' page if not authenticated
+login_manager.login_view = (
+    "login"
+)
 
 
 def create_thumbnail(video_path, thumbnail_path):
@@ -41,12 +58,13 @@ def create_thumbnail(video_path, thumbnail_path):
 
     try:
         if not os.path.exists(os.path.join(os.getcwd(), os.path.basename(video_path))):
-            raise FileNotFoundError(f"Video file not found: {os.path.join(os.getcwd(), os.path.basename(video_path))}")
+            raise FileNotFoundError(
+                f"Video file not found: {os.path.join(os.getcwd(), os.path.basename(video_path))}"
+            )
 
         (
-            ffmpeg
-            .input(os.path.join(os.getcwd(), os.path.basename(video_path)), ss=0)
-            .filter('scale', -1, 480)
+            ffmpeg.input(os.path.join(os.getcwd(), os.path.basename(video_path)), ss=0)
+            .filter("scale", -1, 480)
             .output(thumbnail_path, vframes=1)
             .run(capture_stdout=True, capture_stderr=True)
         )
@@ -62,11 +80,13 @@ def create_thumbnail(video_path, thumbnail_path):
 def reencode_video(filename):
     temp = "temp_" + filename
 
-    filename = os.path.join('static/media/samps', filename + '.mp4')
-    temp = os.path.join('static/media/samps', temp + '.mp4')
+    filename = os.path.join("static/media/samps", filename + ".mp4")
+    temp = os.path.join("static/media/samps", temp + ".mp4")
 
     probe = ffmpeg.probe(filename)
-    video_stream = next((stream for stream in probe["streams"] if stream["codec_type"] == "video"), None)
+    video_stream = next(
+        (stream for stream in probe["streams"] if stream["codec_type"] == "video"), None
+    )
 
     width = int(video_stream.get("width"))
     height = int(video_stream.get("height"))
@@ -79,16 +99,15 @@ def reencode_video(filename):
 
     try:
         (
-            ffmpeg
-            .input(filename)
+            ffmpeg.input(filename)
             .output(
                 temp,
                 format="mp4",
                 vcodec="libx264",
                 acodec="aac",
-                strict='experimental',
+                strict="experimental",
                 preset="medium",
-                vf=f"scale={width}:{height},setsar={sar},setdar={width}/{height}"
+                vf=f"scale={width}:{height},setsar={sar},setdar={width}/{height}",
             )
             .run(overwrite_output=True)
         )
@@ -105,48 +124,48 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route('/login/', methods=['GET', 'POST'])
+@app.route("/login/", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        login_name = request.form['login'].lower()
-        password = request.form['password']
+    if request.method == "POST":
+        login_name = request.form["login"].lower()
+        password = request.form["password"]
 
         user = User.query.filter(func.lower(User.email) == login_name).first()
         if user and user.check_password(password):
             login_user(user)
-            return redirect(url_for('home_page'))
+            return redirect(url_for("home_page"))
 
         user = User.query.filter(func.lower(User.username) == login_name).first()
         if user and user.check_password(password):
             login_user(user)
-            return redirect(url_for('home_page'))
+            return redirect(url_for("home_page"))
         flash("Login or password incorrect.", "error")
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))
 
-    return render_template('login.html')
+    return render_template("login.html")
 
 
-@app.route('/logout/')
+@app.route("/logout/")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home_page'))
+    return redirect(url_for("home_page"))
 
 
-@app.route('/register/', methods=['GET', 'POST'])
+@app.route("/register/", methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+    if request.method == "POST":
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
 
         if User.query.filter(User.username.ilike(username)).first():
             flash("Username is already in use.", "error")
-            return redirect(url_for('register'))
+            return redirect(url_for("register"))
 
         if User.query.filter(User.email.ilike(email)).first():
             flash("Email is already in use.", "error")
-            return redirect(url_for('register'))
+            return redirect(url_for("register"))
 
         user = User(username=username, email=email)
         user.set_password(password)
@@ -154,28 +173,28 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash("Successfully registered.", "success")
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))
 
-    return render_template('register.html')
+    return render_template("register.html")
 
 
 @app.context_processor
 def inject_user():
-    return {'current_user': current_user}
+    return {"current_user": current_user}
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html', title='YTPMV Sample Database')
+    return render_template("404.html", title="YTPMV Sample Database")
 
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
     flash("File too large. Max supported filesize is 10MB.", "error")
-    return redirect(url_for('upload'))
+    return redirect(url_for("upload"))
 
 
-@app.route('/')
+@app.route("/")
 def home_page():
     recent_samples = Sample.query.order_by(Sample.upload_date.desc()).limit(8).all()
     top_samples = (
@@ -187,7 +206,7 @@ def home_page():
         .all()
     )
 
-    filepath = os.path.join('static/wiki/pages/changelogs', f"{version}.md")
+    filepath = os.path.join("static/wiki/pages/changelogs", f"{version}.md")
 
     try:
         with open(filepath, "r", encoding="utf-8") as f:
@@ -197,21 +216,26 @@ def home_page():
         print(f"Changelog {filepath} not found.")
         changelog = None
 
-    return render_template('home.html', title='YTPMV Sample Database', top_samples=top_samples,
-                           recent_samples=recent_samples, date=datetime.datetime.now(datetime.UTC),
-                           changelog=changelog if changelog else None,
-                           version=version)
+    return render_template(
+        "home.html",
+        title="YTPMV Sample Database",
+        top_samples=top_samples,
+        recent_samples=recent_samples,
+        date=datetime.datetime.now(datetime.UTC),
+        changelog=changelog if changelog else None,
+        version=version,
+    )
 
 
-@app.route('/samples/')
+@app.route("/samples/")
 def all_samples():
-    sort = request.args.get('sort', 'liked')
+    sort = request.args.get("sort", "liked")
 
-    if sort == 'latest':
+    if sort == "latest":
         samples = Sample.query.order_by(Sample.upload_date.desc()).all()
-    elif sort == 'oldest':
+    elif sort == "oldest":
         samples = Sample.query.order_by(Sample.upload_date.asc()).all()
-    elif sort == 'liked':
+    elif sort == "liked":
         samples = (
             db.session.query(Sample)
             .outerjoin(likes_table, Sample.id == likes_table.c.sample_id)
@@ -222,15 +246,22 @@ def all_samples():
     else:
         samples = Sample.query.all()
 
-    return render_template('samples.html', title='Samples - YTPMV Sample Database', samples=samples,
-                           date=datetime.datetime.now(datetime.UTC))
+    return render_template(
+        "samples.html",
+        title="Samples - YTPMV Sample Database",
+        samples=samples,
+        date=datetime.datetime.now(datetime.UTC),
+    )
 
 
-ALLOWED_UPLOAD_EXTENSIONS = {'mp4'}
+ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_UPLOAD_EXTENSIONS
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_UPLOAD_EXTENSIONS
+    )
 
 
 def check_video(upload_path):
@@ -241,10 +272,10 @@ def check_video(upload_path):
         return False
 
 
-@app.route('/upload/', methods=['GET', 'POST'])
+@app.route("/upload/", methods=["GET", "POST"])
 def upload():
-    if request.method == 'POST':
-        if 'file' not in request.files:
+    if request.method == "POST":
+        if "file" not in request.files:
             return redirect(request.url)
 
         file = request.files['file']
@@ -271,73 +302,89 @@ def upload():
 
             return redirect(url_for('edit_sample', sample_id=session['uploaded_sample_id']))
 
-    return render_template('upload.html', title='Upload - YTPMV Sample Database')
+    return render_template("upload.html", title="Upload - YTPMV Sample Database")
 
 
 def get_metadata(sample_id):
     sample = Sample.query.get_or_404(sample_id)
-    file = os.path.join('static/media/samps', sample.filename)
+    file = os.path.join("static/media/samps", sample.filename)
 
     probe = ffmpeg.probe(file)
 
     return probe
 
 
-@app.route('/sample/<int:sample_id>/')
+@app.route("/sample/<int:sample_id>/")
 def sample_page(sample_id):
     sample = Sample.query.get_or_404(sample_id)
     uploader = User.query.get_or_404(sample.uploader)
 
     metadata = get_metadata(sample.id)
 
-    return render_template('sample.html', title=f"{sample.filename} - YTPMV Sample Database", sample=sample,
-                           uploader=uploader,
-                           metadata=metadata)
+    return render_template(
+        "sample.html",
+        title=f"{sample.filename} - YTPMV Sample Database",
+        sample=sample,
+        uploader=uploader,
+        metadata=metadata,
+    )
 
 
-@app.route('/sample/edit/<sample_id>/', methods=['GET', 'POST'])
+@app.route("/sample/edit/<sample_id>/", methods=["GET", "POST"])
 @login_required
 def edit_sample(sample_id):
-    uploaded_sample_id = session.get('uploaded_sample_id')
-    old_filename = session.get('filename')
-    thumbnail = session.get('thumbnail')
+    uploaded_sample_id = session.get("uploaded_sample_id")
+    old_filename = session.get("filename")
+    thumbnail = session.get("thumbnail")
 
     if not uploaded_sample_id or uploaded_sample_id != sample_id:
         flash("Invalid request.", "error")
-        return redirect(url_for('upload'))
+        return redirect(url_for("upload"))
 
-    if request.method == 'POST':
-        filename = request.form.get('filename')
+    if request.method == "POST":
+        filename = request.form.get("filename")
         source_id = request.form.get("source_id")
         reencode = request.form.get("reencode")
 
-        filename = re.sub(r"[^\w\s]", '', filename)
-        filename = re.sub(r"\s+", '_', filename)
+        filename = re.sub(r"[^\w\s]", "", filename)
+        filename = re.sub(r"\s+", "_", filename)
 
-        os.rename(os.path.join('static/media/samps', old_filename),
-                  os.path.join('static/media/samps', filename + '.mp4'))
+        os.rename(
+            os.path.join("static/media/samps", old_filename),
+            os.path.join("static/media/samps", filename + ".mp4"),
+        )
         # tags = request.form.get('tags', '').split(',')
 
         if reencode:
             reencode_video(filename)
 
-        if source_id == '':
+        if source_id == "":
             source_id = None
 
-        database_functions.add_sample_to_db(filename + '.mp4', datetime.datetime.now(datetime.UTC),
-                                            str(thumbnail), current_user.id, source_id)
+        database_functions.add_sample_to_db(
+            filename + ".mp4",
+            datetime.datetime.now(datetime.UTC),
+            str(thumbnail),
+            current_user.id,
+            source_id,
+        )
 
-        session.pop('uploaded_sample_id', None)
-        session.pop('filename', None)
-        session.pop('thumbnail', None)
+        session.pop("uploaded_sample_id", None)
+        session.pop("filename", None)
+        session.pop("thumbnail", None)
 
-        return redirect(url_for('home_page'))
+        return redirect(url_for("home_page"))
 
-    return render_template('edit_sample.html', sample_id=sample_id, filename=old_filename, thumbnail=thumbnail,
-                           filename_no_extension=os.path.splitext(old_filename)[0])
+    return render_template(
+        "edit_sample.html",
+        sample_id=sample_id,
+        filename=old_filename,
+        thumbnail=thumbnail,
+        filename_no_extension=os.path.splitext(old_filename)[0],
+    )
 
 
-@app.route('/sample/like/<int:sample_id>/', methods=['POST'])
+@app.route("/sample/like/<int:sample_id>/", methods=["POST"])
 @login_required
 def like_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
@@ -353,7 +400,7 @@ def like_sample(sample_id):
     return jsonify(success=True, likes=len(sample.likes), liked=liked)
 
 
-@app.route('/sample/delete/<int:sample_id>/', methods=['POST'])
+@app.route("/sample/delete/<int:sample_id>/", methods=["POST"])
 @login_required
 def delete_sample(sample_id):
     if not current_user.is_admin:
@@ -361,66 +408,85 @@ def delete_sample(sample_id):
 
     sample = Sample.query.get(sample_id)
     if sample:
-        os.remove(os.path.join('static/media/thumbs', sample.thumbnail_filename))
-        os.remove(os.path.join('static/media/samps', sample.filename))
+        os.remove(os.path.join("static/media/thumbs", sample.thumbnail_filename))
+        os.remove(os.path.join("static/media/samps", sample.filename))
         db.session.delete(sample)
         db.session.commit()
         return jsonify({"message": "Sample deleted successfully."})
     return jsonify({"message": "There was an error deleting the sample."})
 
 
-@app.route('/user/<int:user_id>/')
+@app.route("/user/<int:user_id>/")
 def user_page(user_id):
     user = User.query.get_or_404(user_id)
-    samples = (Sample.query.filter_by(uploader=user_id).order_by(Sample.upload_date.desc()).all())
+    samples = (
+        Sample.query.filter_by(uploader=user_id)
+        .order_by(Sample.upload_date.desc())
+        .all()
+    )
 
-    return render_template('user.html', title=f'{user.username} - YTPMV Sample Database', samples=samples, user=user,
-                           date=datetime.datetime.now(datetime.UTC))
+    return render_template(
+        "user.html",
+        title=f"{user.username} - YTPMV Sample Database",
+        samples=samples,
+        user=user,
+        date=datetime.datetime.now(datetime.UTC),
+    )
 
 
-@app.route('/sources/')
+@app.route("/sources/")
 def all_sources():
     sources = Source.query.order_by(Source.name.asc()).all()
 
-    return render_template('sources.html', title='Sources - YTPMV Sample Database', sources=sources)
+    return render_template(
+        "sources.html", title="Sources - YTPMV Sample Database", sources=sources
+    )
 
 
-@app.route('/source/<int:source_id>/')
+@app.route("/source/<int:source_id>/")
 def source_page(source_id):
     source = Source.query.get_or_404(source_id)
-    samples = (Sample.query.filter_by(source=source).order_by(Sample.upload_date.desc()).all())
+    samples = (
+        Sample.query.filter_by(source=source).order_by(Sample.upload_date.desc()).all()
+    )
 
-    return render_template('source.html', title=f'{source.name} - YTPMV Sample Database', samples=samples,
-                           source=source,
-                           date=datetime.datetime.now(datetime.UTC))
+    return render_template(
+        "source.html",
+        title=f"{source.name} - YTPMV Sample Database",
+        samples=samples,
+        source=source,
+        date=datetime.datetime.now(datetime.UTC),
+    )
 
 
-@app.route('/search_sources/')
+@app.route("/search_sources/")
 def search_sources():
-    query = request.args.get('q', '')
+    query = request.args.get("q", "")
     sources = Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
 
     return jsonify([{"id": s.id, "name": s.name} for s in sources])
 
 
-@app.route('/wiki/')
+@app.route("/wiki/")
 def wiki_main():
-    return render_template('wiki/wiki_home.html')
+    return render_template("wiki/wiki_home.html")
 
 
-@app.route('/wiki/<page>')
+@app.route("/wiki/<page>")
 def wiki_page(page):
-    filepath = os.path.join('static/wiki/pages', f"{page}.md")
+    filepath = os.path.join("static/wiki/pages", f"{page}.md")
 
     with open(filepath, "r", encoding="utf-8") as f:
         md_content = f.read()
 
-    title = md_content.split('\n')[0][2:]
+    title = md_content.split("\n")[0][2:]
 
-    html_content = markdown.markdown(md_content, extensions=['tables', 'md_in_html'])
+    html_content = markdown.markdown(md_content, extensions=["tables", "md_in_html"])
 
-    return render_template("wiki/wiki_page.html", content=html_content, title=title + ' - YTPMVSD Wiki')
+    return render_template(
+        "wiki/wiki_page.html", content=html_content, title=title + " - YTPMVSD Wiki"
+    )
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host='192.168.7.2', port=5000)
+if __name__ == "__main__":
+    app.run(debug=True, host="192.168.7.2", port=5000)
