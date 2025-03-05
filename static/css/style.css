@@ -261,6 +261,19 @@ p {
     gap: 10px;
 }
 
+.popup-background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(2px)
+}
+
+.popup-background.hidden {
+    display: none;
+}
+
 .popup.hidden {
     display: none;
 }
@@ -286,6 +299,26 @@ p {
     margin: 0;
 }
 
+.popup-content h4 {
+    padding-top: 5px;
+    margin: 0;
+}
+
 .popup-content p {
     padding-bottom: 5px;
+    text-align: justify;
+    font-size: 14px;
+}
+
+.popup-content ul {
+    list-style-type: disc;
+    text-align: center;
+    padding: 0 0 5px;
+    font-size: 14px;
+    margin: 0;
+}
+
+.popup-content ul li {
+    display: list-item;
+    width: fit-content;
 }

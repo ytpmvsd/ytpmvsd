@@ -3,6 +3,7 @@
 {% block content %}
 
     {% if changelog %}
+        <div id="changelog-background" class="popup-background hidden"></div>
         <div id="changelog-popup" class="popup hidden">
             <h2>Welcome back!</h2>
             <div class="popup-content">
@@ -62,12 +63,15 @@
 
             if (lastSeenVersion !== currentVer) {
                 document.getElementById("changelog-popup").classList.remove("hidden");
+                document.getElementById("changelog-background").classList.remove("hidden");
+
             }
         });
 
         function closeChangelog() {
             localStorage.setItem("lastSeenVer", currentVer);
             document.getElementById("changelog-popup").classList.add("hidden");
+            document.getElementById("changelog-background").classList.add("hidden");
         }
 
     </script>
