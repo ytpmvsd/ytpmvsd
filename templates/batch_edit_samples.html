@@ -1,31 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
     <h2>Edit Sample Details</h2>
-    <div style="
-        display: flex;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 10px;
-        padding: 10px;
-        width: 700px;
-        max-width: calc(100% - 100px);
-        margin-left: auto;
-        margin-right: auto;
-    ">
+    <div class="multiple-upload-samples">
         {% for sample in samples %}
-            <div style="
-                flex: 0 0 auto; /* Prevent flexbox from resizing */
-                display: flex;
-                align-items: center; /* Vertically centers if needed */
-                justify-content: center;
-            ">
-                <video style="
-                    max-width: 600px;
-                    width: auto; /* Let width be determined by aspect ratio */
-                    height: 200px; /* Let height control the size */
-                    object-fit: contain;
-                    display: block;
-                " class="batch-video" controls>
+            <div class="multiple-upload-sample-container">
+                <video class="batch-video" controls>
                     <source src="{{ url_for('static', filename='media/samps/' + sample.filename) }}">
                 </video>
             </div>
