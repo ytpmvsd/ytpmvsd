@@ -5,7 +5,7 @@
     <div class="upload-form">
         {% if current_user.is_uploader %}
             <form id="uploadForm" action="" method="post" enctype="multipart/form-data">
-                <input type="file" name="file" id="file" accept="video/*">
+                <input type="file" name="file" id="file" accept="video/*" multiple>
             </form>
             <script>
                 document.getElementById('file').addEventListener('change', function () {
