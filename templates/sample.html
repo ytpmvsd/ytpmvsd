@@ -45,7 +45,7 @@
                 {% endfor %}
 
                 {% if sample.source_id %}
-                    <span><b>Source:</b> <a href="../source/{{ sample.source_id }}">{{ sample.source.name }}</a></span>
+                    <span><b>Source:</b> <a href="{{ url_for('source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
                 {% endif %}
 
                 <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.format.size|int/1000/1000 ) }}</span>
