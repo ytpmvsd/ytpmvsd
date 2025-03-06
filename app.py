@@ -17,6 +17,7 @@ from flask import (
     jsonify,
     flash,
     session,
+    abort,
 )
 from flask_login import (
     LoginManager,
@@ -35,11 +36,13 @@ from models import db, Sample, User, likes_table, Source
 
 dotenv.load_dotenv()
 
+MB_UPLOAD_LIMIT = 10
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
-app.config["MAX_CONTENT_LENGTH"] = 10 * 1000 * 1000
+app.config["MAX_CONTENT_LENGTH"] = MB_UPLOAD_LIMIT * 10 * 1000 * 1000
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 version = os.getenv("VERSION")
 
@@ -305,6 +308,10 @@ def upload():
                     )
                     os.remove(upload_path)
                     return redirect(url_for("upload"))
+
+                if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
+                    os.remove(upload_path)
+                    abort(413)
 
                 current_time = int(time.time() * 100)
                 create_thumbnail(upload_path, f"static/media/thumbs/{current_time}.png")
