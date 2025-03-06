@@ -252,7 +252,7 @@ p {
     border-radius: 8px;
     z-index: 1000;
     max-height: 900px;
-    height: calc(100% - 200px);
+    height: calc(100% - 150px);
     max-width: 600px;
     width: calc(100% - 100px);
     backdrop-filter: brightness(1);
@@ -262,7 +262,7 @@ p {
 }
 
 .popup-background {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
@@ -319,8 +319,15 @@ p {
 }
 
 .popup-content ul li {
-    display: list-item;
+    display: inline-block;
     width: fit-content;
+    float: none;
+    margin: 5px 0;
+}
+
+.popup-content ul li::before {
+    content: "•";
+    margin-right: 10px;
 }
 
 .multiple-upload-samples {
