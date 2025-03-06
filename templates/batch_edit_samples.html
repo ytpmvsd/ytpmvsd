@@ -5,7 +5,7 @@
         {% for sample in samples %}
             <div class="multiple-upload-sample-container">
                 <video class="batch-video" controls>
-                    <source src="{{ url_for('static', filename='media/samps/' + sample.filename) }}">
+                    <source src="{{ url_for('static', filename='media/samps/' + sample.stored_as) }}">
                 </video>
             </div>
         {% endfor %}

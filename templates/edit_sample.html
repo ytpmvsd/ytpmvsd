@@ -2,7 +2,7 @@
 {% block content %}
     <h2>Edit Sample Details</h2>
     <video style="max-width: 600px; width: calc(100% - 100px);" class="video" controls>
-        <source src="{{ url_for('static', filename='media/samps/' + filename) }}">
+        <source src="{{ url_for('static', filename='media/samps/' + stored_as) }}">
     </video>
     <form method="POST" style="display: block; margin-top: 20px">
         <div class="edit-fields" style="display: flex; flex-flow: column; gap: 20px">

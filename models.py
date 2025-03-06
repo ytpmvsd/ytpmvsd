@@ -25,6 +25,7 @@ class Source(db.Model):
 class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String, nullable=False)
+    stored_as = db.Column(db.String, nullable=False)
     tags = db.Column(ARRAY(db.String), nullable=False, default=[])
     upload_date = db.Column(
         TIMESTAMP(timezone=True),

@@ -2,7 +2,6 @@ import datetime
 import os
 import re
 import shutil
-import time
 import uuid
 
 import dotenv
@@ -297,8 +296,17 @@ def upload():
 
         for file in files:
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                upload_path = os.path.join("static/media/samps", filename)
+                original_filename = secure_filename(file.filename)
+
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")[:-3]
+                random_id = uuid.uuid4().hex[:6]
+                stored_as = f"{os.path.splitext(original_filename)[0]}_{timestamp}_{random_id}.mp4"
+
+                stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
+
+                # current_time = int(time.time() * 100)
+                # filename = secure_filename(file.filename + str(current_time))
+                upload_path = os.path.join("static/media/samps", stored_as)
                 file.save(upload_path)
 
                 if not check_video(upload_path):
@@ -313,15 +321,15 @@ def upload():
                     os.remove(upload_path)
                     abort(413)
 
-                current_time = int(time.time() * 100)
-                create_thumbnail(upload_path, f"static/media/thumbs/{current_time}.png")
+                create_thumbnail(upload_path, f"static/media/thumbs/{timestamp}.png")
 
                 sample_id = str(uuid.uuid4())
                 sample_ids.append(sample_id)
 
                 session[f"uploaded_sample_id_{sample_id}"] = sample_id
-                session[f"filename_{sample_id}"] = filename
-                session[f"thumbnail_{sample_id}"] = str(current_time) + ".png"
+                session[f"filename_{sample_id}"] = original_filename
+                session[f"thumbnail_{sample_id}"] = f"{timestamp}.png"
+                session[f"stored_as_{sample_id}"] = stored_as
 
         if len(sample_ids) == 1:
             return redirect(url_for("edit_sample", sample_id=sample_ids[0]))
@@ -333,7 +341,7 @@ def upload():
 
 def get_metadata(sample_id):
     sample = Sample.query.get_or_404(sample_id)
-    file = os.path.join("static/media/samps", sample.filename)
+    file = os.path.join("static/media/samps", sample.stored_as)
 
     probe = ffmpeg.probe(file)
 
@@ -362,6 +370,7 @@ def edit_sample(sample_id):
     uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
     old_filename = session.get(f"filename_{sample_id}")
     thumbnail = session.get(f"thumbnail_{sample_id}")
+    stored_as = session.get(f"stored_as_{sample_id}")
 
     if not uploaded_sample_id or uploaded_sample_id != sample_id:
         flash("Invalid request.", "error")
@@ -375,20 +384,17 @@ def edit_sample(sample_id):
         filename = re.sub(r"[^\w\s]", "", filename)
         filename = re.sub(r"\s+", "_", filename) + ".mp4"
 
-        os.rename(
-            os.path.join("static/media/samps", old_filename),
-            os.path.join("static/media/samps", filename),
-        )
         # tags = request.form.get('tags', '').split(',')
 
         if reencode:
-            reencode_video(filename)
+            reencode_video(stored_as)
 
         if source_id == "":
             source_id = None
 
         database_functions.add_sample_to_db(
             filename,
+            stored_as,
             datetime.datetime.now(datetime.UTC),
             str(thumbnail),
             current_user.id,
@@ -398,6 +404,7 @@ def edit_sample(sample_id):
         session.pop(f"uploaded_sample_id_{sample_id}", None)
         session.pop(f"filename_{sample_id}", None)
         session.pop(f"thumbnail_{sample_id}", None)
+        session.pop(f"stored_as_{sample_id}", None)
 
         return redirect(url_for("home_page"))
 
@@ -405,6 +412,7 @@ def edit_sample(sample_id):
         "edit_sample.html",
         sample_id=sample_id,
         filename=old_filename,
+        stored_as=stored_as,
         thumbnail=thumbnail,
         filename_no_extension=os.path.splitext(old_filename)[0],
     )
@@ -420,13 +428,19 @@ def batch_edit_samples(sample_ids):
         uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
         filename = session.get(f"filename_{sample_id}")
         thumbnail = session.get(f"thumbnail_{sample_id}")
+        stored_as = session.get(f"stored_as_{sample_id}")
 
         if not uploaded_sample_id or uploaded_sample_id != sample_id:
             flash("Invalid request.", "error")
             return redirect(url_for("upload"))
 
         sample_data.append(
-            {"sample_id": sample_id, "filename": filename, "thumbnail": thumbnail}
+            {
+                "sample_id": sample_id,
+                "filename": filename,
+                "thumbnail": thumbnail,
+                "stored_as": stored_as,
+            }
         )
 
     if request.method == "POST":
@@ -440,12 +454,14 @@ def batch_edit_samples(sample_ids):
             filename = sample["filename"]
             sample_id = sample["sample_id"]
             thumbnail = sample["thumbnail"]
+            stored_as = sample["stored_as"]
 
             if reencode:
-                reencode_video(filename)
+                reencode_video(stored_as)
 
             database_functions.add_sample_to_db(
                 filename,
+                stored_as,
                 datetime.datetime.now(datetime.UTC),
                 str(thumbnail),
                 current_user.id,
@@ -455,6 +471,7 @@ def batch_edit_samples(sample_ids):
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
             session.pop(f"thumbnail_{sample_id}", None)
+            session.pop(f"stored_as_{sample_id}", None)
 
         return redirect(url_for("home_page"))
 
