@@ -8,7 +8,7 @@
                 <source src="{{ url_for('static', filename='media/samps/' + sample.filename) }}">
             </video>
             <h1>{{ sample.filename }}</h1>
-            <p class="uploader">Uploaded by <a href="../user/{{ uploader.id }}">{{ uploader.username }}</a></p>
+            <p class="uploader">Uploaded by <a href="{{ url_for('user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
             <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
             <script>
                 document.querySelectorAll('.upload-date').forEach(element => {
