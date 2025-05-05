@@ -21,7 +21,6 @@ class Source(db.Model):
     name = db.Column(db.String, unique=True, nullable=False)
     samples = db.relationship("Sample", back_populates="source", lazy=True)
 
-
 class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String, nullable=False)
@@ -38,7 +37,6 @@ class Sample(db.Model):
 
     source = db.relationship("Source", back_populates="samples")
     likes = db.relationship("User", secondary=likes_table, backref="liked_samples")
-
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

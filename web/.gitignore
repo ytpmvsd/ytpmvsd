@@ -2,3 +2,5 @@ __pycache__
 ytpmvsd_env
 .env
 instance
+*.mp4
+static/media/*
