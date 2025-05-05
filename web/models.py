@@ -7,6 +7,7 @@ from sqlalchemy import TIMESTAMP
 from sqlalchemy.dialects.postgresql import ARRAY
 
 db = SQLAlchemy()
+
 bcrypt = Bcrypt()
 
 likes_table = db.Table(
@@ -14,7 +15,6 @@ likes_table = db.Table(
     db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
     db.Column("sample_id", db.Integer, db.ForeignKey("sample.id"), primary_key=True),
 )
-
 
 class Source(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,3 +53,5 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
+
+

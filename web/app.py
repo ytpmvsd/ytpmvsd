@@ -5,8 +5,8 @@ import shutil
 import uuid
 
 import dotenv
-import ffmpeg
 import markdown
+import ffmpeg
 from flask import (
     Flask,
     render_template,
@@ -30,7 +30,7 @@ from flask_moment import Moment
 from sqlalchemy import func
 from werkzeug.utils import secure_filename
 
-import database_functions
+from database_functions import add_sample_to_db
 from models import db, Sample, User, likes_table, Source
 
 dotenv.load_dotenv()
@@ -392,7 +392,7 @@ def edit_sample(sample_id):
         if source_id == "":
             source_id = None
 
-        database_functions.add_sample_to_db(
+        add_sample_to_db(
             filename,
             stored_as,
             datetime.datetime.now(datetime.UTC),
@@ -459,7 +459,7 @@ def batch_edit_samples(sample_ids):
             if reencode:
                 reencode_video(stored_as)
 
-            database_functions.add_sample_to_db(
+            add_sample_to_db(
                 filename,
                 stored_as,
                 datetime.datetime.now(datetime.UTC),
@@ -587,3 +587,9 @@ def wiki_page(page):
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)
+
+with app.app_context():
+    db.create_all()
+    db.session.commit()
+
+    users = User.query.all()

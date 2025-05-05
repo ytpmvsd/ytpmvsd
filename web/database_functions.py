@@ -3,7 +3,6 @@ import os
 import dotenv
 from sqlalchemy import create_engine, text
 
-
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
     with engine.connect() as conn:
         try:
@@ -24,7 +23,6 @@ def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, sour
             conn.commit()
         except Exception as e:
             print(f"Error adding sample: {e}")
-
 
 dotenv.load_dotenv()
 
