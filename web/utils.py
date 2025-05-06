@@ -4,7 +4,7 @@ import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
 
-ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
+from constants import ALLOWED_UPLOAD_EXTENSIONS
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
     with engine.connect() as conn:

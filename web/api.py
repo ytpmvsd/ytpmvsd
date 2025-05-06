@@ -27,7 +27,7 @@ def get_top_samples():
 def get_samples(sort: SampleSort):
     if sort is None:
         return Sample.query.all()
-    match(sort):
+    match sort:
         case SampleSort.LATEST:
             return Sample.query.order_by(Sample.upload_date.desc()).all()
         case SampleSort.OLDEST:

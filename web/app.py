@@ -28,7 +28,6 @@ import datetime
 from constants import MB_UPLOAD_LIMIT
 import api
 import samples
-import utils
 import wiki
 
 app = Flask(__name__)
@@ -125,6 +124,58 @@ def sample_page(sample_id):
         metadata=metadata,
     )
 
+
+@app.route("/sample/edit/<sample_id>/", methods=["GET", "POST"])
+@login_required
+def edit_sample(sample_id):
+    uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
+    old_filename = session.get(f"filename_{sample_id}")
+    thumbnail = session.get(f"thumbnail_{sample_id}")
+    stored_as = session.get(f"stored_as_{sample_id}")
+
+    if not uploaded_sample_id or uploaded_sample_id != sample_id:
+        flash("Invalid request.", "error")
+        return redirect(url_for("upload"))
+
+    if request.method == "POST":
+        filename = request.form.get("filename")
+        source_id = request.form.get("source_id")
+        reencode = request.form.get("reencode")
+
+        filename = re.sub(r"[^\w\s]", "", filename)
+        filename = re.sub(r"\s+", "_", filename) + ".mp4"
+
+        # tags = request.form.get('tags', '').split(',')
+
+        if source_id == "":
+            source_id = None
+
+        samples.edit_sample(
+            filename,
+            stored_as,
+            str(thumbnail),
+            current_user.id,
+            source_id,
+            reencode
+        )
+
+        session.pop(f"uploaded_sample_id_{sample_id}", None)
+        session.pop(f"filename_{sample_id}", None)
+        session.pop(f"thumbnail_{sample_id}", None)
+        session.pop(f"stored_as_{sample_id}", None)
+
+        return redirect(url_for("home_page"))
+
+    return render_template(
+        "edit_sample.html",
+        sample_id=sample_id,
+        filename=old_filename,
+        stored_as=stored_as,
+        thumbnail=thumbnail,
+        filename_no_extension=os.path.splitext(old_filename)[0],
+    )
+
+
 @app.route("/sample/batch-edit/<sample_ids>/", methods=["GET", "POST"])
 @login_required
 def batch_edit_samples(sample_ids):
@@ -163,7 +214,7 @@ def batch_edit_samples(sample_ids):
             thumbnail = sample["thumbnail"]
             sample_id = sample["sample_id"]
 
-            samples.edit_sample(filename,stored_as,thumbnail,current_user.id,source_id,reencode)
+            samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, reencode)
 
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
@@ -248,57 +299,6 @@ def search_sources():
     sources = api.search_sources(query)
 
     return jsonify([{"id": s.id, "name": s.name} for s in sources])
-
-
-@app.route("/sample/edit/<sample_id>/", methods=["GET", "POST"])
-@login_required
-def edit_sample(sample_id):
-    uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
-    old_filename = session.get(f"filename_{sample_id}")
-    thumbnail = session.get(f"thumbnail_{sample_id}")
-    stored_as = session.get(f"stored_as_{sample_id}")
-
-    if not uploaded_sample_id or uploaded_sample_id != sample_id:
-        flash("Invalid request.", "error")
-        return redirect(url_for("upload"))
-
-    if request.method == "POST":
-        filename = request.form.get("filename")
-        source_id = request.form.get("source_id")
-        reencode = request.form.get("reencode")
-
-        filename = re.sub(r"[^\w\s]", "", filename)
-        filename = re.sub(r"\s+", "_", filename) + ".mp4"
-
-        # tags = request.form.get('tags', '').split(',')
-
-        if source_id == "":
-            source_id = None
-
-        samples.edit_sample(
-            filename,
-            stored_as,
-            str(thumbnail),
-            current_user.id,
-            source_id,
-            reencode
-        )
-
-        session.pop(f"uploaded_sample_id_{sample_id}", None)
-        session.pop(f"filename_{sample_id}", None)
-        session.pop(f"thumbnail_{sample_id}", None)
-        session.pop(f"stored_as_{sample_id}", None)
-
-        return redirect(url_for("home_page"))
-
-    return render_template(
-        "edit_sample.html",
-        sample_id=sample_id,
-        filename=old_filename,
-        stored_as=stored_as,
-        thumbnail=thumbnail,
-        filename_no_extension=os.path.splitext(old_filename)[0],
-    )
 
 
 @app.route("/upload/", methods=["GET", "POST"])

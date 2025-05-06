@@ -5,21 +5,17 @@ import uuid
 import pathlib
 
 from flask import jsonify
-# from flask import abort, flash, jsonify, redirect, render_template, request, session, url_for
-# from flask_login import current_user, login_user, logout_user
 
-from models import Sample, db, User
+from models import Sample, db
 from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, reencode_video
-import utils
 
-from sqlalchemy import func
 from werkzeug.utils import secure_filename
 
 from constants import MB_UPLOAD_LIMIT
     
-def edit_sample(filename,stored_as,thumbnail,uploader,source_id,reencode):
+def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
-        utils.reencode_video(stored_as)
+        reencode_video(stored_as)
 
 
     add_sample_to_db(
@@ -40,9 +36,6 @@ def upload(file, sample_ids):
         
         stored_as = f"{os.path.splitext(original_filename)[0]}_{timestamp}_{random_id}.mp4"
         stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
-
-        # current_time = int(time.time() * 100)
-        # filename = secure_filename(file.filename + str(current_time))
 
         # Make sure the directories actually exist
         pathlib.Path("static/media/samps").mkdir(parents=True,exist_ok=True)
