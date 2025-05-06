@@ -401,11 +401,56 @@ def wiki_main():
 def wiki_page(page):
     return wiki.wiki_page(page)
 
+@app.route("/api/recent_samples")
+def api_recent_samples():
+    res = api.get_recent_samples()
+    return jsonify(res)
+
+@app.route("/api/top_samples")
+def api_top_samples():
+    res = api.get_top_samples()
+    return jsonify(res)
+
+@app.route("/api/samples/<string:sort>")
+def api_samples(sort):
+    if sort == "latest":
+        res = api.get_samples(api.SampleSort.LATEST)
+    elif sort == "oldest":
+        res = api.get_samples(api.SampleSort.OLDEST)
+    elif sort == "liked":
+        res = api.get_samples(api.SampleSort.LIKED)
+    else:
+        res = api.get_samples(api.SampleSort.NONE)
+    return jsonify(res)
+
+@app.route("/api/metadata/<int:sample_id>")
+def api_metadata(sample_id):
+    return api.get_metadata(sample_id)
+
+@app.route("/api/search/<string:query>")
+def api_search_sources(query):
+    res = api.search_sources(query)
+    return jsonify(id=res.id,name=res.name,samples=res.samples)
+
+@app.route("/api/source/<int:source_id>")
+def api_source_info(source_id):
+    res = api.get_source_info(source_id)
+    return jsonify(id=res.id,name=res.name,samples=res.samples)
+
+@app.route("/api/sample/<int:sample_id>")
+def api_sample_info(sample_id):
+    res = api.get_sample_info(sample_id)
+
+    # for the uploader, we only want to expose the name.
+    uploader_name = api.get_user_info(res.uploader).username
+
+    return jsonify(id=res.id,filename=res.filename,tags=res.tags,upload_date=res.upload_date,thumbnail_filename=res.thumbnail_filename,uploader=uploader_name,source_id=res.source_id,source=res.source,likes=len(res.likes))
+
+if __name__ == "__main__":
+    app.run(debug=True, host="192.168.7.2", port=5000)
+
 with app.app_context():
     db.create_all()
     db.session.commit()
 
     users = User.query.all()
-
-if __name__ == "__main__":
-    app.run(debug=True, host="192.168.7.2", port=5000)

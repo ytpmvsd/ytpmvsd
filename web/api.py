@@ -43,7 +43,6 @@ def get_samples(sort: SampleSort):
         case _:
             return Sample.query.all()
         
-
 def get_metadata(sample_id):
     sample = Sample.query.get_or_404(sample_id)
     file = os.path.join("static/media/samps", sample.stored_as)
@@ -63,3 +62,6 @@ def get_sample_info(sample_id):
 
 def get_user_info(uploader):
     return User.query.get_or_404(uploader)
+
+
+
