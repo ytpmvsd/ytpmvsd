@@ -404,12 +404,16 @@ def wiki_page(page):
 @app.route("/api/recent_samples")
 def api_recent_samples():
     res = api.get_recent_samples()
-    return jsonify(res)
+    samples = list(map(lambda res: {
+        "id": res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":api.get_user_info(res.uploader).username,"source_id":res.source_id,"source":res.source,"likes":len(res.likes)}, res))
+    return jsonify(samples)
 
 @app.route("/api/top_samples")
 def api_top_samples():
     res = api.get_top_samples()
-    return jsonify(res)
+    samples = list(map(lambda res: {
+        "id": res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":api.get_user_info(res.uploader).username,"source_id":res.source_id,"source":res.source,"likes":len(res.likes)}, res))
+    return jsonify(samples)
 
 @app.route("/api/samples/<string:sort>")
 def api_samples(sort):
