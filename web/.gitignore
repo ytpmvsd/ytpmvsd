@@ -1,6 +1,7 @@
 __pycache__
 ytpmvsd_env
 .venv
+.idea
 .env
 instance
 /*.mp4
