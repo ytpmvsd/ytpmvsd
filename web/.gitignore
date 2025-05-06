@@ -1,0 +1,7 @@
+__pycache__
+ytpmvsd_env
+.venv
+.env
+instance
+/*.mp4
+static/media/*
