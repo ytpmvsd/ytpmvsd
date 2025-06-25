@@ -3,6 +3,7 @@ import os
 import re
 import uuid
 import pathlib
+import secrets
 
 from flask import jsonify
 
@@ -31,11 +32,16 @@ def upload(file, sample_ids):
     if file and allowed_file(file.filename):
         original_filename = secure_filename(file.filename)
 
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")[:-3]
-        random_id = uuid.uuid4().hex[:6]
+        filename = os.path.splitext(original_filename)[0]
+        if len(filename) >= 100:
+            raise Exception("Filename must not exceed 100 bytes")
+
+        random_id = secrets.token_hex(100)
         
-        stored_as = f"{os.path.splitext(original_filename)[0]}_{timestamp}_{random_id}.mp4"
+        stored_as = f"{filename}_{random_id}.mp4"
         stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
+
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")[:-3]
 
         # Make sure the directories actually exist
         pathlib.Path("static/media/samps").mkdir(parents=True,exist_ok=True)
@@ -56,6 +62,11 @@ def upload(file, sample_ids):
 
         sample_id = str(uuid.uuid4())
         sample_ids.append(sample_id)
+    else:
+        if not allowed_file(file):
+            raise Exception("Disallowed file type")
+        else:
+            raise Exception("No file")
 
     return (sample_id, original_filename, timestamp, stored_as)
 
