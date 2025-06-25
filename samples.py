@@ -32,13 +32,13 @@ def upload(file, sample_ids):
     if file and allowed_file(file.filename):
         original_filename = secure_filename(file.filename)
 
-        filename_shortened = os.path.splitext(original_filename)[0]
-        if len(filename_shortened) >= 100:
-            filename_shortened = filename_shortened[:99]
+        filename = os.path.splitext(original_filename)[0]
+        if len(filename) >= 100:
+            raise Exception("Filename must not exceed 100 bytes")
 
         random_id = secrets.token_hex(100)
         
-        stored_as = f"{filename_shortened}_{random_id}.mp4"
+        stored_as = f"{filename}_{random_id}.mp4"
         stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
 
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")[:-3]
