@@ -384,6 +384,10 @@ def register():
         if User.query.filter(User.email.ilike(email)).first():
             flash("Email is already in use.", "error")
             return redirect(url_for("register"))
+        
+        if len(username) >= 64:
+            flash("Username cannot be over 64 characters", "error")
+            return redirect(url_for("register"))
 
         user = User(username=username, email=email)
         user.set_password(password)
