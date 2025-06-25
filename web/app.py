@@ -440,21 +440,25 @@ def api_metadata(sample_id):
 @app.route("/api/search/<string:query>")
 def api_search_sources(query):
     res = api.search_sources(query)
-    return jsonify(id=res.id,name=res.name,samples=res.samples)
+    return jsonify({"id":res.id,"name":res.name,"samples":res.samples})
+
+def sample_jsonify(sample_id):
+    if sample_id is None:
+        return {}
+    res = api.get_sample_info(sample_id)
+    uploader_name = api.get_user_info(res.uploader).username
+    return jsonify({"id":res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":uploader_name,"likes":len(res.likes), "source": res.source.id})
 
 @app.route("/api/source/<int:source_id>")
 def api_source_info(source_id):
     res = api.get_source_info(source_id)
-    return jsonify(id=res.id,name=res.name,samples=res.samples)
+    samples = list(map(lambda f: f.id, res.samples))
+    return jsonify({"id":res.id,"filename":res.name,"samples":samples})
 
 @app.route("/api/sample/<int:sample_id>")
 def api_sample_info(sample_id):
-    res = api.get_sample_info(sample_id)
-
-    # for the uploader, we only want to expose the name.
-    uploader_name = api.get_user_info(res.uploader).username
-
-    return jsonify(id=res.id,filename=res.filename,tags=res.tags,upload_date=res.upload_date,thumbnail_filename=res.thumbnail_filename,uploader=uploader_name,source_id=res.source_id,source=res.source,likes=len(res.likes))
+    res = sample_jsonify(sample_id)
+    return res
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)

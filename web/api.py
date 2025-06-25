@@ -44,7 +44,7 @@ def get_samples(sort: SampleSort):
             return Sample.query.all()
         
 def get_metadata(sample_id):
-    sample = Sample.query.get_or_404(sample_id)
+    sample = Sample.query.get(sample_id)
     file = os.path.join("static/media/samps", sample.stored_as)
 
     probe = ffmpeg.probe(file)
@@ -55,13 +55,13 @@ def search_sources(query):
     return Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
 
 def get_source_info(source_id):
-    return Source.query.get_or_404(source_id)
+    return Source.query.get(source_id)
 
 def get_sample_info(sample_id):
-    return Sample.query.get_or_404(sample_id)
+    return Sample.query.get(sample_id)
 
 def get_user_info(uploader):
-    return User.query.get_or_404(uploader)
+    return User.query.get(uploader)
 
 
 
