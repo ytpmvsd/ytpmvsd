@@ -336,7 +336,7 @@ def upload():
 
                 return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
             except Exception as ex:
-                flash(err_sanitize(ex), "erexror")
+                flash(err_sanitize(ex), "error")
                 return redirect(url_for("upload"))
         
     return render_template("upload.html", title="Upload - YTPMV Sample Database")
