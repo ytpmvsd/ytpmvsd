@@ -107,7 +107,14 @@ def check_video(upload_path):
     except ffmpeg.Error:
         return False
 
-
+# sanitize the given string of anything with a path seperator, as it could reveal information about the filesystem.
+def err_sanitize(err):
+    strerr = str(err)
+    parts = strerr.split(" ")
+    for part in parts:
+        if os.path.sep in part:
+            strerr = strerr.replace(part, "<stripped>")
+    return strerr
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)

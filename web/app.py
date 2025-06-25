@@ -22,6 +22,8 @@ from flask_moment import Moment
 from sqlalchemy import func
 
 from models import db, Sample, User, Source
+from utils import err_sanitize
+
 import markdown
 import datetime
 
@@ -334,7 +336,7 @@ def upload():
 
                 return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
             except Exception as ex:
-                flash(str(ex), "error")
+                flash(err_sanitize(ex), "erexror")
                 return redirect(url_for("upload"))
         
     return render_template("upload.html", title="Upload - YTPMV Sample Database")
