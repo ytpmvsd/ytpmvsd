@@ -8,7 +8,7 @@ from flask import (
     session,
     url_for,
     jsonify,
-    flash,
+    flash, send_file,
 )
 from flask_login import (
     LoginManager,
@@ -253,6 +253,12 @@ def delete_sample(sample_id):
     if not current_user.is_admin:
         return jsonify({"message": "Access denied"}), 403
     return samples.delete_sample(sample_id)
+
+@app.route("/sample/<int:sample_id>/download/")
+def download_sample(sample_id):
+    sample = Sample.query.get_or_404(sample_id)
+    file_path = os.path.join("static/media/samps", sample.stored_as)
+    return send_file(file_path, as_attachment=True, download_name=sample.filename)
 
 @app.route("/user/<int:user_id>/")
 def user_page(user_id):
