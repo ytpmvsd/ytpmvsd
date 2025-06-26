@@ -1,5 +1,6 @@
 import os
 
+import dotenv
 import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
@@ -116,5 +117,6 @@ def err_sanitize(err):
             strerr = strerr.replace(part, "<stripped>")
     return strerr
 
+dotenv.load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
