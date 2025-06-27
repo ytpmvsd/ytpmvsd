@@ -1,4 +1,4 @@
-<img src="https://github.com/user-attachments/assets/ebd1c2e4-5b1a-4068-9b88-d8ddc8991b77" style="width: 30em;"><br>
+<img src="https://github.com/user-attachments/assets/316f1b09-9a2d-4b8a-98bc-aca9c4fb0d78" style="width: 30em;"><br>
 ytpmvsd is a website for catalouging YTPMV Samples, with accompanying tools/features to integrate it further into existing workflows.
 
 ---
