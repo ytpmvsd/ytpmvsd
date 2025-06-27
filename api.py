@@ -4,6 +4,7 @@ import os
 import ffmpeg
 from models import Source, User, db, Sample, likes_table
 from sqlalchemy import func
+from utils import SAMPLES_PER_PAGE
 
 class SampleSort(Enum):
     LATEST = 0
@@ -24,24 +25,25 @@ def get_top_samples():
         .all()
     )
 
-def get_samples(sort: SampleSort):
+def get_samples(sort: SampleSort, index: int):
+    index -= 1
     if sort is None:
-        return Sample.query.all()
+        return Sample.query.limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
     match sort:
         case SampleSort.LATEST:
-            return Sample.query.order_by(Sample.upload_date.desc()).all()
+            return Sample.query.order_by(Sample.upload_date.desc()).limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
         case SampleSort.OLDEST:
-            return Sample.query.order_by(Sample.upload_date.asc()).all()
+            return Sample.query.order_by(Sample.upload_date.asc()).limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
         case SampleSort.LIKED:
             return (
             db.session.query(Sample)
                 .outerjoin(likes_table, Sample.id == likes_table.c.sample_id)
                 .group_by(Sample.id)
                 .order_by(func.count(likes_table.c.user_id).desc())
-                .all()
+                .limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
             )
         case _:
-            return Sample.query.all()
+            return Sample.query.limit(SAMPLES_PER_PAGE)
         
 def get_metadata(sample_id):
     sample = Sample.query.get(sample_id)
@@ -51,6 +53,9 @@ def get_metadata(sample_id):
 
     return probe
 
+def get_samples_len():
+    return Sample.query.count()
+        
 def search_sources(query):
     return Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
 

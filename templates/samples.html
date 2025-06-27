@@ -4,9 +4,10 @@
 
     <div class="home-samples-box">
         <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
-            <h1>All Samples</h1>
-            <form action="{{ url_for('all_samples') }}" method="GET" style="margin-left: auto">
-                <label>Sort by:
+            <div class="flexbox">
+              <h1 class="flexbox-item rightmost">Samples</h1>
+              <form class="flexbox-item leftmost" action="{{ url_for('samples_list_base') }}" method="GET" style="margin-left: auto">
+                <label>
                     <select name="sort" onchange="this.form.submit()">
                         <option value="latest" {% if request.args.get('sort') == 'latest' %}selected{% endif %}>
                             Latest
@@ -19,7 +20,8 @@
                         </option>
                     </select>
                 </label>
-            </form>
+              </form>
+            </div>
         </div>
 
         <div class="home-samples-grid">
@@ -33,6 +35,41 @@
                        style="font-size: 14px;"></p>
                 </div>
             {% endfor %}
+        </div>
+        <div class="flexbox">
+            <span class="flexbox-item" style="margin-left: auto; margin-right: auto;">
+
+            {% if (index - 3) >= 1 %}
+            <a class="nav-btn" href="/samples/1">1</a>
+            <span class="flexbox-item" style="">
+              • • •
+            </span>
+            {% endif %}
+
+            {% if (index - 2) >= 1 %}
+            <a class="nav-btn" href="/samples/{{ index - 2 }}">{{ index - 2 }}</a> •
+            {% endif %}
+            {% if (index - 1) >= 1 %}
+            <a class="nav-btn" href="/samples/{{ index - 1 }}">{{ index - 1 }}</a> •
+            {% endif %}
+
+            <a class="nav-btn" disabled>{{ index }}</a>
+
+            {% if (index + 1) <= page_num %}
+            • <a class="nav-btn" href="/samples/{{ index + 1 }}">{{ index + 1 }}</a>
+            {% endif %}
+            {% if (index + 2) <= page_num %}
+            • <a class="nav-btn" href="/samples/{{ index + 2 }}">{{ index + 2 }}</a>
+            {% endif %}
+
+            {% if (index + 3) <= page_num %}
+            <span class="flexbox-item" style="">
+              • • •
+            </span>
+            <a class="nav-btn" href="/samples/{{ page_num }}">{{ page_num }}</a>
+            {% endif %}
+
+            </span>
         </div>
     </div>
 

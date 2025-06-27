@@ -119,4 +119,5 @@ def err_sanitize(err):
 
 dotenv.load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
+SAMPLES_PER_PAGE = int(os.getenv("SAMPLES_PER_PAGE"))
 engine = create_engine(DATABASE_URL)

@@ -356,3 +356,34 @@ p {
     object-fit: contain;
     display: block;
 }
+
+.flexbox {
+    display: flex;
+    align-items: horizontal;
+    vertical-align: middle;
+    width: 100%;
+    text-align: center;
+}
+
+.flexbox-item {
+    text-align: center;
+    line-height: auto;
+    align-self: center;
+    padding: 0 10px;
+}
+.flexbox-item.leftmost {
+    text-align: left;
+}
+.flexbox-item.rightmost {
+    text-align: right;
+}
+
+.nav-btn, .nav-btn:visited {
+    text-decoration: none;
+    border-bottom: 1px dashed #03c;
+}
+.nav-btn.disabled {
+    color: black;
+    border-bottom: 1px dashed black;
+
+}
