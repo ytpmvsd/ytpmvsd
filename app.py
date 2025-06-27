@@ -8,7 +8,7 @@ from flask import (
     session,
     url_for,
     jsonify,
-    flash,
+    flash, send_file,
 )
 from flask_login import (
     LoginManager,
@@ -22,7 +22,7 @@ from flask_moment import Moment
 from sqlalchemy import func
 
 from models import db, Sample, User, Source
-from utils import err_sanitize
+from utils import err_sanitize, SAMPLES_PER_PAGE
 
 import markdown
 import datetime
@@ -91,25 +91,31 @@ def home_page():
         version=version,
     )
 
-@app.route("/samples/")
-def all_samples():
+@app.route("/samples/<int:index>/")
+def samples_list(index):
     sort = request.args.get("sort", "liked")
 
     if sort == "latest":
-        samples = api.get_samples(api.SampleSort.LATEST)
+        samples = api.get_samples(api.SampleSort.LATEST, index)
     elif sort == "oldest":
-        samples = api.get_samples(api.SampleSort.OLDEST)
+        samples = api.get_samples(api.SampleSort.OLDEST, index)
     elif sort == "liked":
-        samples = api.get_samples(api.SampleSort.LIKED)
+        samples = api.get_samples(api.SampleSort.LIKED, index)
     else:
-        samples = api.get_samples(api.SampleSort.NONE)
+        samples = api.get_samples(api.SampleSort.NONE, index)
 
     return render_template(
         "samples.html",
         title="Samples - YTPMV Sample Database",
         samples=samples,
         date=datetime.datetime.now(datetime.UTC),
+        index=index,
+        page_num = int(api.get_samples_len() / SAMPLES_PER_PAGE)
     )
+
+@app.route("/samples/")
+def samples_list_base():
+    return samples_list(1)
 
 @app.route("/sample/<int:sample_id>/")
 def sample_page(sample_id):
@@ -253,6 +259,12 @@ def delete_sample(sample_id):
     if not current_user.is_admin:
         return jsonify({"message": "Access denied"}), 403
     return samples.delete_sample(sample_id)
+
+@app.route("/sample/<int:sample_id>/download/")
+def download_sample(sample_id):
+    sample = Sample.query.get_or_404(sample_id)
+    file_path = os.path.join("static/media/samps", sample.stored_as)
+    return send_file(file_path, as_attachment=True, download_name=sample.filename)
 
 @app.route("/user/<int:user_id>/")
 def user_page(user_id):
@@ -407,31 +419,42 @@ def wiki_main():
 def wiki_page(page):
     return wiki.wiki_page(page)
 
+def sample_jsonify(sample):
+    if sample is None:
+        return {}
+    uploader_name = api.get_user_info(sample.uploader).username
+    source_id = -1
+    if sample.source is not None:
+        source_id = sample.source.id
+    return {"id":sample.id,"filename":sample.filename,"tags":sample.tags,"upload_date":sample.upload_date,"thumbnail_filename":sample.thumbnail_filename,"uploader":uploader_name,"likes":len(sample.likes), "source": source_id}
+
 @app.route("/api/recent_samples")
 def api_recent_samples():
     res = api.get_recent_samples()
-    samples = list(map(lambda res: {
-        "id": res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":api.get_user_info(res.uploader).username,"source_id":res.source_id,"source":res.source,"likes":len(res.likes)}, res))
+    samples = list(map(lambda f: sample_jsonify(f), res))
     return jsonify(samples)
 
 @app.route("/api/top_samples")
 def api_top_samples():
     res = api.get_top_samples()
-    samples = list(map(lambda res: {
-        "id": res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":api.get_user_info(res.uploader).username,"source_id":res.source_id,"source":res.source,"likes":len(res.likes)}, res))
+    samples = list(map(lambda f: sample_jsonify(f), res))
     return jsonify(samples)
 
-@app.route("/api/samples/<string:sort>")
-def api_samples(sort):
+@app.route("/api/samples/<string:sort>/<int:index>")
+def api_samples(sort, index):
     if sort == "latest":
-        res = api.get_samples(api.SampleSort.LATEST)
+        res = api.get_samples(api.SampleSort.LATEST, index)
     elif sort == "oldest":
-        res = api.get_samples(api.SampleSort.OLDEST)
+        res = api.get_samples(api.SampleSort.OLDEST, index)
     elif sort == "liked":
-        res = api.get_samples(api.SampleSort.LIKED)
+        res = api.get_samples(api.SampleSort.LIKED, index)
     else:
-        res = api.get_samples(api.SampleSort.NONE)
-    return jsonify(res)
+        res = api.get_samples(api.SampleSort.NONE, index)
+    return jsonify(list(map(lambda f: sample_jsonify(f),res)))
+
+@app.route("/api/samples/<string:sort>")
+def api_samples_base(sort):
+    return api_samples(sort, 1)
 
 @app.route("/api/metadata/<int:sample_id>")
 def api_metadata(sample_id):
@@ -442,23 +465,18 @@ def api_search_sources(query):
     res = api.search_sources(query)
     return jsonify({"id":res.id,"name":res.name,"samples":res.samples})
 
-def sample_jsonify(sample_id):
-    if sample_id is None:
-        return {}
-    res = api.get_sample_info(sample_id)
-    uploader_name = api.get_user_info(res.uploader).username
-    return jsonify({"id":res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":uploader_name,"likes":len(res.likes), "source": res.source.id})
-
 @app.route("/api/source/<int:source_id>")
 def api_source_info(source_id):
     res = api.get_source_info(source_id)
     samples = list(map(lambda f: f.id, res.samples))
-    return jsonify({"id":res.id,"filename":res.name,"samples":samples})
+    return jsonify({"id":res.id,"name":res.name,"samples":samples})
 
 @app.route("/api/sample/<int:sample_id>")
 def api_sample_info(sample_id):
-    res = sample_jsonify(sample_id)
-    return res
+    if sample_id is None:
+        return jsonify({})
+    res = sample_jsonify(api.get_sample_info(sample_id))
+    return jsonify(res)
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)
