@@ -39,6 +39,7 @@ def create_thumbnail(video_path, thumbnail_path):
 
         (
             ffmpeg.input(os.path.join(os.getcwd(), os.path.basename(video_path)), ss=0)
+            .filter("pad", width="max(iw,ih*(16/9))", height="ow/(16/9)", x="(ow-iw)/2", y="(oh-ih)/2")
             .filter("scale", -1, 480)
             .output(thumbnail_path, vframes=1)
             .run(capture_stdout=True, capture_stderr=True)
@@ -49,6 +50,8 @@ def create_thumbnail(video_path, thumbnail_path):
         print(f"Thumbnail saved at {thumbnail_path}")
 
     except Exception as e:
+        print('stdout:', e.stdout.decode('utf8'))
+        print('stderr:', e.stderr.decode('utf8'))
         print(f"An error occurred: {e}")
 
 
