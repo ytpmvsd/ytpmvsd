@@ -50,6 +50,8 @@ def create_thumbnail(video_path, thumbnail_path):
         print(f"Thumbnail saved at {thumbnail_path}")
 
     except Exception as e:
+        print('stdout:', e.stdout.decode('utf8'))
+        print('stderr:', e.stderr.decode('utf8'))
         print(f"An error occurred: {e}")
 
 
