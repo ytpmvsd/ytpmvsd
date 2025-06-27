@@ -28,7 +28,7 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
         source_id,
     )
 
-def upload(file, sample_ids):
+def upload(file):
     if file and allowed_file(file.filename):
         original_filename = secure_filename(file.filename)
 
@@ -61,7 +61,6 @@ def upload(file, sample_ids):
         create_thumbnail(upload_path, f"static/media/thumbs/{timestamp}.png")
 
         sample_id = str(uuid.uuid4())
-        sample_ids.append(sample_id)
     else:
         if not allowed_file(file):
             raise Exception("Disallowed file type")
