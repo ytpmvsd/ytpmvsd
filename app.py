@@ -459,7 +459,7 @@ def api_search_sources(query):
 def api_source_info(source_id):
     res = api.get_source_info(source_id)
     samples = list(map(lambda f: f.id, res.samples))
-    return jsonify({"id":res.id,"filename":res.name,"samples":samples})
+    return jsonify({"id":res.id,"name":res.name,"samples":samples})
 
 @app.route("/api/sample/<int:sample_id>")
 def api_sample_info(sample_id):
