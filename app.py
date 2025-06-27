@@ -22,7 +22,7 @@ from flask_moment import Moment
 from sqlalchemy import func
 
 from models import db, Sample, User, Source
-from utils import err_sanitize
+from utils import err_sanitize, SAMPLES_PER_PAGE
 
 import markdown
 import datetime
@@ -91,25 +91,31 @@ def home_page():
         version=version,
     )
 
-@app.route("/samples/")
-def all_samples():
+@app.route("/samples/<int:index>/")
+def samples_list(index):
     sort = request.args.get("sort", "liked")
 
     if sort == "latest":
-        samples = api.get_samples(api.SampleSort.LATEST)
+        samples = api.get_samples(api.SampleSort.LATEST, index)
     elif sort == "oldest":
-        samples = api.get_samples(api.SampleSort.OLDEST)
+        samples = api.get_samples(api.SampleSort.OLDEST, index)
     elif sort == "liked":
-        samples = api.get_samples(api.SampleSort.LIKED)
+        samples = api.get_samples(api.SampleSort.LIKED, index)
     else:
-        samples = api.get_samples(api.SampleSort.NONE)
+        samples = api.get_samples(api.SampleSort.NONE, index)
 
     return render_template(
         "samples.html",
         title="Samples - YTPMV Sample Database",
         samples=samples,
         date=datetime.datetime.now(datetime.UTC),
+        index=index,
+        page_num = int(api.get_samples_len() / SAMPLES_PER_PAGE)
     )
+
+@app.route("/samples/")
+def samples_list_base():
+    return samples_list(1)
 
 @app.route("/sample/<int:sample_id>/")
 def sample_page(sample_id):
@@ -434,17 +440,21 @@ def api_top_samples():
     samples = list(map(lambda f: sample_jsonify(f), res))
     return jsonify(samples)
 
-@app.route("/api/samples/<string:sort>")
-def api_samples(sort):
+@app.route("/api/samples/<string:sort>/<int:index>")
+def api_samples(sort, index):
     if sort == "latest":
-        res = api.get_samples(api.SampleSort.LATEST)
+        res = api.get_samples(api.SampleSort.LATEST, index)
     elif sort == "oldest":
-        res = api.get_samples(api.SampleSort.OLDEST)
+        res = api.get_samples(api.SampleSort.OLDEST, index)
     elif sort == "liked":
-        res = api.get_samples(api.SampleSort.LIKED)
+        res = api.get_samples(api.SampleSort.LIKED, index)
     else:
-        res = api.get_samples(api.SampleSort.NONE)
-    return jsonify(res)
+        res = api.get_samples(api.SampleSort.NONE, index)
+    return jsonify(list(map(lambda f: sample_jsonify(f),res)))
+
+@app.route("/api/samples/<string:sort>")
+def api_samples_base(sort):
+    return api_samples(sort, 1)
 
 @app.route("/api/metadata/<int:sample_id>")
 def api_metadata(sample_id):
