@@ -481,6 +481,10 @@ def api_sample_info(sample_id):
     res = sample_jsonify(api.get_sample_info(sample_id))
     return jsonify(res)
 
+@app.route("/api/samples_len")
+def api_samples_len():
+    return jsonify({"len": int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))})
+
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)
 
