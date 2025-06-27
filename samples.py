@@ -36,7 +36,7 @@ def upload(file):
         if len(filename) >= 100:
             raise Exception("Filename must not exceed 100 bytes")
 
-        random_id = secrets.token_hex(100)
+        random_id = secrets.token_hex(10)
         
         stored_as = f"{filename}_{random_id}.mp4"
         stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
