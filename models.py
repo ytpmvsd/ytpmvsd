@@ -37,6 +37,7 @@ class Sample(db.Model):
 
     source = db.relationship("Source", back_populates="samples")
     likes = db.relationship("User", secondary=likes_table, backref="liked_samples")
+    sample_metadata = db.relationship("Metadata", back_populates="sample")
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,4 +53,13 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
+class Metadata(db.Model):
+    sample_id = db.Column(db.Integer, db.ForeignKey("sample.id"), primary_key=True)
+    filesize = db.Column(db.Integer, nullable=False)
+    width = db.Column(db.Integer, nullable=False)
+    height = db.Column(db.Integer, nullable=False)
+    aspect_ratio = db.Column(db.String, nullable=False)
+    framerate = db.Column(db.Float, nullable=False)
+    codec = db.Column(db.String, nullable=False)
 
+    sample = db.relationship("Sample", back_populates="sample_metadata")
