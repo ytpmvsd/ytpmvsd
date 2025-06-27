@@ -31,6 +31,7 @@ from constants import MB_UPLOAD_LIMIT
 import api
 import samples
 import wiki
+import math
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -110,7 +111,7 @@ def samples_list(index):
         samples=samples,
         date=datetime.datetime.now(datetime.UTC),
         index=index,
-        page_num = int(api.get_samples_len() / SAMPLES_PER_PAGE)
+        page_num = int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))
     )
 
 @app.route("/samples/")
