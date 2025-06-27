@@ -413,18 +413,25 @@ def wiki_main():
 def wiki_page(page):
     return wiki.wiki_page(page)
 
+def sample_jsonify(sample):
+    if sample is None:
+        return {}
+    uploader_name = api.get_user_info(sample.uploader).username
+    source_id = -1
+    if sample.source is not None:
+        source_id = sample.source.id
+    return {"id":sample.id,"filename":sample.filename,"tags":sample.tags,"upload_date":sample.upload_date,"thumbnail_filename":sample.thumbnail_filename,"uploader":uploader_name,"likes":len(sample.likes), "source": source_id}
+
 @app.route("/api/recent_samples")
 def api_recent_samples():
     res = api.get_recent_samples()
-    samples = list(map(lambda res: {
-        "id": res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":api.get_user_info(res.uploader).username,"source_id":res.source_id,"source":res.source,"likes":len(res.likes)}, res))
+    samples = list(map(lambda f: sample_jsonify(f), res))
     return jsonify(samples)
 
 @app.route("/api/top_samples")
 def api_top_samples():
     res = api.get_top_samples()
-    samples = list(map(lambda res: {
-        "id": res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":api.get_user_info(res.uploader).username,"source_id":res.source_id,"source":res.source,"likes":len(res.likes)}, res))
+    samples = list(map(lambda f: sample_jsonify(f), res))
     return jsonify(samples)
 
 @app.route("/api/samples/<string:sort>")
@@ -448,13 +455,6 @@ def api_search_sources(query):
     res = api.search_sources(query)
     return jsonify({"id":res.id,"name":res.name,"samples":res.samples})
 
-def sample_jsonify(sample_id):
-    if sample_id is None:
-        return {}
-    res = api.get_sample_info(sample_id)
-    uploader_name = api.get_user_info(res.uploader).username
-    return jsonify({"id":res.id,"filename":res.filename,"tags":res.tags,"upload_date":res.upload_date,"thumbnail_filename":res.thumbnail_filename,"uploader":uploader_name,"likes":len(res.likes), "source": res.source.id})
-
 @app.route("/api/source/<int:source_id>")
 def api_source_info(source_id):
     res = api.get_source_info(source_id)
@@ -463,8 +463,10 @@ def api_source_info(source_id):
 
 @app.route("/api/sample/<int:sample_id>")
 def api_sample_info(sample_id):
-    res = sample_jsonify(sample_id)
-    return res
+    if sample_id is None:
+        return jsonify({})
+    res = sample_jsonify(api.get_sample_info(sample_id))
+    return jsonify(res)
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)
