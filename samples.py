@@ -28,7 +28,7 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
         source_id,
     )
 
-def upload(file, sample_ids):
+def upload(file):
     if file and allowed_file(file.filename):
         original_filename = secure_filename(file.filename)
 
@@ -36,7 +36,7 @@ def upload(file, sample_ids):
         if len(filename) >= 100:
             raise Exception("Filename must not exceed 100 bytes")
 
-        random_id = secrets.token_hex(100)
+        random_id = secrets.token_hex(10)
         
         stored_as = f"{filename}_{random_id}.mp4"
         stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
@@ -61,7 +61,6 @@ def upload(file, sample_ids):
         create_thumbnail(upload_path, f"static/media/thumbs/{timestamp}.png")
 
         sample_id = str(uuid.uuid4())
-        sample_ids.append(sample_id)
     else:
         if not allowed_file(file):
             raise Exception("Disallowed file type")

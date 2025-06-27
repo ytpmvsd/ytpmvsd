@@ -338,20 +338,22 @@ def upload():
 
         for file in files:
             try:
-                (sample_id, original_filename, timestamp, stored_as) = samples.upload(file,sample_ids)
+                (sample_id, original_filename, timestamp, stored_as) = samples.upload(file)
+                sample_ids.append(sample_id)
                 session[f"uploaded_sample_id_{sample_id}"] = sample_id
                 session[f"filename_{sample_id}"] = original_filename
                 session[f"thumbnail_{sample_id}"] = f"{timestamp}.png"
                 session[f"stored_as_{sample_id}"] = stored_as
 
-                if len(sample_ids) == 1:
-                    return redirect(url_for("edit_sample", sample_id=sample_ids[0]))
-
-                return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
             except Exception as ex:
                 flash(err_sanitize(ex), "error")
                 return redirect(url_for("upload"))
-        
+
+        if len(sample_ids) == 1:
+            return redirect(url_for("edit_sample", sample_id=sample_ids[0]))
+
+        return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
+
     return render_template("upload.html", title="Upload - YTPMV Sample Database")
 
 @login_manager.user_loader
