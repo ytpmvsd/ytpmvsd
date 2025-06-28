@@ -4,7 +4,7 @@ import os
 import ffmpeg
 from models import Source, User, db, Sample, likes_table
 from sqlalchemy import func
-from utils import SAMPLES_PER_PAGE
+SAMPLES_PER_PAGE = int(os.getenv("SAMPLES_PER_PAGE"))
 
 class SampleSort(Enum):
     LATEST = 0
