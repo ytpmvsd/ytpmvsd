@@ -429,7 +429,7 @@ def sample_jsonify(sample):
     source_id = -1
     if sample.source is not None:
         source_id = sample.source.id
-    return {"id":sample.id,"filename":sample.filename,"tags":sample.tags,"upload_date":sample.upload_date,"thumbnail_filename":sample.thumbnail_filename,"uploader":uploader_name,"likes":len(sample.likes), "source": source_id}
+    return {"id":sample.id,"filename":sample.filename,"tags":sample.tags,"upload_date":sample.upload_date,"thumbnail_filename":sample.thumbnail_filename,"uploader":uploader_name,"likes":len(sample.likes), "source": source_id, "stored_as": sample.stored_as}
 
 @app.route("/api/recent_samples")
 def api_recent_samples():
