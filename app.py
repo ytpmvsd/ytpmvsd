@@ -22,7 +22,7 @@ from flask_moment import Moment
 from sqlalchemy import func
 
 from models import db, Sample, User, Source
-from utils import err_sanitize, SAMPLES_PER_PAGE
+from utils import err_sanitize, SAMPLES_PER_PAGE, update_metadata
 
 import markdown
 import datetime
@@ -124,6 +124,9 @@ def sample_page(sample_id):
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
+    if metadata is None:
+        update_metadata(sample_id)
+        metadata = api.get_metadata(sample.id)
 
     return render_template(
         "sample.html",
