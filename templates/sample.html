@@ -47,14 +47,12 @@
                     <span><b>Source:</b> <a href="{{ url_for('source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
                 {% endif %}
 
-                <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.format.size|int/1000/1000 ) }}</span>
+                <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.filesize|int/1000/1000 ) }}</span>
 
-                <span><b>Resolution:</b> {{ ns.video_stream.width }}x{{ ns.video_stream.height }}
-                                                ({{ ns.video_stream.display_aspect_ratio }})</span>
+                <span><b>Resolution:</b> {{ metadata.width }}x{{ metadata.height }}
+                                    ({{ metadata.aspect_ratio }})</span>
 
-                {% set framerate = ns.video_stream.r_frame_rate.split('/') %}
-                {% set framerate_value = (framerate[0]|int / framerate[1]|int) %}
-                <span><b>Frame rate:</b> {{ framerate_value|int if framerate_value.is_integer() else framerate_value|round(3) }} FPS</span>
+                <span><b>Frame rate:</b> {{ metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3) }} FPS</span>
 
             </div>
         </div>

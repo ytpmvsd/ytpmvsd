@@ -6,13 +6,15 @@ import shutil
 from sqlalchemy import create_engine, text
 
 from constants import ALLOWED_UPLOAD_EXTENSIONS
+from models import Sample
+
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
     with engine.connect() as conn:
         try:
-            conn.execute(
+            sample = conn.execute(
                 text(
-                    "INSERT INTO sample (filename, stored_as, tags, upload_date, thumbnail_filename, uploader, source_id) VALUES (:filename, :stored_as, :tags, :upload_date, :thumbnail_filename, :uploader, :source_id)"
+                    "INSERT INTO sample (filename, stored_as, tags, upload_date, thumbnail_filename, uploader, source_id) VALUES (:filename, :stored_as, :tags, :upload_date, :thumbnail_filename, :uploader, :source_id) RETURNING id"
                 ),
                 {
                     "filename": filename,
@@ -25,8 +27,78 @@ def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, sour
                 },
             )
             conn.commit()
+            try:
+                sample_id = sample.scalar()
+                metadata = get_metadata(sample_id)
+                for stream in metadata['streams']:
+                    if stream['codec_type'] == "video":
+                        video_stream = stream
+                        break
+                framerate = video_stream['r_frame_rate'].split('/')
+                framerate = int(framerate[0]) / int(framerate[1])
+                conn.execute(
+                    text(
+                        "INSERT INTO metadata (sample_id, filesize, width, height, aspect_ratio, framerate, codec) VALUES (:sample_id, :filesize, :width, :height, :aspect_ratio, :framerate, :codec)"
+                    ),
+                    {
+                        "sample_id": sample_id,
+                        "filesize": metadata['format']['size'],
+                        "width": video_stream['width'],
+                        "height": video_stream['height'],
+                        "aspect_ratio": video_stream['display_aspect_ratio'],
+                        "framerate": framerate,
+                        "codec": video_stream['codec_name'],
+                    },
+                )
+                conn.commit()
+            except Exception as e:
+                conn.execute(
+                    text("DELETE FROM sample WHERE id = :sample_id"),
+                    {"sample_id": sample_id},
+                )
+                conn.commit()
+                raise ValueError(f"Error adding metadata: {e}")
         except Exception as e:
             print(f"Error adding sample: {e}")
+            raise
+
+
+def update_metadata(sample_id):
+    with engine.connect() as conn:
+        try:
+            sample = conn.execute(
+                text(
+                    "SELECT id from sample WHERE id = :sample_id"
+                ),
+                {"sample_id": sample_id},
+            )
+            sample_id = sample.scalar()
+            metadata = get_metadata(sample_id)
+            for stream in metadata['streams']:
+                if stream['codec_type'] == "video":
+                    video_stream = stream
+                    break
+            framerate = video_stream['r_frame_rate'].split('/')
+            framerate = int(framerate[0]) / int(framerate[1])
+            conn.execute(
+                text(
+                    "INSERT INTO metadata (sample_id, filesize, width, height, aspect_ratio, framerate, codec) VALUES (:sample_id, :filesize, :width, :height, :aspect_ratio, :framerate, :codec)"
+                ),
+                {
+                    "sample_id": sample_id,
+                    "filesize": metadata['format']['size'],
+                    "width": video_stream['width'],
+                    "height": video_stream['height'],
+                    "aspect_ratio": video_stream['display_aspect_ratio'],
+                    "framerate": framerate,
+                    "codec": video_stream['codec_name'],
+                },
+            )
+            conn.commit()
+        except Exception as e:
+            print(f"Error adding sample: {e}")
+            raise ValueError(f"Error adding metadata: {e}")
+
 
 def create_thumbnail(video_path, thumbnail_path):
     shutil.copy(video_path, os.getcwd())
@@ -119,6 +191,14 @@ def err_sanitize(err):
         if os.path.sep in part:
             strerr = strerr.replace(part, "<stripped>")
     return strerr
+
+def get_metadata(sample_id):
+    sample = Sample.query.get(sample_id)
+    file = os.path.join("static/media/samps", sample.stored_as)
+
+    probe = ffmpeg.probe(file)
+
+    return probe
 
 dotenv.load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")

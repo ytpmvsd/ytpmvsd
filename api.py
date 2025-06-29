@@ -2,7 +2,7 @@ from enum import Enum
 import os
 
 import ffmpeg
-from models import Source, User, db, Sample, likes_table
+from models import Source, User, db, Sample, likes_table, Metadata
 from sqlalchemy import func
 from utils import SAMPLES_PER_PAGE
 
@@ -46,12 +46,7 @@ def get_samples(sort: SampleSort, index: int):
             return Sample.query.limit(SAMPLES_PER_PAGE)
         
 def get_metadata(sample_id):
-    sample = Sample.query.get(sample_id)
-    file = os.path.join("static/media/samps", sample.stored_as)
-
-    probe = ffmpeg.probe(file)
-
-    return probe
+    return Metadata.query.get(sample_id)
 
 def get_samples_len():
     return Sample.query.count()

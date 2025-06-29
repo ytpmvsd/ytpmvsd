@@ -22,7 +22,7 @@ from flask_moment import Moment
 from sqlalchemy import func
 
 from models import db, Sample, User, Source
-from utils import err_sanitize, SAMPLES_PER_PAGE
+from utils import err_sanitize, SAMPLES_PER_PAGE, update_metadata
 
 import markdown
 import datetime
@@ -124,6 +124,9 @@ def sample_page(sample_id):
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
+    if metadata is None:
+        update_metadata(sample_id)
+        metadata = api.get_metadata(sample.id)
 
     return render_template(
         "sample.html",
@@ -159,7 +162,7 @@ def edit_sample(sample_id):
         if source_id == "":
             source_id = None
 
-        samples.edit_sample(
+        edit_status = samples.edit_sample(
             filename,
             stored_as,
             str(thumbnail),
@@ -172,6 +175,10 @@ def edit_sample(sample_id):
         session.pop(f"filename_{sample_id}", None)
         session.pop(f"thumbnail_{sample_id}", None)
         session.pop(f"stored_as_{sample_id}", None)
+
+        if edit_status:
+            flash("Failed to upload sample. Please reencode or try another video.", "error")
+            return redirect(url_for("upload"))
 
         return redirect(url_for("home_page"))
 
@@ -223,12 +230,16 @@ def batch_edit_samples(sample_ids):
             thumbnail = sample["thumbnail"]
             sample_id = sample["sample_id"]
 
-            samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, reencode)
+            edit_status = samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, reencode)
 
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
             session.pop(f"thumbnail_{sample_id}", None)
             session.pop(f"stored_as_{sample_id}", None)
+
+            if edit_status:
+                flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
+                return redirect(url_for("upload"))
 
         return redirect(url_for("home_page"))
 

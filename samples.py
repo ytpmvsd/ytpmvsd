@@ -18,15 +18,20 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
         reencode_video(stored_as)
 
+    try:
+        add_sample_to_db(
+            filename,
+            stored_as,
+            datetime.datetime.now(datetime.UTC),
+            str(thumbnail),
+            uploader,
+            source_id,
+        )
+    except Exception as e:
+        print(e)
+        return 1
 
-    add_sample_to_db(
-        filename,
-        stored_as,
-        datetime.datetime.now(datetime.UTC),
-        str(thumbnail),
-        uploader,
-        source_id,
-    )
+    return 0
 
 def upload(file):
     if file and allowed_file(file.filename):
