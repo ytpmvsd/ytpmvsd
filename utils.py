@@ -5,8 +5,8 @@ import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
 
-from api import get_metadata
 from constants import ALLOWED_UPLOAD_EXTENSIONS
+from models import Sample
 
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
@@ -153,6 +153,14 @@ def err_sanitize(err):
         if os.path.sep in part:
             strerr = strerr.replace(part, "<stripped>")
     return strerr
+
+def get_metadata(sample_id):
+    sample = Sample.query.get(sample_id)
+    file = os.path.join("static/media/samps", sample.stored_as)
+
+    probe = ffmpeg.probe(file)
+
+    return probe
 
 dotenv.load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
