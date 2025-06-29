@@ -387,3 +387,18 @@ p {
     border-bottom: 1px dashed black;
 
 }
+
+.footer-links {
+    font-size: 30px;
+    color: hsl(var(--hue), 85%, 60%);
+    text-decoration: none;
+    padding: 0 3px;
+}
+
+.footer-links:visited {
+    color: hsl(var(--hue), 85%, 60%);
+}
+
+.footer-links:hover {
+    color: hsl(var(--hue), 85%, 40%);
+}
