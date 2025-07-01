@@ -276,8 +276,7 @@ def delete_sample(sample_id):
     if not current_user:
         if not current_user.is_admin:
             return jsonify({"message": "Access denied"}), 403
-    delete_sample = samples.delete_sample(sample_id)
-    return delete_sample
+    return samples.delete_sample(sample_id)
 
 @app.route("/sample/<int:sample_id>/download/")
 def download_sample(sample_id):
