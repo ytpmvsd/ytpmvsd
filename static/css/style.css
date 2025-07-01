@@ -10,6 +10,10 @@ body {
     background-color: hsl(var(--hue), 85%, 85%);
     color: #000;
     text-align: center;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 a:visited {
@@ -388,23 +392,26 @@ p {
 
 }
 
+footer {
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
 .footer-links {
+    font-size: 30px;
     text-decoration: none;
-    padding: 0 3px;
-    /*color: hsl(var(--hue), 85%, 60%);*/
-    filter: invert(65%) sepia(62%) saturate(469%) hue-rotate(358deg) brightness(104%) contrast(88%);
+    padding: 0 8px;
+    color: hsl(var(--hue), 85%, 60%);
 }
 
 .footer-links:visited {
-    /*color: hsl(var(--hue), 85%, 60%);*/
-    filter: invert(65%) sepia(62%) saturate(469%) hue-rotate(358deg) brightness(104%) contrast(88%);
+    color: hsl(var(--hue), 85%, 60%);
 }
 
 .footer-links:hover {
-    /*color: hsl(var(--hue), 85%, 40%);*/
-    filter: invert(56%) sepia(21%) saturate(5915%) hue-rotate(14deg) brightness(91%) contrast(88%);
+    color: hsl(var(--hue), 85%, 40%);
 }
 
-.footer-links img {
-    width: 30px;
+main {
+    flex: 1;
 }
