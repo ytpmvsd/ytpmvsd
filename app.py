@@ -122,6 +122,10 @@ def samples_list_base():
 @app.route("/sample/<int:sample_id>/")
 def sample_page(sample_id):
     sample = api.get_sample_info(sample_id)
+
+    if sample is None:
+        return render_template("404.html", title="YTPMV Sample Database")
+
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
