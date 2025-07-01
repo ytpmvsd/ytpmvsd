@@ -1,13 +1,13 @@
 import os
 
-import dotenv
 import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
 
-from constants import ALLOWED_UPLOAD_EXTENSIONS
-from models import Sample
+ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
 
+from env import DATABASE_URL
+from models import Sample
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
     with engine.connect() as conn:
@@ -200,7 +200,4 @@ def get_metadata(sample_id):
 
     return probe
 
-dotenv.load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
-SAMPLES_PER_PAGE = int(os.getenv("SAMPLES_PER_PAGE"))
 engine = create_engine(DATABASE_URL)

@@ -7,12 +7,12 @@ import secrets
 
 from flask import jsonify
 
+from env import MB_UPLOAD_LIMIT
 from models import Sample, db
 from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, reencode_video
 
 from werkzeug.utils import secure_filename
 
-from constants import MB_UPLOAD_LIMIT
     
 def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
