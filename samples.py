@@ -6,6 +6,7 @@ import pathlib
 import secrets
 
 from flask import jsonify
+from flask_login import current_user
 
 from env import MB_UPLOAD_LIMIT
 from models import Sample, db
@@ -75,7 +76,7 @@ def upload(file):
     return (sample_id, original_filename, timestamp, stored_as)
 
 def delete_sample(sample_id):
-    # (note: we do not need err_sanitize here as these errors should only be visble to admins)
+    # (note: we do not need err_sanitize here as these errors should only be visible to admins)
     try:
         sample = Sample.query.get(sample_id)
     except Exception as ex:
