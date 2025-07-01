@@ -9,7 +9,7 @@ from flask import jsonify
 
 from env import MB_UPLOAD_LIMIT
 from models import Sample, db
-from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, reencode_video
+from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, err_sanitize, reencode_video
 
 from werkzeug.utils import secure_filename
 
@@ -75,8 +75,18 @@ def upload(file):
     return (sample_id, original_filename, timestamp, stored_as)
 
 def delete_sample(sample_id):
-    sample = Sample.query.get(sample_id)
+    # (note: we do not need err_sanitize here as these errors should only be visble to admins)
+    try:
+        sample = Sample.query.get(sample_id)
+    except Exception as ex:
+        return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
     if sample:
+        # try deleting the sample from the database first, as if there's an error we don't want to delete the other stuff and create a broken page.
+        try:
+            db.session.delete(sample)
+            db.session.commit()
+        except Exception as ex:
+            return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
         warnings = []
         try:
             os.remove(os.path.join("static/media/thumbs", sample.thumbnail_filename))
@@ -86,8 +96,7 @@ def delete_sample(sample_id):
             os.remove(os.path.join("static/media/samps", sample.stored_as))
         except FileNotFoundError as _:
             warnings.append("Sample file wasn't found, couldn't be deleted")
-        db.session.delete(sample)
-        db.session.commit()
-        return jsonify({"message": "Sample deleted successfully.", "warnings": warnings})
-    return jsonify({"message": "There was an error deleting the sample."})
+
+        return jsonify({"success": False, "message": "Sample deleted successfully.", "warnings": warnings})
+    return jsonify({"success": False, "message": "Tried to delete a sample that doesn't exist."})
 

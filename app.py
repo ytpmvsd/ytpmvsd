@@ -271,7 +271,8 @@ def like_sample(sample_id):
 def delete_sample(sample_id):
     if not current_user.is_admin:
         return jsonify({"message": "Access denied"}), 403
-    return samples.delete_sample(sample_id)
+    delete_sample = samples.delete_sample(sample_id)
+    return delete_sample
 
 @app.route("/sample/<int:sample_id>/download/")
 def download_sample(sample_id):

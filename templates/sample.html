@@ -103,7 +103,9 @@
                     .then(response => response.json())
                     .then(data => {
                         window.alert(data.message);
-                        window.location = '/';
+                        if(data.success) {
+                            window.location = '/';
+                        }
                     })
                     .catch(error => console.error("Error:", error));
             });
