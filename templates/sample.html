@@ -109,9 +109,9 @@
                         // javascript has a proper way of constructing elements but it's messy and I've never seen a real reason to do it. - ioi_xd
                         warningBox.innerHTML += "<p style='color: red'>"+data.message+"</p>"   
                         for(let warning in data.warnings) {
-                            warningBox.innerHTML += "<p style='color: yellow'>("+data.message+")</span>"   
+                            warningBox.innerHTML += "<p style='color: darkgold'>("+data.message+")</span>"   
                         }
-                        if(data.success) {
+                        if(data.success == "True") {
                             document.querySelector(".sample-box").remove();
                         }
                     })
