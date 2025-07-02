@@ -2,9 +2,9 @@ from enum import Enum
 import os
 
 import ffmpeg
+from env import SAMPLES_PER_PAGE
 from models import Source, User, db, Sample, likes_table, Metadata
 from sqlalchemy import func
-from utils import SAMPLES_PER_PAGE
 
 class SampleSort(Enum):
     LATEST = 0

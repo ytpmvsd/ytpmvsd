@@ -21,25 +21,26 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
+from env import USER_APPROVAL, DATABASE_URL, FLASK_SECRET_KEY, MB_UPLOAD_LIMIT, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
-from utils import err_sanitize, SAMPLES_PER_PAGE, update_metadata
+from utils import err_sanitize, update_metadata
 
 import markdown
 import datetime
 
-from constants import MB_UPLOAD_LIMIT
+
 import api
 import samples
 import wiki
 import math
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+app.config["SECRET_KEY"] = FLASK_SECRET_KEY
 app.config["MAX_CONTENT_LENGTH"] = MB_UPLOAD_LIMIT * 10 * 1000 * 1000
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
-version = os.getenv("VERSION")
+version = VERSION
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -121,6 +122,10 @@ def samples_list_base():
 @app.route("/sample/<int:sample_id>/")
 def sample_page(sample_id):
     sample = api.get_sample_info(sample_id)
+
+    if sample is None:
+        return render_template("404.html", title="YTPMV Sample Database")
+
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
@@ -268,8 +273,9 @@ def like_sample(sample_id):
 @app.route("/sample/delete/<int:sample_id>/", methods=["POST"])
 @login_required
 def delete_sample(sample_id):
-    if not current_user.is_admin:
-        return jsonify({"message": "Access denied"}), 403
+    if not current_user:
+        if not current_user.is_admin:
+            return jsonify({"message": "Access denied"}), 403
     return samples.delete_sample(sample_id)
 
 @app.route("/sample/<int:sample_id>/download/")
@@ -365,7 +371,7 @@ def upload():
 
         return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
 
-    return render_template("upload.html", title="Upload - YTPMV Sample Database")
+    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL.lower() == "true")
 
 @login_manager.user_loader
 def load_user(user_id):

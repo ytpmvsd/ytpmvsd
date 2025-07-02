@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="warning-box">
 
+    </div>
     <div class="sample-box">
         <div class="sample-player-box">
             <video class="video" controls>
@@ -102,8 +104,16 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        window.alert(data.message);
-                        window.location = '/';
+                        let warningBox = document.querySelector(".warning-box");
+                        warningBox.innerHTML = "";
+                        // javascript has a proper way of constructing elements but it's messy and I've never seen a real reason to do it. - ioi_xd
+                        warningBox.innerHTML += "<p style='color: red'>"+data.message+"</p>"   
+                        for(let warning in data.warnings) {
+                            warningBox.innerHTML += "<p style='color: darkgold'>("+data.message+")</span>"   
+                        }
+                        if(data.success == "True") {
+                            document.querySelector(".sample-box").remove();
+                        }
                     })
                     .catch(error => console.error("Error:", error));
             });
