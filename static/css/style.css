@@ -69,6 +69,7 @@ li {
 
 h1 {
     margin: 0;
+    word-break: break-word;
 }
 
 p {
