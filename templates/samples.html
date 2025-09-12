@@ -71,7 +71,7 @@
             {% else %}
                 <a class="nav-btn" {% if 1 == index %} disabled {% else %} href="{{ url_for('samples_list', index = 1) }}{{ "?sort=" + request.args.get('sort') if request.args.get('sort') }}" {% endif %}>1</a>
                 {% for page in range(page_num - 1) %}
-                    • <a class="nav-btn" {% if (page + 2) == index %} disabled {% else %} href="{{ url_for('samples_list', index = page + 2) }}" {% endif %}>{{ page + 2 }}</a>
+                    • <a class="nav-btn" {% if (page + 2) == index %} disabled {% else %} href="{{ url_for('samples_list', index = page + 2) }}{{ "?sort=" + request.args.get('sort') if request.args.get('sort') }}" {% endif %}>{{ page + 2 }}</a>
                 {% endfor %}
             {% endif %}
 
