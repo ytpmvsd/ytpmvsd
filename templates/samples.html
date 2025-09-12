@@ -40,38 +40,38 @@
             <span class="flexbox-item" style="margin-left: auto; margin-right: auto; padding-top: 10px;">
             {% if page_num > 5 %}
                 {% if (index - 3) >= 1 %}
-                <a class="nav-btn" href="/samples/1">1</a>
+                <a class="nav-btn" href="{{ url_for('samples_list', index = 1) }}">1</a>
                 <span class="flexbox-item" style="">
                   • • •
                 </span>
                 {% endif %}
 
                 {% if (index - 2) >= 1 %}
-                <a class="nav-btn" href="/samples/{{ index - 2 }}">{{ index - 2 }}</a> •
+                <a class="nav-btn" href="{{ url_for('samples_list', index = index - 2) }}">{{ index - 2 }}</a> •
                 {% endif %}
                 {% if (index - 1) >= 1 %}
-                <a class="nav-btn" href="/samples/{{ index - 1 }}">{{ index - 1 }}</a> •
+                <a class="nav-btn" href="{{ url_for('samples_list', index = index - 1) }}">{{ index - 1 }}</a> •
                 {% endif %}
 
                 <a class="nav-btn" disabled>{{ index }}</a>
 
                 {% if (index + 1) <= page_num %}
-                • <a class="nav-btn" href="/samples/{{ index + 1 }}">{{ index + 1 }}</a>
+                • <a class="nav-btn" href="{{ url_for('samples_list', index = index + 1) }}">{{ index + 1 }}</a>
                 {% endif %}
                 {% if (index + 2) <= page_num %}
-                • <a class="nav-btn" href="/samples/{{ index + 2 }}">{{ index + 2 }}</a>
+                • <a class="nav-btn" href="{{ url_for('samples_list', index = index + 2) }}">{{ index + 2 }}</a>
                 {% endif %}
 
                 {% if (index + 3) <= page_num %}
                 <span class="flexbox-item" style="">
                   • • •
                 </span>
-                <a class="nav-btn" href="/samples/{{ page_num }}">{{ page_num }}</a>
+                <a class="nav-btn" href="{{ url_for('samples_list', index = page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
-                <a class="nav-btn" {% if 1 == index %} disabled {% else %} href="/samples/1" {% endif %}>1</a>
+                <a class="nav-btn" {% if 1 == index %} disabled {% else %} href="{{ url_for('samples_list', index = 1) }}" {% endif %}>1</a>
                 {% for page in range(page_num - 1) %}
-                    • <a class="nav-btn" {% if (page + 2) == index %} disabled {% else %} href="/samples/{{ page + 2 }}" {% endif %}>{{ page + 2 }}</a>
+                    • <a class="nav-btn" {% if (page + 2) == index %} disabled {% else %} href="{{ url_for('samples_list', index = page + 2) }}" {% endif %}>{{ page + 2 }}</a>
                 {% endfor %}
             {% endif %}
 
