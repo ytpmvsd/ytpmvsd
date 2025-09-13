@@ -6,27 +6,33 @@ import pathlib
 import secrets
 
 from flask import jsonify
+from flask_login import current_user
 
-from models import Sample, db
-from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, reencode_video
+from env import MB_UPLOAD_LIMIT
+from models import Metadata, Sample, db
+from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, err_sanitize, reencode_video
 
 from werkzeug.utils import secure_filename
 
-from constants import MB_UPLOAD_LIMIT
     
 def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
         reencode_video(stored_as)
 
+    try:
+        add_sample_to_db(
+            filename,
+            stored_as,
+            datetime.datetime.now(datetime.UTC),
+            str(thumbnail),
+            uploader,
+            source_id,
+        )
+    except Exception as e:
+        print(e)
+        return 1
 
-    add_sample_to_db(
-        filename,
-        stored_as,
-        datetime.datetime.now(datetime.UTC),
-        str(thumbnail),
-        uploader,
-        source_id,
-    )
+    return 0
 
 def upload(file):
     if file and allowed_file(file.filename):
@@ -70,19 +76,41 @@ def upload(file):
     return (sample_id, original_filename, timestamp, stored_as)
 
 def delete_sample(sample_id):
-    sample = Sample.query.get(sample_id)
+    # (note: we do not need err_sanitize here as these errors should only be visible to admins)
+    try:
+        sample = Sample.query.get(sample_id)
+    except Exception as ex:
+        return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
     if sample:
-        warnings = []
         try:
-            os.remove(os.path.join("static/media/thumbs", sample.thumbnail_filename))
-        except FileNotFoundError as _:
-            warnings.append("Thumbnail file wasn't found, couldn't be deleted")
-        try:
-            os.remove(os.path.join("static/media/samps", sample.stored_as))
-        except FileNotFoundError as _:
-            warnings.append("Sample file wasn't found, couldn't be deleted")
-        db.session.delete(sample)
-        db.session.commit()
-        return jsonify({"message": "Sample deleted successfully.", "warnings": warnings})
-    return jsonify({"message": "There was an error deleting the sample."})
+            metadata = Metadata.query.get(sample_id)
+        except Exception as ex:
+            return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
+        if sample:
+            try:
+                db.session.delete(metadata)
+            except Exception as ex:
+                return jsonify({"success": False, "message": "Sample metadata could not be deleted: "+str(ex)})
+            try:
+                db.session.delete(sample)
+            except Exception as ex:
+                return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
+            try: 
+                db.session.commit()
+            except Exception as ex:
+                return jsonify({"success": False, "message": "Sample deletion could not be committed: "+str(ex)})
+                
+            warnings = []
+            try:
+                os.remove(os.path.join("static/media/thumbs", sample.thumbnail_filename))
+            except FileNotFoundError as _:
+                warnings.append("Thumbnail file wasn't found, couldn't be deleted")
+            try:
+                os.remove(os.path.join("static/media/samps", sample.stored_as))
+            except FileNotFoundError as _:
+                warnings.append("Sample file wasn't found, couldn't be deleted")
+
+        return jsonify({"success": False, "message": "Sample deleted successfully.", "warnings": warnings})
+    
+    return jsonify({"success": False, "message": "Tried to delete a sample that doesn't exist."})
 

@@ -21,25 +21,26 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
+from env import USER_APPROVAL, DATABASE_URL, FLASK_SECRET_KEY, MB_UPLOAD_LIMIT, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
-from utils import err_sanitize, SAMPLES_PER_PAGE
+from utils import err_sanitize, update_metadata
 
 import markdown
 import datetime
 
-from constants import MB_UPLOAD_LIMIT
+
 import api
 import samples
 import wiki
 import math
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+app.config["SECRET_KEY"] = FLASK_SECRET_KEY
 app.config["MAX_CONTENT_LENGTH"] = MB_UPLOAD_LIMIT * 10 * 1000 * 1000
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
-version = os.getenv("VERSION")
+version = VERSION
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -121,9 +122,16 @@ def samples_list_base():
 @app.route("/sample/<int:sample_id>/")
 def sample_page(sample_id):
     sample = api.get_sample_info(sample_id)
+
+    if sample is None:
+        return render_template("404.html", title="YTPMV Sample Database")
+
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
+    if metadata is None:
+        update_metadata(sample_id)
+        metadata = api.get_metadata(sample.id)
 
     return render_template(
         "sample.html",
@@ -159,7 +167,7 @@ def edit_sample(sample_id):
         if source_id == "":
             source_id = None
 
-        samples.edit_sample(
+        edit_status = samples.edit_sample(
             filename,
             stored_as,
             str(thumbnail),
@@ -172,6 +180,10 @@ def edit_sample(sample_id):
         session.pop(f"filename_{sample_id}", None)
         session.pop(f"thumbnail_{sample_id}", None)
         session.pop(f"stored_as_{sample_id}", None)
+
+        if edit_status:
+            flash("Failed to upload sample. Please reencode or try another video.", "error")
+            return redirect(url_for("upload"))
 
         return redirect(url_for("home_page"))
 
@@ -223,12 +235,16 @@ def batch_edit_samples(sample_ids):
             thumbnail = sample["thumbnail"]
             sample_id = sample["sample_id"]
 
-            samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, reencode)
+            edit_status = samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, reencode)
 
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
             session.pop(f"thumbnail_{sample_id}", None)
             session.pop(f"stored_as_{sample_id}", None)
+
+            if edit_status:
+                flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
+                return redirect(url_for("upload"))
 
         return redirect(url_for("home_page"))
 
@@ -257,8 +273,9 @@ def like_sample(sample_id):
 @app.route("/sample/delete/<int:sample_id>/", methods=["POST"])
 @login_required
 def delete_sample(sample_id):
-    if not current_user.is_admin:
-        return jsonify({"message": "Access denied"}), 403
+    if not current_user:
+        if not current_user.is_admin:
+            return jsonify({"message": "Access denied"}), 403
     return samples.delete_sample(sample_id)
 
 @app.route("/sample/<int:sample_id>/download/")
@@ -354,7 +371,7 @@ def upload():
 
         return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
 
-    return render_template("upload.html", title="Upload - YTPMV Sample Database")
+    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL.lower() == "true")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -429,7 +446,7 @@ def sample_jsonify(sample):
     source_id = -1
     if sample.source is not None:
         source_id = sample.source.id
-    return {"id":sample.id,"filename":sample.filename,"tags":sample.tags,"upload_date":sample.upload_date,"thumbnail_filename":sample.thumbnail_filename,"uploader":uploader_name,"likes":len(sample.likes), "source": source_id}
+    return {"id":sample.id,"filename":sample.filename,"tags":sample.tags,"upload_date":sample.upload_date,"thumbnail_filename":sample.thumbnail_filename,"uploader":uploader_name,"likes":len(sample.likes), "source": source_id, "stored_as": sample.stored_as}
 
 @app.route("/api/recent_samples")
 def api_recent_samples():
@@ -480,6 +497,10 @@ def api_sample_info(sample_id):
         return jsonify({})
     res = sample_jsonify(api.get_sample_info(sample_id))
     return jsonify(res)
+
+@app.route("/api/samples_len")
+def api_samples_len():
+    return jsonify({"len": int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))})
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)

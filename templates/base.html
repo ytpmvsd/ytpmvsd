@@ -8,11 +8,13 @@
     {{ moment.include_moment() }}
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <meta property="og:site_name" content="YTPMVSD">
     <meta name="theme-color" content="#f9e3b8">
     {% block metatags %}
     {% endblock %}
+
 </head>
 <body>
 
@@ -40,8 +42,16 @@
     </ul>
 </div>
 
-{% block content %}
-{% endblock %}
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer style="padding: 0 5px 5px;">
+    <a class="fa-brands fa-github footer-links" href="https://github.com/ytpmvsd/ytpmvsd"></a>
+    <a class="fa-brands fa-bluesky footer-links" href="https://bsky.app/profile/ytpmvsd.com"></a>
+    <a class="fa-brands fa-discord footer-links" href="https://discord.gg/jGKaQWj8nC"></a>
+</footer>
 
 </body>
 </html>
