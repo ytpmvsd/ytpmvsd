@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 
+{% block metatags %}
+    <meta property="og:title" content="{{ sample.filename }}"/>
+    <meta property="og:video" content="{{ url_for('static', filename='media/samps/' + sample.stored_as, _external=True, _scheme='https') }}">
+    <meta property="og:type" content="video.other"/>
+    <meta property="og:video:type" content="video/mp4"/>
+    <meta property="og:video:width" content="{{ metadata.width }}"/>
+    <meta property="og:video:height" content="{{ metadata.height }}"/>
+    <meta property="article:published_time" content="{{ sample.upload_date.utcnow().isoformat() }}Z">
+    <meta name="twitter:card" content="player"/>
+{% endblock %}
+
 {% block content %}
     <div class="warning-box">
 
