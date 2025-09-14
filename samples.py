@@ -57,7 +57,7 @@ def upload(file):
         upload_path = os.path.join("static/media/samps", stored_as)
         file.save(upload_path)
 
-        ext = file_type.filetype_from_file(upload_path)
+        ext = file_type.filetype_from_file(filename)
         if "mp4" not in ext.extensions():
             os.remove(upload_path)
             raise Exception("Invalid file. Only valid .mp4 files are allowed.")

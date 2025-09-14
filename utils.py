@@ -2,7 +2,6 @@ import os
 
 import ffmpeg
 import shutil
-import file_type
 from sqlalchemy import create_engine, text
 import pathlib
 
@@ -173,7 +172,6 @@ def check_video(upload_path):
         ffmpeg.probe(upload_path)
         return True
     except ffmpeg.Error as ex:
-        print(ex)
         return False
 
 # sanitize the given string of anything with a path seperator, as it could reveal information about the filesystem.
