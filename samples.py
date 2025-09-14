@@ -7,7 +7,7 @@ import secrets
 import file_type
 
 from flask import jsonify
-ALLOWED_UPLOAD_EXTENSIONS = {"mp4", "m4v"}
+ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
 
 from env import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db
@@ -36,6 +36,7 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     return 0
 
 def upload(file):
+    force_reencode = False
     if file:
         original_filename = secure_filename(file.filename)
 
@@ -57,18 +58,20 @@ def upload(file):
         upload_path = os.path.join("static/media/samps", stored_as)
         file.save(upload_path)
 
-        ext = file_type.filetype_from_file(upload_path)
-        valid_ext = False
-        for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS:
-            if allowed_ext in ext.extensions():
-                valid_ext = True
-                break
-        if not valid_ext:
-            os.remove(upload_path)
-            raise Exception("Disallowed file type. Allowed file types: "+", ".join(ALLOWED_UPLOAD_EXTENSIONS))
+        ext = file_type.filetype_from_file(upload_path).extensions()
+        invalid_file = False
+        if "mp4" not in ext: 
+            if not "m4v" in ext:
+                invalid_file = True
+                os.remove(upload_path)
+            else:
+                force_reencode = True
 
         if not check_video(upload_path):
+            invalid_file = True
             os.remove(upload_path)
+            
+        if invalid_file:
             raise Exception("There is an error one of your files. Please make sure it is a valid .mp4 file.")
         
         if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
@@ -81,7 +84,7 @@ def upload(file):
     else:
         raise Exception("No file")
 
-    return (sample_id, original_filename, timestamp, stored_as)
+    return (sample_id, original_filename, timestamp, stored_as, force_reencode)
 
 def delete_sample(sample_id):
     # (note: we do not need err_sanitize here as these errors should only be visible to admins)

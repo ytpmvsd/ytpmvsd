@@ -149,6 +149,7 @@ def edit_sample(sample_id):
     old_filename = session.get(f"filename_{sample_id}")
     thumbnail = session.get(f"thumbnail_{sample_id}")
     stored_as = session.get(f"stored_as_{sample_id}")
+    force_reencode = session.get(f"force_reencode")
 
     if not uploaded_sample_id or uploaded_sample_id != sample_id:
         flash("Invalid request.", "error")
@@ -180,6 +181,7 @@ def edit_sample(sample_id):
         session.pop(f"filename_{sample_id}", None)
         session.pop(f"thumbnail_{sample_id}", None)
         session.pop(f"stored_as_{sample_id}", None)
+        session.pop(f"force_reencode", None)
 
         if edit_status:
             flash("Failed to upload sample. Please reencode or try another video.", "error")
@@ -194,6 +196,7 @@ def edit_sample(sample_id):
         stored_as=stored_as,
         thumbnail=thumbnail,
         filename_no_extension=os.path.splitext(old_filename)[0],
+        force_reencode=force_reencode,
     )
 
 
@@ -355,12 +358,13 @@ def upload():
 
         for file in files:
             try:
-                (sample_id, original_filename, timestamp, stored_as) = samples.upload(file)
+                (sample_id, original_filename, timestamp, stored_as, force_reencode) = samples.upload(file)
                 sample_ids.append(sample_id)
                 session[f"uploaded_sample_id_{sample_id}"] = sample_id
                 session[f"filename_{sample_id}"] = original_filename
                 session[f"thumbnail_{sample_id}"] = f"{timestamp}.png"
                 session[f"stored_as_{sample_id}"] = stored_as
+                session[f"force_reencode"] = force_reencode
 
             except Exception as ex:
                 flash(err_sanitize(ex), "error")
