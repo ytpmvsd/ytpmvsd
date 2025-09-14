@@ -41,7 +41,7 @@
                     <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
                     <span class="like-count">{{ sample.likes|length }}</span>
                 </a>
-                {% if current_user.is_admin %}
+                {% if current_user.is_admin or current_user.id == uploader.id %}
                     <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
                         <span>Delete sample</span>
                     </a>
@@ -102,7 +102,7 @@
         });
     </script>
 
-    {% if current_user.is_admin %}
+    {% if current_user.is_admin or current_user.id == uploader.id %}
         <script>
             document.querySelector('.delete-button').addEventListener("click", function () {
                 const sampleId = this.getAttribute("data-sample-id");

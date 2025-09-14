@@ -273,9 +273,10 @@ def like_sample(sample_id):
 @app.route("/sample/delete/<int:sample_id>/", methods=["POST"])
 @login_required
 def delete_sample(sample_id):
-    if not current_user:
-        if not current_user.is_admin:
-            return jsonify({"message": "Access denied"}), 403
+    sample = Sample.query.get(sample_id)
+    if not current_user or (not current_user.is_admin and sample.uploader != current_user.id):
+        return jsonify({"message": "Access denied"}), 403
+
     return samples.delete_sample(sample_id)
 
 @app.route("/sample/<int:sample_id>/download/")
