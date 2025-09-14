@@ -2,9 +2,9 @@ import os
 
 import ffmpeg
 import shutil
+import file_type
 from sqlalchemy import create_engine, text
-
-ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
+import pathlib
 
 from env import DATABASE_URL
 from models import Sample
@@ -168,19 +168,12 @@ def reencode_video(filename):
         print(e.stderr)
         return False
 
-
-def allowed_file(filename):
-    return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower() in ALLOWED_UPLOAD_EXTENSIONS
-    )
-
-
 def check_video(upload_path):
     try:
         ffmpeg.probe(upload_path)
         return True
-    except ffmpeg.Error:
+    except ffmpeg.Error as ex:
+        print(ex)
         return False
 
 # sanitize the given string of anything with a path seperator, as it could reveal information about the filesystem.

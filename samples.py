@@ -4,13 +4,14 @@ import re
 import uuid
 import pathlib
 import secrets
+import file_type
 
 from flask import jsonify
 from flask_login import current_user
 
 from env import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db
-from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, err_sanitize, reencode_video
+from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video
 
 from werkzeug.utils import secure_filename
 
@@ -35,7 +36,7 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     return 0
 
 def upload(file):
-    if file and allowed_file(file.filename):
+    if file:
         original_filename = secure_filename(file.filename)
 
         filename = os.path.splitext(original_filename)[0]
@@ -56,6 +57,11 @@ def upload(file):
         upload_path = os.path.join("static/media/samps", stored_as)
         file.save(upload_path)
 
+        ext = file_type.filetype_from_file(upload_path)
+        if "mp4" not in ext.extensions():
+            os.remove(upload_path)
+            raise Exception("Invalid file. Only valid .mp4 files are allowed.")
+
         if not check_video(upload_path):
             os.remove(upload_path)
             raise Exception("There is an error one of your files. Please make sure it is a valid .mp4 file.")
@@ -68,10 +74,7 @@ def upload(file):
 
         sample_id = str(uuid.uuid4())
     else:
-        if not allowed_file(file):
-            raise Exception("Disallowed file type")
-        else:
-            raise Exception("No file")
+        raise Exception("No file")
 
     return (sample_id, original_filename, timestamp, stored_as)
 
