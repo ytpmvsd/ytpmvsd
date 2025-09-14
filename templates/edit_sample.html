@@ -27,13 +27,13 @@
 
             <div>
                 {% if force_reencode %}
-                    <label for="reencode"><em>(A reencode is required for this file)</em></label>
+                    <label for="reencode"><em>A reencode is required for this file.</em></label>
                     <input type="checkbox" id="reencode" name="reencode" hidden checked disabled="disabled">
                 {% else %}
                     <label for="reencode">Reencode (recommended)</label>
                     <input type="checkbox" id="reencode" name="reencode" checked>
+                    <br><small>This will ensure the sample is compatible with the website and will not cause errors.<br>You should only uncheck this if it's important the original sample's metadata remain intact.</small>
                 {% endif %}
-                <br><small>This will ensure the sample is compatible with the website and will not cause errors.<br>You should only uncheck this if it's important the original sample's metadata remain intact.</small>
             </div>
 
             <div>
