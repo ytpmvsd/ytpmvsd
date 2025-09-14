@@ -52,7 +52,7 @@ a:visited {
     justify-content: space-between;
 }
 
-li {
+.home-header li {
     display: inline;
     margin: 0 20px;
 }
