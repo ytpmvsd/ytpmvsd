@@ -7,7 +7,7 @@ import secrets
 import file_type
 
 from flask import jsonify
-from flask_login import current_user
+ALLOWED_UPLOAD_EXTENSIONS = {"mp4", "m4v"}
 
 from env import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db
@@ -57,10 +57,15 @@ def upload(file):
         upload_path = os.path.join("static/media/samps", stored_as)
         file.save(upload_path)
 
-        ext = file_type.filetype_from_file(filename)
-        if "mp4" not in ext.extensions():
+        ext = file_type.filetype_from_file(upload_path)
+        valid_ext = False
+        for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS:
+            if allowed_ext in ext.extensions():
+                valid_ext = True
+                break
+        if not valid_ext:
             os.remove(upload_path)
-            raise Exception("Invalid file. Only valid .mp4 files are allowed.")
+            raise Exception("Disallowed file type. Allowed file types: "+", ".join(ALLOWED_UPLOAD_EXTENSIONS))
 
         if not check_video(upload_path):
             os.remove(upload_path)
