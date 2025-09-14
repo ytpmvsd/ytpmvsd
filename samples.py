@@ -15,7 +15,9 @@ from utils import add_sample_to_db, check_video, create_thumbnail, reencode_vide
 from werkzeug.utils import secure_filename
 
 ALLOWED_UPLOAD_EXTENSIONS=["mp4"]
-    
+ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE=["m4v"]
+
+
 def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
         reencode_video(stored_as)
@@ -59,17 +61,20 @@ def upload(file):
         file.save(upload_path)
 
         ext = file_type.filetype_from_file(upload_path).extensions()
-        if "m4v" in ext:
-            is_m4v = True
         invalid_file = True
-        is_m4v = False
         for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS:
             if allowed_ext in ext:
                 invalid_file = False
                 break
-        if not invalid_file and is_m4v:
-            invalid_file = False
-            force_reencode = True
+        
+        # if we hit an invalid file, go through the extensions that can be submitted but with a reencode
+        if invalid_file:
+            for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE:
+                if allowed_ext in ext:
+                    invalid_file = False
+                    force_reencode = True
+                    break
+
 
         if not check_video(upload_path):
             invalid_file = True
