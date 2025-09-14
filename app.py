@@ -206,11 +206,15 @@ def batch_edit_samples(sample_ids):
     sample_ids = sample_ids.split(",")
     sample_data = []
 
+    force_reencode = False
+
     for sample_id in sample_ids:
         uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
         filename = session.get(f"filename_{sample_id}")
         thumbnail = session.get(f"thumbnail_{sample_id}")
         stored_as = session.get(f"stored_as_{sample_id}")
+        if not force_reencode:
+            force_reencode = session.get(f"force_reencode")
 
         if not uploaded_sample_id or uploaded_sample_id != sample_id:
             flash("Invalid request.", "error")
@@ -222,12 +226,15 @@ def batch_edit_samples(sample_ids):
                 "filename": filename,
                 "thumbnail": thumbnail,
                 "stored_as": stored_as,
+                "force_reencode": force_reencode,
             }
         )
 
     if request.method == "POST":
         source_id = request.form.get("source_id")
         reencode = request.form.get("reencode")
+        if session.get(f"force_reencode") == "True":
+            reencode = True
 
         if source_id == "":
             source_id = None
@@ -244,6 +251,7 @@ def batch_edit_samples(sample_ids):
             session.pop(f"filename_{sample_id}", None)
             session.pop(f"thumbnail_{sample_id}", None)
             session.pop(f"stored_as_{sample_id}", None)
+            session.pop(f"force_reencode", None)
 
             if edit_status:
                 flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
@@ -254,6 +262,7 @@ def batch_edit_samples(sample_ids):
     return render_template(
         "batch_edit_samples.html",
         samples=sample_data,
+        force_reencode=force_reencode,
     )
 
 

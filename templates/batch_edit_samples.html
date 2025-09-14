@@ -26,10 +26,14 @@
             {#        <input type="text" id="tags" name="tags">#}
 
             <div>
-                <label for="reencode">Reencode All (recommended)</label><input type="checkbox" id="reencode"
-                                                                               name="reencode" checked>
-                <br><small>This will ensure the samples are compatible with the website and will not cause errors.<br>You
-                should only uncheck this if it's important the original samples' metadata remain intact.</small>
+                {% if force_reencode %}
+                    <label for="reencode">Reencode All <em>(required due to one of the samples, <a href="/wiki/reencode">learn more</a>)</em></label>
+                    <input type="checkbox" id="reencode" name="reencode" checked disabled="disabled">
+                {% else %}
+                    <label for="reencode">Reencode (recommended)</label>
+                    <input type="checkbox" id="reencode" name="reencode" checked>
+                     <br><small>This will ensure the sample is compatible with the website and will not cause errors.<br>You should only uncheck this if it's important the original sample's metadata remain intact.</small>
+                {% endif %}
             </div>
 
             <div>
