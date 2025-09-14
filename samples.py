@@ -7,7 +7,6 @@ import secrets
 import file_type
 
 from flask import jsonify
-ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
 
 from env import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db
@@ -15,6 +14,7 @@ from utils import add_sample_to_db, check_video, create_thumbnail, reencode_vide
 
 from werkzeug.utils import secure_filename
 
+ALLOWED_UPLOAD_EXTENSIONS=["mp4"]
     
 def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
@@ -59,19 +59,23 @@ def upload(file):
         file.save(upload_path)
 
         ext = file_type.filetype_from_file(upload_path).extensions()
-        invalid_file = False
-        if "mp4" not in ext: 
-            if not "m4v" in ext:
-                invalid_file = True
-                os.remove(upload_path)
-            else:
-                force_reencode = True
+        if "m4v" in ext:
+            is_m4v = True
+        invalid_file = True
+        is_m4v = False
+        for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS:
+            if allowed_ext in ext:
+                invalid_file = False
+                break
+        if not invalid_file and is_m4v:
+            invalid_file = False
+            force_reencode = True
 
         if not check_video(upload_path):
             invalid_file = True
-            os.remove(upload_path)
             
         if invalid_file:
+            os.remove(upload_path)
             raise Exception("There is an error one of your files. Please make sure it is a valid .mp4 file.")
         
         if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
