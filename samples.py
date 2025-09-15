@@ -4,17 +4,20 @@ import re
 import uuid
 import pathlib
 import secrets
+import file_type
 
 from flask import jsonify
-from flask_login import current_user
 
 from env import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db
-from utils import add_sample_to_db, allowed_file, check_video, create_thumbnail, err_sanitize, reencode_video
+from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video
 
 from werkzeug.utils import secure_filename
 
-    
+ALLOWED_UPLOAD_EXTENSIONS=["mp4"]
+ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE=["m4v"]
+
+
 def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     if reencode:
         reencode_video(stored_as)
@@ -35,7 +38,8 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     return 0
 
 def upload(file):
-    if file and allowed_file(file.filename):
+    force_reencode = False
+    if file:
         original_filename = secure_filename(file.filename)
 
         filename = os.path.splitext(original_filename)[0]
@@ -56,7 +60,26 @@ def upload(file):
         upload_path = os.path.join("static/media/samps", stored_as)
         file.save(upload_path)
 
+        ext = file_type.filetype_from_file(upload_path).extensions()
+        invalid_file = True
+        for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS:
+            if allowed_ext in ext:
+                invalid_file = False
+                break
+        
+        # if we hit an invalid file, go through the extensions that can be submitted but with a reencode
+        if invalid_file:
+            for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE:
+                if allowed_ext in ext:
+                    invalid_file = False
+                    force_reencode = True
+                    break
+
+
         if not check_video(upload_path):
+            invalid_file = True
+            
+        if invalid_file:
             os.remove(upload_path)
             raise Exception("There is an error one of your files. Please make sure it is a valid .mp4 file.")
         
@@ -68,12 +91,9 @@ def upload(file):
 
         sample_id = str(uuid.uuid4())
     else:
-        if not allowed_file(file):
-            raise Exception("Disallowed file type")
-        else:
-            raise Exception("No file")
+        raise Exception("No file")
 
-    return (sample_id, original_filename, timestamp, stored_as)
+    return (sample_id, original_filename, timestamp, stored_as, force_reencode)
 
 def delete_sample(sample_id):
     # (note: we do not need err_sanitize here as these errors should only be visible to admins)
