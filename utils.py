@@ -4,9 +4,7 @@ import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
 
-ALLOWED_UPLOAD_EXTENSIONS = {"mp4"}
-
-from env import DATABASE_URL
+from env import DATABASE_URL, ALLOWED_UPLOAD_EXTENSIONS
 from models import Sample
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
