@@ -1,9 +1,11 @@
-import os, dotenv
+import toml
 
-dotenv.load_dotenv()
-FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
-DATABASE_URL = os.getenv("DATABASE_URL")
-SAMPLES_PER_PAGE = int(os.getenv("SAMPLES_PER_PAGE"))
-VERSION = os.getenv("VERSION")
-MB_UPLOAD_LIMIT = int(os.getenv("MB_UPLOAD_LIMIT")) 
-USER_APPROVAL = os.getenv("USER_APPROVAL")
+settings = toml.load("config.toml")
+
+USER_APPROVAL = settings["user_approval"]
+VERSION = settings["version"]
+FLASK_SECRET_KEY = settings["flask_secret_key"]
+DATABASE_URL = settings["database_url"]
+MB_UPLOAD_LIMIT = settings["mb_upload_limit"]
+SAMPLES_PER_PAGE = settings["samples_per_page"]
+ALLOWED_UPLOAD_EXTENSIONS = settings["allowed_upload_extensions"]
