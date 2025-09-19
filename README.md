@@ -5,7 +5,7 @@ ytpmvsd is a website for catalouging YTPMV Samples, with accompanying tools/feat
 
 ## Setup
 
-Start by copying `.example.config.toml` to `.config.toml` and setting the following values:
+Start by copying `config.example.toml` to `config.toml` and setting the following values:
 
 - `database_url`: URL for your PostgresSQL database. Currently, nothing else is supported
 - `flask_secret_key`: The key that Flask uses for cryptography. You can set this to anything. For deployment, you'll obviously want to set it to something sufficiently random, for security purposes
