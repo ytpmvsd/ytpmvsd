@@ -8,7 +8,7 @@ import file_type
 
 from flask import jsonify
 
-from env import MB_UPLOAD_LIMIT
+from env import MAX_CONTENT_LENGTH
 from models import Metadata, Sample, db
 from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video
 
@@ -83,7 +83,7 @@ def upload(file):
             os.remove(upload_path)
             raise Exception("There is an error one of your files. Please make sure it is a valid .mp4 file.")
         
-        if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
+        if os.path.getsize(upload_path) > MAX_CONTENT_LENGTH:
             os.remove(upload_path)
             raise Exception("Content is too large")
 

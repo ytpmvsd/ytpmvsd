@@ -5,12 +5,12 @@ ytpmvsd is a website for catalouging YTPMV Samples, with accompanying tools/feat
 
 ## Setup
 
-Start by copying `.example.env` to `.env` and setting the following:
+Start by copying `.example.toml` to `.toml` and setting the following values:
 
-- `DATABASE_URL`: URL for your PostgresSQL database. Yes, it has to be PostgresSQL, nothing else supports the ARRAY data type.
-- `FLASK_SECRET_KEY`: You can set this to anything. For deployment, you'll obviously want to set it to something sufficiently random, for security purposes
-- `SAMPLES_PER_PAGE`: The amount of samples shown per page on `/samples/`. This is set to 24 by default.
-- `VERSION`: The version of the site. This is used for grabbing the latest changelog.
+- `database_url`: URL for your PostgresSQL database. Currently, nothing else is supported
+- `flask_secret_key`: The key that Flask uses for cryptography. You can set this to anything. For deployment, you'll obviously want to set it to something sufficiently random, for security purposes
+
+There are other values you can set, but they're all set by default in the example file and can be changed according as their comments describe.
 
 Development of this is done in a venv. The venv must be Python 3.12 and must be called either `ytpmvsd_env` or `.venv` as these are what the .gitignore is set to ignore.
 

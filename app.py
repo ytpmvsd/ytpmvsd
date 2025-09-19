@@ -21,24 +21,22 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
-from env import USER_APPROVAL, DATABASE_URL, FLASK_SECRET_KEY, MB_UPLOAD_LIMIT, VERSION, SAMPLES_PER_PAGE
+from env import USER_APPROVAL, DATABASE_URL, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
 
 import markdown
 import datetime
 
-
 import api
 import samples
 import wiki
 import math
 
+import env
+
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = FLASK_SECRET_KEY
-app.config["MAX_CONTENT_LENGTH"] = MB_UPLOAD_LIMIT * 10 * 1000 * 1000
+app.config.from_object(env)
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 version = VERSION
 
