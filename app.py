@@ -149,6 +149,7 @@ def edit_sample(sample_id):
     old_filename = session.get(f"filename_{sample_id}")
     thumbnail = session.get(f"thumbnail_{sample_id}")
     stored_as = session.get(f"stored_as_{sample_id}")
+    force_reencode = session.get(f"force_reencode")
 
     if not uploaded_sample_id or uploaded_sample_id != sample_id:
         flash("Invalid request.", "error")
@@ -180,6 +181,7 @@ def edit_sample(sample_id):
         session.pop(f"filename_{sample_id}", None)
         session.pop(f"thumbnail_{sample_id}", None)
         session.pop(f"stored_as_{sample_id}", None)
+        session.pop(f"force_reencode", None)
 
         if edit_status:
             flash("Failed to upload sample. Please reencode or try another video.", "error")
@@ -194,6 +196,7 @@ def edit_sample(sample_id):
         stored_as=stored_as,
         thumbnail=thumbnail,
         filename_no_extension=os.path.splitext(old_filename)[0],
+        force_reencode=force_reencode,
     )
 
 
@@ -203,11 +206,15 @@ def batch_edit_samples(sample_ids):
     sample_ids = sample_ids.split(",")
     sample_data = []
 
+    force_reencode = False
+
     for sample_id in sample_ids:
         uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
         filename = session.get(f"filename_{sample_id}")
         thumbnail = session.get(f"thumbnail_{sample_id}")
         stored_as = session.get(f"stored_as_{sample_id}")
+        if not force_reencode:
+            force_reencode = session.get(f"force_reencode")
 
         if not uploaded_sample_id or uploaded_sample_id != sample_id:
             flash("Invalid request.", "error")
@@ -219,12 +226,15 @@ def batch_edit_samples(sample_ids):
                 "filename": filename,
                 "thumbnail": thumbnail,
                 "stored_as": stored_as,
+                "force_reencode": force_reencode,
             }
         )
 
     if request.method == "POST":
         source_id = request.form.get("source_id")
         reencode = request.form.get("reencode")
+        if session.get(f"force_reencode") == "True":
+            reencode = True
 
         if source_id == "":
             source_id = None
@@ -241,6 +251,7 @@ def batch_edit_samples(sample_ids):
             session.pop(f"filename_{sample_id}", None)
             session.pop(f"thumbnail_{sample_id}", None)
             session.pop(f"stored_as_{sample_id}", None)
+            session.pop(f"force_reencode", None)
 
             if edit_status:
                 flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
@@ -251,6 +262,7 @@ def batch_edit_samples(sample_ids):
     return render_template(
         "batch_edit_samples.html",
         samples=sample_data,
+        force_reencode=force_reencode,
     )
 
 
@@ -273,9 +285,10 @@ def like_sample(sample_id):
 @app.route("/sample/delete/<int:sample_id>/", methods=["POST"])
 @login_required
 def delete_sample(sample_id):
-    if not current_user:
-        if not current_user.is_admin:
-            return jsonify({"message": "Access denied"}), 403
+    sample = Sample.query.get(sample_id)
+    if not current_user or (not current_user.is_admin and sample.uploader != current_user.id):
+        return jsonify({"message": "Access denied"}), 403
+
     return samples.delete_sample(sample_id)
 
 @app.route("/sample/<int:sample_id>/download/")
@@ -355,12 +368,13 @@ def upload():
 
         for file in files:
             try:
-                (sample_id, original_filename, timestamp, stored_as) = samples.upload(file)
+                (sample_id, original_filename, timestamp, stored_as, force_reencode) = samples.upload(file)
                 sample_ids.append(sample_id)
                 session[f"uploaded_sample_id_{sample_id}"] = sample_id
                 session[f"filename_{sample_id}"] = original_filename
                 session[f"thumbnail_{sample_id}"] = f"{timestamp}.png"
                 session[f"stored_as_{sample_id}"] = stored_as
+                session[f"force_reencode"] = force_reencode
 
             except Exception as ex:
                 flash(err_sanitize(ex), "error")
