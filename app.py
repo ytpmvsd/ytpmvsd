@@ -454,6 +454,23 @@ def register():
 
     return render_template("register.html")
 
+@app.route("/verify/<token>")
+def verify(token):
+    email = confirm_token(token)
+    if not email:
+        flash("Invalid or expired verification link.", "error")
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(email=email).first()
+    if user and not user.is_verified:
+        user.is_verified = True
+        db.session.commit()
+        flash("Your account is now verified.", "success")
+        return redirect(url_for("login"))
+    else:
+        flash("Account already verified.", "error")
+        return redirect(url_for("login"))
+
 @app.route("/wiki/")
 def wiki_main():
     return wiki.wiki_main()
