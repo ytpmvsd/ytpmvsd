@@ -21,7 +21,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
-from env import USER_APPROVAL, DATABASE_URL, VERSION, SAMPLES_PER_PAGE
+from env import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
 
