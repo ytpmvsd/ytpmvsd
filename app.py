@@ -33,10 +33,8 @@ import samples
 import wiki
 import math
 
-import env
-
 app = Flask(__name__)
-app.config.from_object(env)
+app.config.from_pyfile("env.py")
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 version = VERSION
 
