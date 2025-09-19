@@ -21,7 +21,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
-from env import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
+from config import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
 
@@ -34,7 +34,7 @@ import wiki
 import math
 
 app = Flask(__name__)
-app.config.from_pyfile("env.py")
+app.config.from_pyfile("config.py")
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 version = VERSION
 

@@ -4,7 +4,7 @@ import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
 
-from env import SQLALCHEMY_DATABASE_URI
+from config import SQLALCHEMY_DATABASE_URI
 from models import Sample
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
