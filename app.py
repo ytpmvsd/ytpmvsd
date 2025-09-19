@@ -25,6 +25,7 @@ from env import USER_APPROVAL, DATABASE_URL, FLASK_SECRET_KEY, MB_UPLOAD_LIMIT, 
     MAIL_PORT, MAIL_USE_TLS, MAIL_USE_SSL, MAIL_USERNAME, MAIL_PASSWORD
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
+from mail import mail, generate_token, send_verification_email, confirm_token
 
 import markdown
 import datetime
@@ -52,6 +53,7 @@ app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 version = VERSION
 
 db.init_app(app)
+mail.init_app(app)
 migrate = Migrate(app, db)
 moment = Moment(app)
 
@@ -449,7 +451,12 @@ def register():
 
         db.session.add(user)
         db.session.commit()
-        flash("Successfully registered.", "success")
+
+        token = generate_token(email)
+        verify_url = url_for("verify", token=token, _external=True)
+        send_verification_email(email, verify_url)
+
+        flash("Successfully registered. Please check your email to verify your account.", "success")
         return redirect(url_for("login"))
 
     return render_template("register.html")
