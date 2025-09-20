@@ -387,7 +387,7 @@ def upload():
 
         return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
 
-    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL.lower() == "true")
+    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL)
 
 @login_manager.user_loader
 def load_user(user_id):
