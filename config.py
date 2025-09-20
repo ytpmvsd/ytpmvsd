@@ -12,9 +12,9 @@ SAMPLES_PER_PAGE = settings["samples_per_page"]
 ALLOWED_UPLOAD_EXTENSIONS = settings["allowed_upload_extensions"]
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-MAIL_SERVER = settings["mail_server"] or "smtp.example.com"
-MAIL_PORT = int(settings["mail_port"] or 587)
-MAIL_USE_TLS = settings["mail_use_tls"] or True  # Use TLS for most SMTP providers
-MAIL_USE_SSL = settings["mail_use_ssl"] or False  # Use SSL only if required (never enable both)
-MAIL_USERNAME = settings["MAIL_USERNAME"] or "your_email@example.com"
-MAIL_PASSWORD = settings["MAIL_PASSWORD"] or "hackme"
+MAIL_SERVER = settings["mail_server"]
+MAIL_PORT = int(settings["mail_port"])
+MAIL_USE_TLS = settings["mail_use_tls"]
+MAIL_USE_SSL = settings["mail_use_ssl"]
+MAIL_USERNAME = settings["mail_username"]
+MAIL_PASSWORD = settings["mail_password"]

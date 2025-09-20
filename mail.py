@@ -1,11 +1,11 @@
 from flask_mail import Message, Mail
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-from env import FLASK_SECRET_KEY
+from config import SECRET_KEY
 import secrets
 
 mail = Mail()
 
-s = URLSafeTimedSerializer(FLASK_SECRET_KEY)
+s = URLSafeTimedSerializer(SECRET_KEY)
 email_hash = secrets.token_hex(4096)
 
 def generate_token(email):
