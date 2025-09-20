@@ -15,3 +15,4 @@ gunicorn
 Markdown~=3.8
 filetype_py~=1.0
 toml~=0.10.2
+flask_mail~=0.10.0

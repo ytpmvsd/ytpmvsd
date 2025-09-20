@@ -21,9 +21,11 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
-from config import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
+from config import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, MAIL_SERVER, \
+    MAIL_PORT, MAIL_USE_TLS, MAIL_USE_SSL, MAIL_USERNAME, MAIL_PASSWORD
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
+from mail import mail, generate_token, send_verification_email, confirm_token
 
 import markdown
 import datetime
@@ -39,6 +41,7 @@ app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 version = VERSION
 
 db.init_app(app)
+mail.init_app(app)
 migrate = Migrate(app, db)
 moment = Moment(app)
 
@@ -268,6 +271,9 @@ def batch_edit_samples(sample_ids):
 def like_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
 
+    if not current_user.is_verified:
+        return jsonify(success=False, message="Please verify your account to like samples.")
+
     if current_user in sample.likes:
         sample.likes.remove(current_user)
         liked = False
@@ -381,7 +387,7 @@ def upload():
 
         return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
 
-    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL.lower() == "true")
+    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -436,10 +442,39 @@ def register():
 
         db.session.add(user)
         db.session.commit()
-        flash("Successfully registered.", "success")
+
+        token = generate_token(email)
+        verify_url = url_for("verify", token=token, _external=True)
+        send_verification_email(email, verify_url)
+
+        flash("Successfully registered. Please check your email to verify your account.", "success")
         return redirect(url_for("login"))
 
     return render_template("register.html")
+
+@app.route("/verify/<token>", methods=["GET", "POST"])
+def verify(token):
+    msg = "Click below to confirm your email."
+    email = confirm_token(token)
+    on_confirm_screen = True
+    if not email:
+        msg = "Invalid or expired verification link."
+        on_confirm_screen = False
+    elif request.method == "POST":
+        user = User.query.filter_by(email=email).first()
+        if user and not user.is_verified:
+            user.is_verified = True
+            db.session.commit()
+            msg = "Your account is now verified."
+            on_confirm_screen = False
+        else:
+            # no message saying your account is already verified, in case somehow
+            # the link shows up in search results.
+            return redirect(url_for("home_page"))
+    return render_template("email/verify.html",
+        msg=msg,
+        on_confirm_screen=on_confirm_screen
+    )
 
 @app.route("/wiki/")
 def wiki_main():
