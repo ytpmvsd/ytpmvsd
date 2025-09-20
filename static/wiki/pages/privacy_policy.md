@@ -1,5 +1,5 @@
 # Privacy Policy
-<small>Last updated September 13th, 2025. The changelog for this document can be viewed [here](https://github.com/ytpmvsd/ytpmvsd/commits/master/static/wiki/pages/filename_guidelines.md).</small>
+<small>Last updated September 13th, 2025. The changelog for this document can be viewed [here](https://github.com/ytpmvsd/ytpmvsd/commits/master/static/wiki/pages/privacy_policy.md).</small>
 
 ## Introduction
 YTPMVSD is a website that allows users to upload and share short video clips used in YTPMVs. Users must create accounts to share these, and as such, YTPMVSD must collect, store, and transmit personal information. This privacy policy will describe what information we collect, how we use it, and how you are able to control your information.
