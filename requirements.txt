@@ -14,3 +14,4 @@ psycopg2-binary==2.9.10
 gunicorn
 Markdown~=3.8
 filetype_py~=1.0
+flask_mail~=0.10.0

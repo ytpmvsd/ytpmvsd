@@ -93,6 +93,9 @@
                                     likeCountSpan.textContent = data.likes;
                                     this.querySelector("span").textContent = data.liked ? "Unlike" : "Like";  // Change text
                                 }
+                                else {
+                                    window.alert(data.message);
+                                }
                             });
                     {% else %}
                         window.alert("You are not logged in!");
