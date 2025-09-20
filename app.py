@@ -461,22 +461,29 @@ def register():
 
     return render_template("register.html")
 
-@app.route("/verify/<token>")
+@app.route("/verify/<token>", methods=["GET", "POST"])
 def verify(token):
+    msg = "Click below to confirm your email."
     email = confirm_token(token)
+    on_confirm_screen = True
     if not email:
-        flash("Invalid or expired verification link.", "error")
-        return redirect(url_for("login"))
-
-    user = User.query.filter_by(email=email).first()
-    if user and not user.is_verified:
-        user.is_verified = True
-        db.session.commit()
-        flash("Your account is now verified.", "success")
-        return redirect(url_for("login"))
-    else:
-        flash("Account already verified.", "error")
-        return redirect(url_for("login"))
+        msg = "Invalid or expired verification link."
+        on_confirm_screen = False
+    elif request.method == "POST":
+        user = User.query.filter_by(email=email).first()
+        if user and not user.is_verified:
+            user.is_verified = True
+            db.session.commit()
+            msg = "Your account is now verified."
+            on_confirm_screen = False
+        else:
+            # no message saying your account is already verified, in case somehow
+            # the link shows up in search results.
+            return redirect(url_for("home_page"))
+    return render_template("email/verify.html",
+        msg=msg,
+        on_confirm_screen=on_confirm_screen
+    )
 
 @app.route("/wiki/")
 def wiki_main():
