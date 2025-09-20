@@ -1,6 +1,6 @@
 import tomllib
 
-with open("config.toml", "rc") as f:
+with open("config.toml", "rb") as f:
     settings = tomllib.load(f)
 
 USER_APPROVAL = settings["user_approval"]

@@ -90,8 +90,8 @@
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    likeCountSpan.textContent = data.likes;
-                                    this.querySelector("span").textContent = data.liked ? "Unlike" : "Like";  // Change text
+                                    likeCountSpan.textContent = data["likes"];
+                                    this.querySelector("span").textContent = data["liked"] ? "Unlike" : "Like";  // Change text
                                 }
                                 else {
                                     window.alert(data.message);
@@ -122,10 +122,10 @@
                         warningBox.innerHTML = "";
                         // javascript has a proper way of constructing elements but it's messy and I've never seen a real reason to do it. - ioi_xd
                         warningBox.innerHTML += "<p style='color: red'>"+data.message+"</p>"   
-                        for(let warning in data.warnings) {
-                            warningBox.innerHTML += "<p style='color: darkgold'>("+data.message+")</span>"   
+                        for(let warning in data["warnings"]) {
+                            warningBox.innerHTML += "<p style='color: darkgoldenrod'>("+data.message+")</span>"
                         }
-                        if(data.success == "True") {
+                        if(data["success"] === "True") {
                             document.querySelector(".sample-box").remove();
                         }
                     })

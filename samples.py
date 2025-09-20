@@ -93,7 +93,7 @@ def upload(file):
     else:
         raise Exception("No file")
 
-    return (sample_id, original_filename, timestamp, stored_as, force_reencode)
+    return sample_id, original_filename, timestamp, stored_as, force_reencode
 
 def delete_sample(sample_id):
     # (note: we do not need err_sanitize here as these errors should only be visible to admins)

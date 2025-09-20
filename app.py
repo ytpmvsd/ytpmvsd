@@ -21,8 +21,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
-from config import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, MAIL_SERVER, \
-    MAIL_PORT, MAIL_USE_TLS, MAIL_USE_SSL, MAIL_USERNAME, MAIL_PASSWORD
+from config import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
 from mail import mail, generate_token, send_verification_email, confirm_token

@@ -1,7 +1,4 @@
 from enum import Enum
-import os
-
-import ffmpeg
 from config import SAMPLES_PER_PAGE
 from models import Source, User, db, Sample, likes_table, Metadata
 from sqlalchemy import func
