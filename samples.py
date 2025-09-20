@@ -8,7 +8,7 @@ import file_type
 
 from flask import jsonify
 
-from env import MB_UPLOAD_LIMIT
+from config import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db
 from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video
 
