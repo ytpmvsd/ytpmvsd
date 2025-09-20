@@ -3,7 +3,7 @@ import tomllib
 with open("config.toml", "rb") as f:
     settings = tomllib.load(f)
 
-USER_APPROVAL = settings["user_approval"]
+REQUIRE_USER_APPROVAL = settings["require_user_approval"]
 VERSION = settings["version"]
 SECRET_KEY = settings["flask_secret_key"]
 SQLALCHEMY_DATABASE_URI = settings["database_url"]

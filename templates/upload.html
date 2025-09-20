@@ -4,18 +4,18 @@
 
     <div class="upload-form">
         {% if current_user is none %}
-            {% if user_approval %}
+            {% if require_user_approval %}
                 Only approved registered users can upload samples.
             {% else %}
                 Only registered users can upload samples.
             {% endif %}
         {% elif not current_user.is_verified %}
-            {% if user_approval %}
+            {% if require_user_approval %}
                 Only approved users can upload samples.
             {% else %}
                 Please verify your account to upload samples.
             {% endif %}
-        {% elif current_user.is_uploader or not user_approval %}
+        {% elif current_user.is_uploader or not require_user_approval %}
             <form id="uploadForm" action="" method="post" enctype="multipart/form-data">
                 <input type="file" name="file" id="file" accept="video/*" multiple>
             </form>
