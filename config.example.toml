@@ -1,5 +1,5 @@
 # whether users need to be approved to upload.
-user_approval = false
+require_user_approval = false
 
 # Version of the site shown on the changelog.
 version = "0.0"

@@ -21,7 +21,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from sqlalchemy import func
 
-from config import USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
+from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
 from models import db, Sample, User, Source
 from utils import err_sanitize, update_metadata
 from mail import mail, generate_token, send_verification_email, confirm_token
@@ -386,7 +386,7 @@ def upload():
 
         return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
 
-    return render_template("upload.html", title="Upload - YTPMV Sample Database", user_approval=USER_APPROVAL)
+    return render_template("upload.html", title="Upload - YTPMV Sample Database", require_user_approval=REQUIRE_USER_APPROVAL)
 
 @login_manager.user_loader
 def load_user(user_id):
