@@ -1,17 +1,19 @@
 from flask_mail import Message, Mail
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from env import FLASK_SECRET_KEY
+import secrets
 
 mail = Mail()
 
 s = URLSafeTimedSerializer(FLASK_SECRET_KEY)
+email_hash = secrets.token_hex(4096)
 
 def generate_token(email):
-    return s.dumps(email, salt="email-confirm")
+    return s.dumps(email, salt=email_hash)
 
 def confirm_token(token, expiration=86400):
     try:
-        return s.loads(token, salt="email-confirm", max_age=expiration)
+        return s.loads(token, salt=email_hash, max_age=expiration)
     except SignatureExpired:
         return False
     except BadSignature:
