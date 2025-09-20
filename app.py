@@ -271,6 +271,9 @@ def batch_edit_samples(sample_ids):
 def like_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
 
+    if not current_user.is_verified:
+        return jsonify(success=False, message="Please verify your account to like samples.")
+
     if current_user in sample.likes:
         sample.likes.remove(current_user)
         liked = False
