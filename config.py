@@ -1,6 +1,7 @@
-import rtoml as toml
+import tomllib
 
-settings = toml.load(open("config.toml"))
+with open("config.toml", "rc") as f:
+    settings = tomllib.load(f)
 
 USER_APPROVAL = settings["user_approval"]
 VERSION = settings["version"]
