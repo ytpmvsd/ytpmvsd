@@ -4,7 +4,7 @@ import ffmpeg
 import shutil
 from sqlalchemy import create_engine, text
 
-from env import DATABASE_URL
+from config import SQLALCHEMY_DATABASE_URI
 from models import Sample
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
@@ -191,4 +191,4 @@ def get_metadata(sample_id):
 
     return probe
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URI)
