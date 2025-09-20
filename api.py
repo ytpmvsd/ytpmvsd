@@ -49,7 +49,7 @@ def get_samples_len():
     return Sample.query.count()
         
 def search_sources(query):
-    return Source.query.filter(Source.name.ilike(f"%{query}%")).limit(10).all()
+    return Source.query.filter(Source.name.ilike(f"%{query}%")).limit(50).all()
 
 def get_source_info(source_id):
     return Source.query.get(source_id)

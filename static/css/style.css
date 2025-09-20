@@ -13,7 +13,6 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
 a:visited {
@@ -200,17 +199,6 @@ p {
 .home-source a {
     text-align: center;
     text-decoration: none;
-}
-
-.suggestions {
-    margin: 0;
-    padding: 0;
-}
-
-.suggestions li {
-    display: block;
-    color: #0000FF;
-    cursor: pointer;
 }
 
 .wiki-content h1 {
@@ -415,4 +403,47 @@ footer {
 
 main {
     flex: 1;
+}
+
+.filename-box input, .source-box input, .source-box .suggestions:has(li) {
+    background: white;
+    border-radius: 0px;
+    border: 1px solid #aaa;
+    outline: none;
+    margin: 0 auto;
+    padding: 4px;
+}
+
+.source-box .suggestions {
+    display: none;
+    position: relative;
+    max-height: 10em;
+    overflow-y: scroll;
+}
+
+.source-box .suggestions:has(li) {
+    display: block!important;
+    margin: 0;
+}
+
+.source-box .suggestions ul {
+    width: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.source-box .suggestions li {
+    margin: 0;
+    padding: 0;
+    padding: 0.25em 1em 0.25em 0.25em;
+    font-size: 80%;
+}
+
+.source-box .suggestions li:hover {
+    cursor: pointer;
+    background: blue;
+    color: white;
+    overflow: visible!important;
+    background: #324ca8;
 }
