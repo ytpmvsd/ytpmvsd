@@ -26,8 +26,14 @@ def send_verification_email(to, verify_url):
             recipients=[to],
             sender="account@ytpmvsd.com",
             html=f"""
-            <p>Click the link below to verify your email:</p>
-            <p><a href="{verify_url}">{verify_url}</a></p>
+            <div style="font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+            <table>
+                <tr align="center"><td style="padding: 0.5em;"><center><img src="https://ytpmvsd.com/static/img/logo.png"/ width="50%"></center></td></tr>
+                <tr align="center"><td style="padding: 0.5em;"><h3>Please confirm your email address to use YTPMVSD.</h3></td></tr>
+                <tr align="center"><td style="padding: 0.5em;"><a style="display: block; background: #324ca8; padding: 1em; color: white; font-weight: bold; border-radius: 5px; width: 5em; text-decoration: none;" href="{verify_url}">Verify</a></td></tr>
+                <tr align="center"><td>This link expires in 24 hours.</td></tr>
+                <tr align="center"><td>Do not click this link if you didn't sign up for this site.</td></tr>
+            </table>
             """
         )
         mail.send(msg)
