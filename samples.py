@@ -85,7 +85,7 @@ def upload(file):
         
         if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
             os.remove(upload_path)
-            raise Exception("Content is too large")
+            raise Exception("One or more of your sample(s) exceeded the file limit. Max supported filesize is 10MB per file.")
 
         create_thumbnail(upload_path, f"static/media/thumbs/{timestamp}.png")
 

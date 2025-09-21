@@ -2,6 +2,22 @@
 
 {% block content %}
 
+    <div id="changelog-background" class="popup-background hidden"></div>
+    <div id="changelog-popup" class="popup hidden" style="height: calc(75% - 150px);">
+        <h2>Uploading...</h2>
+        <p>Please do not leave this page...</p>
+        <div class="popup-content">
+            <table style="width: 100%; table-layout: fixed;">
+                <tr>
+                    <td><b>honoka_whine_cf.mp4</b></td>
+                    <td style="width: 60%">
+                        <progress value="70" max="100" style="width: 100%; color: hsl(var(--hue), 85%, 60%);">70%</progress>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
     <div class="upload-form">
         {% if current_user is none %}
             {% if require_user_approval %}
@@ -20,8 +36,107 @@
                 <input type="file" name="file" id="file" accept="video/*" multiple>
             </form>
             <script>
-                document.getElementById('file').addEventListener('change', function () {
-                    document.getElementById('uploadForm').submit();
+                document.getElementById('file').addEventListener('change', async function () {
+                    const files = this.files;
+
+                    document.getElementById('changelog-popup').classList.remove('hidden');
+                    document.getElementById('changelog-background').classList.remove('hidden');
+
+                    const table = document.querySelector('.popup-content table');
+                    table.innerHTML = '';
+
+                    sampleIds = [];
+
+                    function uploadFile(file) {
+                        return new Promise((resolve, reject) => {
+                            const progressBar = document.getElementById(file.name);
+
+                            const formData = new FormData();
+                            formData.append("file", file);
+
+                            const xhr = new XMLHttpRequest();
+                            xhr.open("POST", "/upload/", true);
+
+                            xhr.upload.addEventListener("progress", e => {
+                                if (e.lengthComputable) {
+                                    const percent = Math.round((e.loaded / e.total) * 100);
+                                    console.log(`Uploading ${file.name}: ${percent}%`);
+                                    progressBar.value = percent;
+                                    progressBar.textContent = `${percent}%`;
+                                }
+                            });
+
+                            xhr.onload = () => {
+                                if (xhr.status === 200) {
+                                    try {
+                                        console.log(xhr.responseText);
+                                        const resp = JSON.parse(xhr.responseText);
+                                        if (resp.sample_id) {
+                                            sampleIds.push(resp.sample_id);
+                                        }
+                                        resolve();
+                                    } catch (err) {
+                                        reject(err);
+
+                                    }
+                                } else {
+                                    reject(new Error("Upload failed: " + xhr.status));
+                                    const popup = document.querySelector('.popup');
+                                    const errormessage = document.createElement('p');
+                                    const resp = JSON.parse(xhr.responseText);
+                                    errormessage.innerHTML = "Error: " + resp.error;
+                                    errormessage.style.color = "red";
+                                    const returnbutton = document.createElement('button');
+                                    returnbutton.innerHTML = "Return to upload page";
+                                    returnbutton.onclick = () => window.location.href = "/upload/"
+                                    popup.appendChild(errormessage);
+                                    popup.appendChild(returnbutton);
+                                }
+                            };
+
+                            xhr.onerror = () => reject(new Error("Network error"));
+                            xhr.send(formData);
+                        });
+                    }
+
+                    for (let file of files) {
+                        const row = document.createElement('tr');
+                        const fileName = document.createElement('td');
+                        const progress = document.createElement('td');
+                        fileName.style.width = '40%';
+                        fileName.style.overflow = 'hidden';
+                        fileName.style.whiteSpace = 'nowrap';
+                        fileName.style.textOverflow = 'ellipsis';
+                        progress.style.width = '60%';
+                        fileName.innerHTML = '<b>' + file.name + '</b>';
+                        progress.innerHTML = `<progress id="${file.name}" value="0" max="100" style="width: 100%; color: hsl(var(--hue), 85%, 60%);"></progress>`;
+                        row.appendChild(fileName);
+                        row.appendChild(progress);
+                        table.appendChild(row);
+                    }
+
+                    if (files.length > 10) {
+                        const popup = document.querySelector('.popup');
+                        const errormessage = document.createElement('p');
+                        errormessage.innerHTML = "Error: Too many files. Please upload a maximum of 10 files at a time.";
+                        errormessage.style.color = "red";
+                        const returnbutton = document.createElement('button');
+                        returnbutton.innerHTML = "Return to upload page";
+                        returnbutton.onclick = () => window.location.href = "/upload/"
+                        popup.appendChild(errormessage);
+                        popup.appendChild(returnbutton);
+                        return;
+                    }
+
+                    for (let file of files) {
+                        await uploadFile(file);
+                    }
+
+                    if (sampleIds.length === 1) {
+                        window.location.href = "/sample/edit/" + sampleIds[0] + "/";
+                    } else if (sampleIds.length > 1) {
+                        window.location.href = "/sample/batch-edit/" + sampleIds.join(",") + "/";
+                    }
                 });
             </script>
             Only .mp4 files are currently supported.
