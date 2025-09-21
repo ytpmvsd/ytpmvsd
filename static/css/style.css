@@ -202,17 +202,6 @@ p {
     text-decoration: none;
 }
 
-.suggestions {
-    margin: 0;
-    padding: 0;
-}
-
-.suggestions li {
-    display: block;
-    color: #0000FF;
-    cursor: pointer;
-}
-
 .wiki-content h1 {
     padding-bottom: 5px;
     border-bottom: 1px solid hsl(var(--hue), 60%, 50%);
@@ -415,4 +404,48 @@ footer {
 
 main {
     flex: 1;
+}
+
+.filename-box input, .source-box input, .source-box .suggestions:has(li) {
+    background: white;
+    border-radius: 0px;
+    border: 1px solid #aaa;
+    outline: none;
+    margin: 0 auto;
+    padding: 4px;
+}
+
+.source-box .suggestions {
+    display: none;
+    position: relative;
+    max-height: 10em;
+    overflow-y: scroll;
+}
+
+.source-box .suggestions:has(li) {
+    display: block!important;
+    margin: 0;
+}
+
+.source-box .suggestions ul {
+    width: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.source-box .suggestions li {
+    margin: 0;
+    padding: 0;
+    padding: 0.25em 1em 0.25em 0.25em;
+    font-size: 80%;
+    text-align: center;
+}
+
+.source-box .suggestions li:hover {
+    cursor: pointer;
+    background: blue;
+    color: white;
+    overflow: visible!important;
+    background: #324ca8;
 }

@@ -6,22 +6,50 @@
     </video>
     <form method="POST" style="display: block; margin-top: 20px">
         <div class="edit-fields" style="display: flex; flex-flow: column; gap: 20px">
-            <div>
-                <label for="filename"><b>Filename:</b></label>
-                <input type="text" id="filename" name="filename" value="{{ filename_no_extension }}" required>.mp4
-                <br><label><small>Check out the <a href="{{ url_for('wiki_page',page='filename_guidelines') }}">filename guidelines</a></small></label>
-            </div>
-
-            <div>
-                <label for="source"><b>Source:</b></label>
-                <input type="text" id="source" name="source" autocomplete="off" placeholder="Optional">
-                <button type="button" id="clear-source" style="display: none;">Clear</button>
-                <p id="instruction-text" style="margin-top: 10px">Search and select from list below</p>
-                <ul id="source-suggestions" class="suggestions"></ul>
-
-                <input type="hidden" id="source_id" name="source_id">
-            </div>
-
+            <table align="center">
+                <tr class="filename-box">
+                    <td align="right">
+                        <b>Filename:</b>
+                    </td>
+                    <td align="left">
+                        <input type="text" id="filename" name="filename" value="{{ filename_no_extension }}" required>
+                    </td>
+                    <td align="left">
+                        .mp4
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan=3>
+                        <small>Check out the <a href="{{ url_for('wiki_page',page='filename_guidelines') }}">filename guidelines</a></small><br><br>
+                    </td>
+                </tr>
+                <tr class="source-box">
+                    <td align="right">
+                        <b>Source:</b>
+                    </td>
+                    <td align="left">
+                        <input type="text" id="source" name="source" autocomplete="off" placeholder="">
+                    </td>
+                    <td>
+                        <button type="button" id="clear-source" disabled="disabled">Clear</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan=3>
+                        <small id="instruction-text">Search and select from list below</small>
+                    </td>
+                </tr>
+                <tr class="source-box">
+                    <td align="left" colspan=3>
+                        <span class="suggestions">
+                            <ul id="source-suggestions">
+                            </ul>
+                        </span>
+                        <input type="hidden" id="source_id" name="source_id">
+                    </td>
+                </tr>
+            </table>
+            
             {#        <label for="tags">Tags (comma-separated):</label>#}
             {#        <input type="text" id="tags" name="tags">#}
 
@@ -42,7 +70,6 @@
         </div>
     </form>
 
-    {# TODO: This code is 90% chatGPTed, for the love of god go back and learn how it works #}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const sourceInput = document.getElementById("source");
@@ -51,10 +78,7 @@
             const clearButton = document.getElementById("clear-source");
             const instructionText = document.getElementById("instruction-text");
 
-
-            let userSelected = false;
-
-            sourceInput.addEventListener("input", function () {
+            function sourceBoxFill() {
                 const query = sourceInput.value;
                 userSelected = false;
 
@@ -78,7 +102,7 @@
                                 sourceIdField.value = source.id;
                                 sourceList.innerHTML = "";
                                 sourceInput.disabled = true;
-                                clearButton.style.display = "inline";
+                                clearButton.disabled = false;
                                 instructionText.style.display = "none";
                                 userSelected = true;
                             });
@@ -86,13 +110,18 @@
                             sourceList.appendChild(item);
                         });
                     });
-            });
+            };
+            let userSelected = false;
+
+            sourceInput.addEventListener("click", sourceBoxFill);
+            sourceInput.addEventListener("input", sourceBoxFill);
+            sourceBoxFill();
 
             clearButton.addEventListener("click", function () {
                 sourceInput.value = "";
                 sourceIdField.value = "";
                 sourceInput.disabled = false;
-                clearButton.style.display = "none";
+                clearButton.disabled = true;
                 instructionText.style.display = "block";
             });
 
