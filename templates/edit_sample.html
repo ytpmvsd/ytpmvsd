@@ -71,15 +71,12 @@
     </form>
 
     <script>
-        var highestDocHeight = 0;
-        
         document.addEventListener("DOMContentLoaded", function () {
             const sourceInput = document.getElementById("source");
             const sourceList = document.getElementById("source-suggestions");
             const sourceIdField = document.getElementById("source_id");
             const clearButton = document.getElementById("clear-source");
             const instructionText = document.getElementById("instruction-text");
-            var highestDocHeight = 0;
 
             function sourceBoxFill() {
                 const query = sourceInput.value;
