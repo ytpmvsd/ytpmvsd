@@ -1,5 +1,16 @@
 {% extends "base.html" %}
+
 {% block content %}
+
+    <div id="changelog-background" class="popup-background hidden"></div>
+    <div id="changelog-popup" class="popup hidden" style="height: calc(45% - 150px);">
+        <h2>Reencoding...</h2>
+        <p>Please do not leave this page...</p>
+        <div class="popup-content">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
     <h2>Edit Sample Details</h2>
     <video style="max-width: 600px; width: calc(100% - 100px);" class="video" controls>
         <source src="{{ url_for('static', filename='media/samps/' + stored_as) }}">
@@ -65,7 +76,7 @@
             </div>
 
             <div>
-                <button type="submit">Save</button>
+                <button type="submit" class="submit_button">Save</button>
             </div>
         </div>
     </form>
@@ -131,5 +142,12 @@
                 }
             });
         });
+    </script>
+
+    <script>
+    document.querySelector(".submit_button").onclick = function() {
+        document.getElementById('changelog-popup').classList.remove('hidden');
+        document.getElementById('changelog-background').classList.remove('hidden');
+    }
     </script>
 {% endblock %}
