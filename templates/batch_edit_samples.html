@@ -137,8 +137,12 @@
 
     <script>
     document.querySelector(".submit_button").onclick = function() {
-        document.getElementById('changelog-popup').classList.remove('hidden');
-        document.getElementById('changelog-background').classList.remove('hidden');
+        const reencode = document.getElementById('reencode');
+        if (reencode.checked) {
+            document.getElementById('changelog-popup').classList.remove('hidden');
+            document.getElementById('changelog-background').classList.remove('hidden');
+        }
     }
     </script>
+
 {% endblock %}
