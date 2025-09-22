@@ -62,8 +62,7 @@ def page_not_found(e):
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    flash("File too large. Max supported filesize is 10MB.", "error")
-    return redirect(url_for("upload"))
+    return jsonify({"error": "One or more of your sample(s) exceeded the file limit. Max supported filesize is 10MB per file."}), 400
 
 
 @app.route("/")
@@ -353,19 +352,15 @@ def upload():
         sample_ids = []
 
         if "file" not in request.files:
-            return redirect(request.url)
+            return jsonify({"error": "Bad request"}), 400
 
         files = request.files.getlist("file")
 
         if len(files) == 0 or files[0].filename == "":
-            return redirect(request.url)
+            return jsonify({"error": "No files selected"}), 400
 
         if len(files) > 10:
-            flash(
-                "Currently, you can only upload up to 10 files at once. Please select fewer files.",
-                "error",
-            )
-            return redirect(url_for("upload"))
+            return jsonify({"error": "Too many files"}), 400
 
         for file in files:
             try:
@@ -378,13 +373,9 @@ def upload():
                 session[f"force_reencode"] = force_reencode
 
             except Exception as ex:
-                flash(err_sanitize(ex), "error")
-                return redirect(url_for("upload"))
+                return jsonify({"error": str(ex)}), 400
 
-        if len(sample_ids) == 1:
-            return redirect(url_for("edit_sample", sample_id=sample_ids[0]))
-
-        return redirect(url_for("batch_edit_samples", sample_ids=",".join(sample_ids)))
+        return jsonify({"sample_id": sample_ids[0]})
 
     return render_template("upload.html", title="Upload - YTPMV Sample Database", require_user_approval=REQUIRE_USER_APPROVAL)
 
