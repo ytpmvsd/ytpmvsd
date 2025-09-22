@@ -47,7 +47,7 @@
                     </a>
                 {% endif %}
             </div>
-            <div class="sample-metadata" style="display: flex; flex-flow: column; justify-content: space-around;">
+            <div class="sample-metadata" style="display: flex; flex-flow: column; justify-content: space-around; margin-bottom: 10px;">
                 {% set ns = namespace(video_stream=None) %}
                 {% for stream in metadata.streams %}
                     {% if stream.codec_type == "video" %}
@@ -67,6 +67,15 @@
 
                 <span><b>Frame rate:</b> {{ metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3) }} FPS</span>
 
+            </div>
+            <div style="display: flex; flex-flow: column; justify-content: space-around;">
+                <span><b>Tags</b></span>
+                {% for tag in sample.tags %}
+                    <span style="color: {{ "#" + tag.category.colour }};">{{ tag.name }}</span>
+                {% endfor %}
+                <script>
+                    console.log("{{ sample.tags[0].name }}")
+                </script>
             </div>
         </div>
     </div>
