@@ -1,5 +1,16 @@
 {% extends "base.html" %}
+
 {% block content %}
+
+    <div id="changelog-background" class="popup-background hidden"></div>
+    <div id="changelog-popup" class="popup hidden" style="height: calc(45% - 150px);">
+        <h2>Reencoding...</h2>
+        <p>Please do not leave this page...</p>
+        <div class="popup-content">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
     <h2>Edit Sample Details</h2>
     <div class="multiple-upload-samples">
         {% for sample in samples %}
@@ -55,7 +66,7 @@
             </div>
 
             <div>
-                <button type="submit">Save</button>
+                <button type="submit" class="submit_button">Save</button>
             </div>
         </div>
     </form>
@@ -123,4 +134,15 @@
             });
         });
     </script>
+
+    <script>
+    document.querySelector(".submit_button").onclick = function() {
+        const reencode = document.getElementById('reencode');
+        if (reencode.checked) {
+            document.getElementById('changelog-popup').classList.remove('hidden');
+            document.getElementById('changelog-background').classList.remove('hidden');
+        }
+    }
+    </script>
+
 {% endblock %}
