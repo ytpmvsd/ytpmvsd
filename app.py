@@ -338,6 +338,16 @@ def source_page(source_id):
         date=datetime.datetime.now(datetime.UTC),
     )
 
+@app.route("/search/<string:query>/")
+def search_results(query):
+    results = api.search_samples(query)
+
+    return render_template(
+        "search.html",
+        title="YTPMV Sample Database",
+        samples=results,
+        date=datetime.datetime.now(datetime.UTC),
+    )
 
 @app.route("/search_sources/")
 def search_sources():
