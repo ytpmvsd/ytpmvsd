@@ -7,6 +7,7 @@ import secrets
 import file_type
 
 from flask import jsonify
+from sqlalchemy.exc import IntegrityError
 
 from config import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db, Tag
@@ -44,7 +45,10 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, tags, reenc
             add_tag_to_db(sample_tag, 5)
             tag = Tag.query.filter_by(name=sample_tag).first()
         sample.tags.append(tag)
-    db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
     return 0
 
