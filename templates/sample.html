@@ -16,12 +16,12 @@
     <div class="warning-box">
 
     </div>
-    <div class="sample-page-layout" style="display: grid; grid-template-columns: 1fr minmax(0, 900px) 1fr; gap: 20px; padding-left: 40px; padding-right: 40px;">
-        <aside class="tag-sidebar" style="position: sticky; top: 20px; width: 100%; justify-self: end; text-align: end">
-            <div style="display: flex; flex-flow: column; justify-content: space-around;">
-                <span style="padding-top: 5px; padding-bottom: 5px"><b>Tags</b></span>
+    <div class="sample-page-layout">
+        <aside class="tag-sidebar">
+            <div class="tag-sidebar-inner">
+                <span class="tags-header"><b>Tags</b></span>
                 {% for category, tags in sample.tags|groupby("category.id") %}
-                    <span style="padding-top: 5px">{{ tags[0].category.name }}</span>
+                    <span class="tags-category-header">{{ tags[0].category.name }}</span>
                     {% for tag in tags|sort(attribute='name') %}
                         <p style="color: #00E">
                             <a href="{{ url_for('search_results', q=tag.name) }}" style="color: {{ "#" + tag.category.colour }}; text-decoration: none">{{ tag.name | replace('_', ' ') }}</a>
@@ -72,8 +72,7 @@
                         </a>
                     {% endif %}
                 </div>
-                <div class="sample-metadata"
-                     style="display: flex; flex-flow: column; justify-content: space-around; margin-bottom: 10px;">
+                <div class="sample-metadata">
                     {% set ns = namespace(video_stream=None) %}
                     {% for stream in metadata.streams %}
                         {% if stream.codec_type == "video" %}

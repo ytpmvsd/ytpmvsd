@@ -52,6 +52,13 @@ a:visited {
     justify-content: space-between;
 }
 
+.search-form {
+    justify-content: center;
+    gap: 5px;
+    display: flex;
+    margin-bottom: 20px
+}
+
 .home-header li {
     display: inline;
     margin: 0 20px;
@@ -117,6 +124,13 @@ p {
 
 }
 
+.sample-page-layout {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 900px) 1fr;
+    gap: 20px;
+    margin: 20px 40px;
+}
+
 .sample-box {
     background-color: hsl(var(--hue), 85%, 75%);
     border-radius: 20px;
@@ -176,6 +190,35 @@ p {
 .sample-page-button:hover {
     background-color: hsl(var(--hue), 40%, 55%);
     border: black solid 1px;
+}
+
+.sample-metadata {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.tag-sidebar {
+    position: sticky;
+    top: 20px;
+    width: 100%;
+    justify-self: end;
+    text-align: end
+}
+
+.tag-sidebar-inner {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+}
+
+.tags-header {
+    padding: 5px 0;
+}
+
+.tags-category-header {
+    padding-top: 5px
 }
 
 .flash {
