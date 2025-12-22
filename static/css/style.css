@@ -23,7 +23,6 @@ a:visited {
 .home-header {
     display: flex;
     justify-content: center;
-    max-width: 500px;
     margin: 25px auto auto;
     flex-direction: column;
     text-align: justify;

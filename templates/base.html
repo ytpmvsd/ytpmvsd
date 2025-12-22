@@ -19,11 +19,13 @@
 <body>
 
 <div class="home-header">
-    <img src="{{ url_for('static', filename='img/logo-beta.png') }}" alt="logo">
-    <div class="home-header-text">
-        {% for i in "the ytpmv sample database" %}
-            <div>{{ i }}</div>
-        {% endfor %}
+    <div style="max-width: 500px; display: flex; margin: 25px auto auto; flex-direction: column;">
+        <img src="{{ url_for('static', filename='img/logo-beta.png') }}" alt="logo">
+        <div class="home-header-text">
+            {% for i in "the ytpmv sample database" %}
+                <div>{{ i }}</div>
+            {% endfor %}
+        </div>
     </div>
     <ul>
         <li><a href="{{ url_for("home_page") }}">Home</a></li>
@@ -31,6 +33,8 @@
         <li><a href="{{ url_for("samples_list_base") }}">Samples</a></li>
         •
         <li><a href="{{ url_for("all_sources") }}">Sources</a></li>
+        •
+        <li><a href="{{ url_for("tags_list") }}">Tags</a></li>
         •
         <li><a href="{{ url_for("upload") }}">Upload</a></li>
         •
