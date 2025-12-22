@@ -12,12 +12,11 @@ def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, sour
         try:
             sample = conn.execute(
                 text(
-                    "INSERT INTO sample (filename, stored_as, tags, upload_date, thumbnail_filename, uploader, source_id) VALUES (:filename, :stored_as, :tags, :upload_date, :thumbnail_filename, :uploader, :source_id) RETURNING id"
+                    "INSERT INTO sample (filename, stored_as, upload_date, thumbnail_filename, uploader, source_id) VALUES (:filename, :stored_as, :upload_date, :thumbnail_filename, :uploader, :source_id) RETURNING id"
                 ),
                 {
                     "filename": filename,
                     "stored_as": stored_as,
-                    "tags": [],
                     "upload_date": upload_date,
                     "thumbnail_filename": thumbnail,
                     "uploader": uploader,
@@ -123,6 +122,25 @@ def create_thumbnail(video_path, thumbnail_path):
         print('stdout:', e.stdout.decode('utf8'))
         print('stderr:', e.stderr.decode('utf8'))
         print(f"An error occurred: {e}")
+
+def add_tag_to_db(name, category_id):
+    with engine.connect() as conn:
+        try:
+            tag = conn.execute(
+                text(
+                    "INSERT INTO tag (name, category_id) VALUES (:name, :category_id) RETURNING id"
+                ),
+                {
+                    "name": name,
+                    "category_id": category_id,
+                },
+            )
+            conn.commit()
+
+        except Exception as e:
+            print(f"Error adding tag: {e}")
+            raise
+
 
 
 def reencode_video(filename):

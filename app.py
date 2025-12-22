@@ -156,12 +156,11 @@ def edit_sample(sample_id):
     if request.method == "POST":
         filename = request.form.get("filename")
         source_id = request.form.get("source_id")
+        tags = request.form.get('tags', '').split(' ')
         reencode = request.form.get("reencode")
 
         filename = re.sub(r"[^\w\s]", "", filename)
         filename = re.sub(r"\s+", "_", filename) + ".mp4"
-
-        # tags = request.form.get('tags', '').split(',')
 
         if source_id == "":
             source_id = None
@@ -172,6 +171,7 @@ def edit_sample(sample_id):
             str(thumbnail),
             current_user.id,
             source_id,
+            tags,
             reencode
         )
 

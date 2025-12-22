@@ -22,8 +22,11 @@
                 <input type="hidden" id="source_id" name="source_id">
             </div>
 
-            {#        <label for="tags">Tags (comma-separated):</label>#}
-            {#        <input type="text" id="tags" name="tags">#}
+            <div>
+                <label for="tags"><b>Tags:</b></label>
+                <br><textarea id="tags" name="tags" rows="4" cols="45"></textarea>
+                <br><label><small>Space separated. Use underscores for tags with spaces in them.</small></label>
+            </div>
 
             <div>
                 {% if force_reencode %}
