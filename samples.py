@@ -42,6 +42,8 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, tags, reenc
     for sample_tag in tags:
         tag = Tag.query.filter_by(name=sample_tag).first()
         if tag is None:
+            if sample_tag == '':
+                continue
             add_tag_to_db(sample_tag, 5)
             tag = Tag.query.filter_by(name=sample_tag).first()
         sample.tags.append(tag)
