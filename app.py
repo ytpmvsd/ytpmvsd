@@ -338,8 +338,10 @@ def source_page(source_id):
         date=datetime.datetime.now(datetime.UTC),
     )
 
-@app.route("/search/<string:query>/")
-def search_results(query):
+@app.route("/search")
+def search_results():
+    query = request.args.get("q", "")
+
     results = api.search_samples(query)
 
     return render_template(
