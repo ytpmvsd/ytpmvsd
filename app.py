@@ -51,8 +51,11 @@ login_manager.login_view = (
 
 
 @app.context_processor
-def inject_user():
-    return {"current_user": current_user}
+def inject_global_data():
+    return {
+        "current_user": current_user,
+        "date": datetime.datetime.now(datetime.UTC),
+    }
 
 
 @app.errorhandler(404)
@@ -85,7 +88,6 @@ def home_page():
         title="YTPMV Sample Database",
         top_samples=top_samples,
         recent_samples=recent_samples,
-        date=datetime.datetime.now(datetime.UTC),
         changelog=changelog if changelog else None,
         version=version,
     )
@@ -107,7 +109,6 @@ def samples_list(index):
         "samples.html",
         title="Samples - YTPMV Sample Database",
         samples=samples,
-        date=datetime.datetime.now(datetime.UTC),
         index=index,
         page_num = int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))
     )
@@ -311,7 +312,6 @@ def user_page(user_id):
         title=f"{user.username} - YTPMV Sample Database",
         samples=samples,
         user=user,
-        date=datetime.datetime.now(datetime.UTC),
     )
 
 @app.route("/sources/")
@@ -334,7 +334,6 @@ def source_page(source_id):
         title=f"{source.name} - YTPMV Sample Database",
         samples=samples,
         source=source,
-        date=datetime.datetime.now(datetime.UTC),
     )
 
 @app.route("/search")
@@ -347,7 +346,6 @@ def search_results():
         "search.html",
         title="YTPMV Sample Database",
         samples=results,
-        date=datetime.datetime.now(datetime.UTC),
     )
 
 @app.route("/search_sources/")
