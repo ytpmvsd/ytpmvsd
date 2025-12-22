@@ -546,6 +546,14 @@ def api_sample_info(sample_id):
 def api_samples_len():
     return jsonify({"len": int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))})
 
+@app.route("/api/search_samples")
+def api_search_samples():
+    query = request.args.get("q", "")
+    samples = api.search_samples(query)
+
+    return jsonify([{"id": s.id, "name": s.filename} for s in samples])
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)
 
