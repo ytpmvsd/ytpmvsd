@@ -239,6 +239,20 @@ p {
     gap: 10px;
 }
 
+.tags-table {
+    table-layout: fixed;
+    width: 100%;
+    text-align: center;
+}
+
+.tags-table tbody {
+    font-size: 12px;
+}
+
+.tags-table tbody a {
+    text-decoration: underline;
+}
+
 .home-source a {
     text-align: center;
     text-decoration: none;

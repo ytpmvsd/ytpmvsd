@@ -1,6 +1,6 @@
 from enum import Enum
 from config import SAMPLES_PER_PAGE
-from models import Source, User, db, Sample, likes_table, Metadata, Tag
+from models import Source, User, db, Sample, likes_table, Metadata, Tag, TagCategory
 from sqlalchemy import func
 
 class SampleSort(Enum):
@@ -59,6 +59,12 @@ def get_sample_info(sample_id):
 
 def get_user_info(uploader):
     return User.query.get(uploader)
+
+def get_tags():
+    return Tag.query.all()
+
+def get_tag_categories():
+    return TagCategory.query.order_by(TagCategory.id).all()
 
 def search_samples(query):
     tags = query.split(',')

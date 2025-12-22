@@ -358,6 +358,23 @@ def search_sources():
 
     return jsonify([{"id": s.id, "name": s.name} for s in sources])
 
+@app.route("/tags/")
+def tags_list():
+    tags = api.get_tags()
+    categories = api.get_tag_categories()
+
+    grouped_tags = {category.id: [] for category in categories}
+
+    for tag in tags:
+        grouped_tags[tag.category_id].append(tag)
+
+    return render_template(
+        "tags.html",
+        title="Tags - YTPMV Sample Database",
+        categories=categories,
+        tags=grouped_tags,
+    )
+
 
 @app.route("/upload/", methods=["GET", "POST"])
 def upload():
