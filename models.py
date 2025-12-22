@@ -4,7 +4,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import TIMESTAMP
-from sqlalchemy.dialects.postgresql import ARRAY
 
 db = SQLAlchemy()
 
