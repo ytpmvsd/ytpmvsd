@@ -61,7 +61,7 @@ def get_user_info(uploader):
     return User.query.get(uploader)
 
 def search_samples(query):
-    tags = query.split()
+    tags = query.split(',')
     query_results = Sample.query
     for tag in tags:
         query_results = query_results.filter(Sample.tags.any(Tag.name == tag))
