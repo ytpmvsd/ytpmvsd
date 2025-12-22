@@ -64,5 +64,8 @@ def search_samples(query):
     tags = query.split(',')
     query_results = Sample.query
     for tag in tags:
-        query_results = query_results.filter(Sample.tags.any(Tag.name == tag))
+        if tag.startswith("-"):
+            query_results = query_results.filter(~Sample.tags.any(Tag.name == tag[1:]))
+        else:
+            query_results = query_results.filter(Sample.tags.any(Tag.name == tag))
     return query_results.all()
