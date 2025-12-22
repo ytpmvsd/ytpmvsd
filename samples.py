@@ -36,7 +36,7 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, tags, reenc
         print(e)
         return 1
 
-    sample = Sample.query.filter_by(filename=filename).first()
+    sample = Sample.query.filter_by(stored_as=stored_as).first()
 
     print(tags)
     for sample_tag in tags:
