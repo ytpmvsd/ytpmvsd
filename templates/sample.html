@@ -15,69 +15,88 @@
     <div class="warning-box">
 
     </div>
-    <div class="sample-box">
-        <div class="sample-player-box">
-            <video class="video" controls>
-                <source src="{{ url_for('static', filename='media/samps/' + sample.stored_as) }}">
-            </video>
-            <h1>{{ sample.filename }}</h1>
-            <p class="uploader">Uploaded by <a href="{{ url_for('user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
-            <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
-            <script>
-                document.querySelectorAll('.upload-date').forEach(element => {
-                    const utcDate = element.getAttribute('data-utc');
-                    const localTime = moment.utc(utcDate).local();
-                    element.innerText = 'Uploaded ' + localTime.fromNow();
-                });
-            </script>
-        </div>
-        <div class="sample-info-box">
-            <div class="sample-buttons">
-                <a href="{{ url_for('download_sample', sample_id=sample.id) }}"
-                   class="sample-page-button" style="--hue: 100">
-                    <span>Download sample</span>
-                </a>
-                <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
-                    <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
-                    <span class="like-count">{{ sample.likes|length }}</span>
-                </a>
-                {% if current_user.is_admin or current_user.id == uploader.id %}
-                    <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
-                        <span>Delete sample</span>
-                    </a>
-                {% endif %}
-            </div>
-            <div class="sample-metadata" style="display: flex; flex-flow: column; justify-content: space-around; margin-bottom: 10px;">
-                {% set ns = namespace(video_stream=None) %}
-                {% for stream in metadata.streams %}
-                    {% if stream.codec_type == "video" %}
-                        {% set ns.video_stream = stream %}
-                        {% break %}
-                    {% endif %}
-                {% endfor %}
-
-                {% if sample.source_id %}
-                    <span><b>Source:</b> <a href="{{ url_for('source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
-                {% endif %}
-
-                <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.filesize|int/1000/1000 ) }}</span>
-
-                <span><b>Resolution:</b> {{ metadata.width }}x{{ metadata.height }}
-                                    ({{ metadata.aspect_ratio }})</span>
-
-                <span><b>Frame rate:</b> {{ metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3) }} FPS</span>
-
-            </div>
+    <div class="sample-page-layout" style="display: grid; grid-template-columns: 1fr minmax(0, 900px) 1fr; gap: 20px; padding-left: 40px; padding-right: 40px;">
+        <aside class="tag-sidebar" style="position: sticky; top: 20px; width: 100%; justify-self: end; text-align: end">
             <div style="display: flex; flex-flow: column; justify-content: space-around;">
-                <span><b>Tags</b></span>
-                {% for tag in sample.tags %}
-                    <span style="color: {{ "#" + tag.category.colour }};">{{ tag.name }}</span>
+                <span style="padding-top: 5px; padding-bottom: 5px"><b>Tags</b></span>
+                {% for category, tags in sample.tags|groupby("category.id") %}
+                    <span style="padding-top: 5px">{{ tags[0].category.name }}</span>
+                    {% for tag in tags|sort(attribute='name') %}
+                        <p style="color: #00E">
+                            <a href="{{ url_for('search_results', q=tag.name) }}" style="color: {{ "#" + tag.category.colour }}; text-decoration: none">{{ tag.name | replace('_', ' ') }}</a>
+                            <a onclick="addToSearchText('{{ tag.name }}')">+</a>
+                            <a onclick="addToSearchText('-{{ tag.name }}')">-</a>
+                            <a onclick="">?</a>
+                        </p>
+                    {% endfor %}
                 {% endfor %}
                 <script>
-                    console.log("{{ sample.tags[0].name }}")
+                    function addToSearchText(text){
+                        document.getElementById("search-input").value += text + " ";
+                    }
                 </script>
             </div>
+        </aside>
+
+        <div class="sample-box">
+            <div class="sample-player-box">
+                <video class="video" controls>
+                    <source src="{{ url_for('static', filename='media/samps/' + sample.stored_as) }}">
+                </video>
+                <h1>{{ sample.filename }}</h1>
+                <p class="uploader">Uploaded by <a
+                        href="{{ url_for('user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
+                <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
+                <script>
+                    document.querySelectorAll('.upload-date').forEach(element => {
+                        const utcDate = element.getAttribute('data-utc');
+                        const localTime = moment.utc(utcDate).local();
+                        element.innerText = 'Uploaded ' + localTime.fromNow();
+                    });
+                </script>
+            </div>
+            <div class="sample-info-box">
+                <div class="sample-buttons">
+                    <a href="{{ url_for('download_sample', sample_id=sample.id) }}"
+                       class="sample-page-button" style="--hue: 100">
+                        <span>Download sample</span>
+                    </a>
+                    <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
+                        <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
+                        <span class="like-count">{{ sample.likes|length }}</span>
+                    </a>
+                    {% if current_user.is_admin or current_user.id == uploader.id %}
+                        <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
+                            <span>Delete sample</span>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="sample-metadata"
+                     style="display: flex; flex-flow: column; justify-content: space-around; margin-bottom: 10px;">
+                    {% set ns = namespace(video_stream=None) %}
+                    {% for stream in metadata.streams %}
+                        {% if stream.codec_type == "video" %}
+                            {% set ns.video_stream = stream %}
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if sample.source_id %}
+                        <span><b>Source:</b> <a
+                                href="{{ url_for('source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
+                    {% endif %}
+
+                    <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.filesize|int/1000/1000 ) }}</span>
+
+                    <span><b>Resolution:</b> {{ metadata.width }}x{{ metadata.height }}
+                                    ({{ metadata.aspect_ratio }})</span>
+
+                    <span><b>Frame rate:</b> {{ metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3) }} FPS</span>
+
+                </div>
+            </div>
         </div>
+    <div class="spacer"></div>
     </div>
 
     <script>
