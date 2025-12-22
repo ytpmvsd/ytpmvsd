@@ -257,17 +257,6 @@ p {
     text-decoration: none;
 }
 
-.suggestions {
-    margin: 0;
-    padding: 0;
-}
-
-.suggestions li {
-    display: block;
-    color: #0000FF;
-    cursor: pointer;
-}
-
 .wiki-content h1 {
     padding-bottom: 5px;
     border-bottom: 1px solid hsl(var(--hue), 60%, 50%);
@@ -470,4 +459,67 @@ footer {
 
 main {
     flex: 1;
+}
+
+.filename-box input, .source-box input, .source-box .suggestions:has(li) {
+    background: white;
+    border-radius: 0px;
+    border: 1px solid #aaa;
+    outline: none;
+    margin: 0 auto;
+    padding: 4px;
+}
+
+.source-box .suggestions {
+    display: none;
+    position: relative;
+    max-height: 10em;
+    overflow-y: scroll;
+}
+
+.source-box .suggestions:has(li) {
+    display: block!important;
+    margin: 0;
+}
+
+.source-box .suggestions ul {
+    width: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.source-box .suggestions li {
+    margin: 0;
+    padding: 0;
+    padding: 0.25em 1em 0.25em 0.25em;
+    font-size: 80%;
+    text-align: center;
+}
+
+.source-box .suggestions li:hover {
+    cursor: pointer;
+    background: blue;
+    color: white;
+    overflow: visible!important;
+    background: #324ca8;
+}
+
+.loading-spinner {
+    border: 16px solid hsl(var(--hue), 20%, 90%);
+    border-top: 16px solid hsl(var(--hue), 85%, 40%);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
