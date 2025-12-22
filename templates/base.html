@@ -40,9 +40,21 @@
             <li><a href="{{ url_for("login") }}">Login</a></li>
         {% endif %}
     </ul>
-    <label style="justify-content: center; gap: 5px; display: flex; margin-bottom: 20px">
-        <input type="search" placeholder="yo" id="search-input"><button>Search</button>
-    </label>
+    <form role="search" onsubmit="search(event)" style="justify-content: center; gap: 5px; display: flex; margin-bottom: 20px">
+        <label for="search-input">Search: </label>
+        <input type="search" placeholder="crossfade anime" id="search-input">
+        <button type="submit">Search</button>
+    </form>
+
+    <script>
+        function search(event) {
+            event.preventDefault();
+            let query = document.getElementById("search-input").value;
+            query = query.replace(/\s+$/, ''); //remove trailing whitespace
+            query = query.replace(' ', ',');
+            window.location.href = "/search?q=" + encodeURIComponent(query);
+        }
+    </script>
 </div>
 
 <main>
