@@ -2,7 +2,8 @@
 
 {% block metatags %}
     <meta property="og:title" content="{{ sample.filename }}"/>
-    <meta property="og:video" content="{{ url_for('static', filename='media/samps/' + sample.stored_as, _external=True, _scheme='https') }}">
+    <meta property="og:video"
+          content="{{ url_for('static', filename='media/samps/' + sample.stored_as, _external=True, _scheme='https') }}">
     <meta property="og:type" content="video.other"/>
     <meta property="og:video:type" content="video/mp4"/>
     <meta property="og:video:width" content="{{ metadata.width }}"/>
@@ -120,8 +121,7 @@
                                 if (data.success) {
                                     likeCountSpan.textContent = data["likes"];
                                     this.querySelector("span").textContent = data["liked"] ? "Unlike" : "Like";  // Change text
-                                }
-                                else {
+                                } else {
                                     window.alert(data.message);
                                 }
                             });
@@ -149,11 +149,11 @@
                         let warningBox = document.querySelector(".warning-box");
                         warningBox.innerHTML = "";
                         // javascript has a proper way of constructing elements but it's messy and I've never seen a real reason to do it. - ioi_xd
-                        warningBox.innerHTML += "<p style='color: red'>"+data.message+"</p>"   
-                        for(let warning in data["warnings"]) {
-                            warningBox.innerHTML += "<p style='color: darkgoldenrod'>("+data.message+")</span>"
+                        warningBox.innerHTML += "<p style='color: red'>" + data.message + "</p>"
+                        for (let warning in data["warnings"]) {
+                            warningBox.innerHTML += "<p style='color: darkgoldenrod'>(" + data.message + ")</span>"
                         }
-                        if(data["success"] === "True") {
+                        if (data["success"] === "True") {
                             document.querySelector(".sample-box").remove();
                         }
                     })
