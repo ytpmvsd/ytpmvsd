@@ -243,7 +243,7 @@ def batch_edit_samples(sample_ids):
             thumbnail = sample["thumbnail"]
             sample_id = sample["sample_id"]
 
-            edit_status = samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, reencode)
+            edit_status = samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, [], reencode)
 
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
