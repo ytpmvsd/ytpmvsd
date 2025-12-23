@@ -71,6 +71,10 @@ def sample_page(sample_id):
     if sample is None:
         return render_template("404.html", title="YTPMV Sample Database")
 
+    if not sample.is_public:
+        if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
+            return render_template("404.html", title="YTPMV Sample Database")
+
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
@@ -235,16 +239,19 @@ def delete_sample(sample_id):
 @main_bp.route("/sample/<int:sample_id>/download/")
 def download_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
+    if not sample.is_public:
+        if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
+            return render_template("404.html", title="YTPMV Sample Database"), 404
     file_path = os.path.join("static/media/samps", sample.stored_as)
     return send_file(file_path, as_attachment=True, download_name=sample.filename)
 
 @main_bp.route("/user/<int:user_id>/")
 def user_page(user_id):
     user = User.query.get_or_404(user_id)
-    res_samples = (
-        Sample.query.filter_by(uploader=user_id)
-        .order_by(Sample.upload_date.desc())
-        .all()
+    res_samples = api.get_user_samples(
+        user_id,
+        viewer_id=current_user.id if current_user.is_authenticated else None,
+        is_admin=current_user.is_authenticated and current_user.is_admin
     )
 
     return render_template(
@@ -266,7 +273,7 @@ def all_sources():
 def source_page(source_id):
     source = api.get_source_info(source_id)
     res_samples = (
-        Sample.query.filter_by(source=source).order_by(Sample.upload_date.desc()).all()
+        Sample.query.filter_by(source=source, is_public=True).order_by(Sample.upload_date.desc()).all()
     )
 
     return render_template(
