@@ -123,6 +123,17 @@ p {
 
 }
 
+.privacy-warning {
+    color: red;
+    background: #fee;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    max-width: 900px;
+    width: calc(100% - 100px);
+    margin: 0 auto;
+}
+
 .sample-page-layout {
     display: grid;
     grid-template-columns: 1fr minmax(0, 900px) 1fr;
@@ -134,7 +145,6 @@ p {
     background-color: hsl(var(--hue), 85%, 75%);
     border-radius: 20px;
     max-width: 900px;
-    width: calc(100% - 100px);
     text-align: left;
     padding: 15px;
     display: grid;
