@@ -38,6 +38,7 @@ class Sample(db.Model):
     thumbnail_filename = db.Column(db.String, nullable=False)
     uploader = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     source_id = db.Column(db.Integer, db.ForeignKey("source.id"), nullable=True)
+    is_public = db.Column(db.Boolean, default=False, nullable=False)
 
     source = db.relationship("Source", back_populates="samples")
     likes = db.relationship("User", secondary=likes_table, backref="liked_samples")
