@@ -13,7 +13,7 @@
     </div>
 
     <div class="upload-form">
-        {% if current_user is none %}
+        {% if not current_user.is_authenticated %}
             {% if require_user_approval %}
                 Only approved registered users can upload samples.
             {% else %}
