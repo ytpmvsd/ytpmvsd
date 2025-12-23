@@ -99,8 +99,12 @@ def edit_sample(sample_id):
     stored_as = session.get(f"stored_as_{sample_id}")
     force_reencode = session.get(f"force_reencode")
 
-    if not uploaded_sample_id or uploaded_sample_id != sample_id:
-        flash("Invalid request.", "error")
+    if not uploaded_sample_id:
+        flash("Sample ID empty.", "error")
+        return redirect(url_for("main.upload"))
+
+    if uploaded_sample_id != sample_id:
+        flash("Sample ID doesn't match.", "error")
         return redirect(url_for("main.upload"))
 
     if request.method == "POST":
@@ -161,8 +165,12 @@ def batch_edit_samples(sample_ids):
         if not force_reencode:
             force_reencode = session.get(f"force_reencode")
 
-        if not uploaded_sample_id or uploaded_sample_id != sample_id:
-            flash("Invalid request.", "error")
+        if not uploaded_sample_id:
+            flash("Sample ID empty.", "error")
+            return redirect(url_for("main.upload"))
+
+        if uploaded_sample_id != sample_id:
+            flash("Sample ID doesn't match.", "error")
             return redirect(url_for("main.upload"))
 
         sample_data.append(
