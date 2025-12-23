@@ -89,7 +89,7 @@ def sample_page(sample_id):
 @main_bp.route("/sample/edit/<sample_id>/", methods=["GET", "POST"])
 @login_required
 def edit_sample(sample_id):
-    uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
+    uploaded_sample_id = str(session.get(f"uploaded_sample_id_{sample_id}"))
     old_filename = session.get(f"filename_{sample_id}")
     thumbnail = session.get(f"thumbnail_{sample_id}")
     stored_as = session.get(f"stored_as_{sample_id}")
@@ -112,10 +112,8 @@ def edit_sample(sample_id):
             source_id = None
 
         edit_status = samples.edit_sample(
+            sample_id,
             filename,
-            stored_as,
-            str(thumbnail),
-            current_user.id,
             source_id,
             tags,
             reencode
@@ -152,7 +150,7 @@ def batch_edit_samples(sample_ids):
     force_reencode = False
 
     for sample_id in sample_ids_list:
-        uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
+        uploaded_sample_id = str(session.get(f"uploaded_sample_id_{sample_id}"))
         filename = session.get(f"filename_{sample_id}")
         thumbnail = session.get(f"thumbnail_{sample_id}")
         stored_as = session.get(f"stored_as_{sample_id}")
@@ -184,11 +182,9 @@ def batch_edit_samples(sample_ids):
 
         for sample_item in sample_data:
             filename = sample_item["filename"]
-            stored_as = sample_item["stored_as"]
-            thumbnail = sample_item["thumbnail"]
             sample_id = sample_item["sample_id"]
 
-            edit_status = samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, [], reencode)
+            edit_status = samples.edit_sample(sample_id, filename, source_id, [], reencode)
 
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
