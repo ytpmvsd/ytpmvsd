@@ -7,10 +7,11 @@ import secrets
 import file_type
 
 from flask import jsonify
+from sqlalchemy.exc import IntegrityError
 
 from config import MB_UPLOAD_LIMIT
-from models import Metadata, Sample, db
-from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video
+from models import Metadata, Sample, db, Tag
+from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video, add_tag_to_db
 
 from werkzeug.utils import secure_filename
 
@@ -18,7 +19,7 @@ ALLOWED_UPLOAD_EXTENSIONS=["mp4"]
 ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE=["m4v"]
 
 
-def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
+def edit_sample(filename, stored_as, thumbnail, uploader, source_id, tags, reencode):
     if reencode:
         reencode_video(stored_as)
 
@@ -34,6 +35,22 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, reencode):
     except Exception as e:
         print(e)
         return 1
+
+    sample = Sample.query.filter_by(stored_as=stored_as).first()
+
+    print(tags)
+    for sample_tag in tags:
+        tag = Tag.query.filter_by(name=sample_tag).first()
+        if tag is None:
+            if sample_tag == '':
+                continue
+            add_tag_to_db(sample_tag, 5)
+            tag = Tag.query.filter_by(name=sample_tag).first()
+        sample.tags.append(tag)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
     return 0
 

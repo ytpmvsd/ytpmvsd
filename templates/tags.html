@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="home-samples-box">
+        <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
+            <div class="flexbox">
+              <h1 style="text-align: center">All Tags</h1>
+            </div>
+        </div>
+
+        <table class="tags-table">
+            <thead>
+                <tr>
+                    {% for category in categories %}
+                        <th>{{ category.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% set max_tags = tags.values() | map('length') | max if tags else 0 %}
+                {% for i in range(max_tags) %}
+                    <tr>
+                        {% for category in categories %}
+                            <td>
+                                {% set category_tags = tags.get(category.id, []) %}
+                                {% if i < category_tags | length %}
+                                    <a href="{{ url_for('search_results', q=category_tags[i].name) }}" style="color: {{ "#" + category.colour }};">
+                                    {{ category_tags[i].name }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

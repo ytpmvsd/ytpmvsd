@@ -155,12 +155,11 @@ def edit_sample(sample_id):
     if request.method == "POST":
         filename = request.form.get("filename")
         source_id = request.form.get("source_id")
+        tags = request.form.get('tags', '').split(' ')
         reencode = request.form.get("reencode")
 
         filename = re.sub(r"[^\w\s]", "", filename)
         filename = re.sub(r"\s+", "_", filename) + ".mp4"
-
-        # tags = request.form.get('tags', '').split(',')
 
         if source_id == "":
             source_id = None
@@ -171,6 +170,7 @@ def edit_sample(sample_id):
             str(thumbnail),
             current_user.id,
             source_id,
+            tags,
             reencode
         )
 
@@ -337,6 +337,18 @@ def source_page(source_id):
         date=datetime.datetime.now(datetime.UTC),
     )
 
+@app.route("/search")
+def search_results():
+    query = request.args.get("q", "")
+
+    results = api.search_samples(query)
+
+    return render_template(
+        "search.html",
+        title="YTPMV Sample Database",
+        samples=results,
+        date=datetime.datetime.now(datetime.UTC),
+    )
 
 @app.route("/search_sources/")
 def search_sources():
@@ -344,6 +356,23 @@ def search_sources():
     sources = api.search_sources(query)
 
     return jsonify([{"id": s.id, "name": s.name} for s in sources])
+
+@app.route("/tags/")
+def tags_list():
+    tags = api.get_tags()
+    categories = api.get_tag_categories()
+
+    grouped_tags = {category.id: [] for category in categories}
+
+    for tag in tags:
+        grouped_tags[tag.category_id].append(tag)
+
+    return render_template(
+        "tags.html",
+        title="Tags - YTPMV Sample Database",
+        categories=categories,
+        tags=grouped_tags,
+    )
 
 
 @app.route("/upload/", methods=["GET", "POST"])
@@ -536,6 +565,14 @@ def api_sample_info(sample_id):
 @app.route("/api/samples_len")
 def api_samples_len():
     return jsonify({"len": int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))})
+
+@app.route("/api/search_samples")
+def api_search_samples():
+    query = request.args.get("q", "")
+    samples = api.search_samples(query)
+
+    return jsonify([{"id": s.id, "name": s.filename} for s in samples])
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.7.2", port=5000)

@@ -4,7 +4,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import TIMESTAMP
-from sqlalchemy.dialects.postgresql import ARRAY
 
 db = SQLAlchemy()
 
@@ -13,6 +12,12 @@ bcrypt = Bcrypt()
 likes_table = db.Table(
     "likes",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
+    db.Column("sample_id", db.Integer, db.ForeignKey("sample.id"), primary_key=True),
+)
+
+tags_table = db.Table(
+    "tags",
+    db.Column("tag_id", db.Integer, db.ForeignKey("tag.id"), primary_key=True),
     db.Column("sample_id", db.Integer, db.ForeignKey("sample.id"), primary_key=True),
 )
 
@@ -25,7 +30,6 @@ class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String, nullable=False)
     stored_as = db.Column(db.String, nullable=False)
-    tags = db.Column(ARRAY(db.String), nullable=False, default=[])
     upload_date = db.Column(
         TIMESTAMP(timezone=True),
         nullable=False,
@@ -37,6 +41,7 @@ class Sample(db.Model):
 
     source = db.relationship("Source", back_populates="samples")
     likes = db.relationship("User", secondary=likes_table, backref="liked_samples")
+    tags = db.relationship("Tag", secondary=tags_table, back_populates="samples")
     sample_metadata = db.relationship("Metadata", back_populates="sample")
 
 class User(db.Model, UserMixin):
@@ -64,3 +69,19 @@ class Metadata(db.Model):
     codec = db.Column(db.String, nullable=False)
 
     sample = db.relationship("Sample", back_populates="sample_metadata")
+
+class TagCategory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    colour = db.Column(db.String(6), nullable=False)
+
+    tags = db.relationship("Tag", back_populates="category", lazy=True)
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey("tag_category.id"), nullable=False)
+
+    category = db.relationship("TagCategory", back_populates="tags")
+    samples = db.relationship("Sample", secondary=tags_table, back_populates="tags")
