@@ -28,20 +28,20 @@
         </div>
     </div>
     <ul>
-        <li><a href="{{ url_for("home_page") }}">Home</a></li>
+        <li><a href="{{ url_for("main.home_page") }}">Home</a></li>
         •
-        <li><a href="{{ url_for("samples_list_base") }}">Samples</a></li>
+        <li><a href="{{ url_for("main.samples_list_base") }}">Samples</a></li>
         •
-        <li><a href="{{ url_for("all_sources") }}">Sources</a></li>
+        <li><a href="{{ url_for("main.all_sources") }}">Sources</a></li>
         •
-        <li><a href="{{ url_for("tags_list") }}">Tags</a></li>
+        <li><a href="{{ url_for("main.tags_list") }}">Tags</a></li>
         •
-        <li><a href="{{ url_for("upload") }}">Upload</a></li>
+        <li><a href="{{ url_for("main.upload") }}">Upload</a></li>
         •
         {% if current_user.is_authenticated %}
-            <li><a href="{{ url_for("logout") }}">Logout</a></li>
+            <li><a href="{{ url_for("main.logout") }}">Logout</a></li>
         {% else %}
-            <li><a href="{{ url_for("login") }}">Login</a></li>
+            <li><a href="{{ url_for("main.login") }}">Login</a></li>
         {% endif %}
     </ul>
     <form role="search" onsubmit="search(event)" class="search-form">
@@ -73,8 +73,8 @@
 </footer>
 
 <footer style="padding: 0 5px 5px; font-size: 14px; gap: 10px;">
-    <a href="{{ url_for('wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">Privacy Policy</a>
-    <a href="{{ url_for('wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">DMCA</a>
+    <a href="{{ url_for('wiki.wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">Privacy Policy</a>
+    <a href="{{ url_for('wiki.wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">DMCA</a>
 </footer>
 
 </body>

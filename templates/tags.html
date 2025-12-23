@@ -26,7 +26,7 @@
                             <td>
                                 {% set category_tags = tags.get(category.id, []) %}
                                 {% if i < category_tags | length %}
-                                    <a href="{{ url_for('search_results', q=category_tags[i].name) }}" style="color: {{ "#" + category.colour }};">
+                                    <a href="{{ url_for('main.search_results', q=category_tags[i].name) }}" style="color: {{ "#" + category.colour }};">
                                     {{ category_tags[i].name }}
                                     </a>
                                 {% endif %}

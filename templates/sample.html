@@ -24,7 +24,7 @@
                     <span class="tags-category-header">{{ tags[0].category.name }}</span>
                     {% for tag in tags|sort(attribute='name') %}
                         <p style="color: #00E">
-                            <a href="{{ url_for('search_results', q=tag.name) }}" style="color: {{ "#" + tag.category.colour }}; text-decoration: none">{{ tag.name | replace('_', ' ') }}</a>
+                            <a href="{{ url_for('main.search_results', q=tag.name) }}" style="color: {{ "#" + tag.category.colour }}; text-decoration: none">{{ tag.name | replace('_', ' ') }}</a>
                             <a onclick="addToSearchText('{{ tag.name }}')">+</a>
                             <a onclick="addToSearchText('-{{ tag.name }}')">-</a>
                             <a onclick="">?</a>
@@ -46,7 +46,7 @@
                 </video>
                 <h1>{{ sample.filename }}</h1>
                 <p class="uploader">Uploaded by <a
-                        href="{{ url_for('user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
+                        href="{{ url_for('main.user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
                 <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
                 <script>
                     document.querySelectorAll('.upload-date').forEach(element => {
@@ -58,7 +58,7 @@
             </div>
             <div class="sample-info-box">
                 <div class="sample-buttons">
-                    <a href="{{ url_for('download_sample', sample_id=sample.id) }}"
+                    <a href="{{ url_for('main.download_sample', sample_id=sample.id) }}"
                        class="sample-page-button" style="--hue: 100">
                         <span>Download sample</span>
                     </a>
@@ -83,7 +83,7 @@
 
                     {% if sample.source_id %}
                         <span><b>Source:</b> <a
-                                href="{{ url_for('source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
+                                href="{{ url_for('main.source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
                     {% endif %}
 
                     <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.filesize|int/1000/1000 ) }}</span>

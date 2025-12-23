@@ -31,7 +31,7 @@
                 </tr>
                 <tr>
                     <td align="center" colspan=3>
-                        <small>Check out the <a href="{{ url_for('wiki_page',page='filename_guidelines') }}">filename guidelines</a></small><br><br>
+                        <small>Check out the <a href="{{ url_for('wiki.wiki_page',page='filename_guidelines') }}">filename guidelines</a></small><br><br>
                     </td>
                 </tr>
                 <tr class="source-box">
@@ -69,7 +69,7 @@
 
             <div>
                 {% if force_reencode %}
-                    <label for="reencode">Reencode <em>(required, <a href="{{ url_for('wiki_page',page='reencode') }}">learn more</a>)</em></label>
+                    <label for="reencode">Reencode <em>(required, <a href="{{ url_for('wiki.wiki_page',page='reencode') }}">learn more</a>)</em></label>
                     <input type="checkbox" id="reencode" name="reencode" checked disabled="disabled">
                 {% else %}
                     <label for="reencode">Reencode (recommended)</label>
