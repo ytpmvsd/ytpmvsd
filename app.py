@@ -348,12 +348,6 @@ def search_results():
         samples=results,
     )
 
-@app.route("/search_sources/")
-def search_sources():
-    query = request.args.get("q", "")
-    sources = api.search_sources(query)
-
-    return jsonify([{"id": s.id, "name": s.name} for s in sources])
 
 @app.route("/tags/")
 def tags_list():
@@ -570,6 +564,13 @@ def api_search_samples():
     samples = api.search_samples(query)
 
     return jsonify([{"id": s.id, "name": s.filename} for s in samples])
+
+@app.route("/api/search_sources")
+def search_sources():
+    query = request.args.get("q", "")
+    sources = api.search_sources(query)
+
+    return jsonify([{"id": s.id, "name": s.name} for s in sources])
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ function initSourceSelector() {
             return;
         }
 
-        fetch(`/search_sources?q=${encodeURIComponent(query)}`)
+        fetch(`/api/search_sources?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
                 sourceList.innerHTML = "";
