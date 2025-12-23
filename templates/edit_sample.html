@@ -31,7 +31,7 @@
                 </tr>
                 <tr>
                     <td align="center" colspan=3>
-                        <small>Check out the <a href="{{ url_for('wiki_page',page='filename_guidelines') }}">filename guidelines</a></small><br><br>
+                        <small>Check out the <a href="{{ url_for('wiki.wiki_page',page='filename_guidelines') }}">filename guidelines</a></small><br><br>
                     </td>
                 </tr>
                 <tr class="source-box">
@@ -69,7 +69,7 @@
 
             <div>
                 {% if force_reencode %}
-                    <label for="reencode">Reencode <em>(required, <a href="{{ url_for('wiki_page',page='reencode') }}">learn more</a>)</em></label>
+                    <label for="reencode">Reencode <em>(required, <a href="{{ url_for('wiki.wiki_page',page='reencode') }}">learn more</a>)</em></label>
                     <input type="checkbox" id="reencode" name="reencode" checked disabled="disabled">
                 {% else %}
                     <label for="reencode">Reencode (recommended)</label>
@@ -84,69 +84,7 @@
         </div>
     </form>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const sourceInput = document.getElementById("source");
-            const sourceList = document.getElementById("source-suggestions");
-            const sourceIdField = document.getElementById("source_id");
-            const clearButton = document.getElementById("clear-source");
-            const instructionText = document.getElementById("instruction-text");
-
-            function sourceBoxFill() {
-                const query = sourceInput.value;
-                userSelected = false;
-
-                if (query.length < 1) {
-                    sourceList.innerHTML = "";
-                    sourceIdField.value = "";
-                    return;
-                }
-
-                fetch(`/search_sources?q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        sourceList.innerHTML = "";
-                        data.forEach(source => {
-                            const item = document.createElement("li");
-                            item.textContent = source.name;
-                            item.dataset.id = source.id;
-
-                            item.addEventListener("click", function () {
-                                sourceInput.value = source.name;
-                                sourceIdField.value = source.id;
-                                sourceList.innerHTML = "";
-                                sourceInput.disabled = true;
-                                clearButton.disabled = false;
-                                instructionText.style.display = "none";
-                                userSelected = true;
-                            });
-
-                            sourceList.appendChild(item);
-                        });
-                    });
-            };
-            let userSelected = false;
-
-            sourceInput.addEventListener("click", sourceBoxFill);
-            sourceInput.addEventListener("input", sourceBoxFill);
-            sourceBoxFill();
-
-            clearButton.addEventListener("click", function () {
-                sourceInput.value = "";
-                sourceIdField.value = "";
-                sourceInput.disabled = false;
-                clearButton.disabled = true;
-                instructionText.style.display = "block";
-            });
-
-            document.addEventListener("click", function (e) {
-                if (!sourceList.contains(e.target) && e.target !== sourceInput) {
-                    sourceList.innerHTML = "";
-                }
-            });
-        });
-    </script>
-
+    <script src="{{ url_for('static', filename='js/source_selector.js') }}"></script>
     <script>
     document.querySelector(".submit_button").onclick = function() {
         const reencode = document.getElementById('reencode');

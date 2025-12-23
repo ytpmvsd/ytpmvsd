@@ -8,7 +8,7 @@
             <button type="submit">Confirm</button>
         </form>
     {% else %}
-        <form action="{{ url_for('home_page') }}" method="GET">
+        <form action="{{ url_for('main.home_page') }}" method="GET">
             <button type="submit">Back to home page</button>
         </form>
     {% endif %}

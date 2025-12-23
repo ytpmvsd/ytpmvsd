@@ -10,10 +10,10 @@
         <div class="home-samples-grid">
             {% for sample in samples %}
                 <div class="home-sample">
-                    <a href="{{ url_for('sample_page',sample_id=sample.id) }}"><img
+                    <a href="{{ url_for('main.sample_page',sample_id=sample.id) }}"><img
                             src="{{ url_for('static', filename='media/thumbs/' + sample.thumbnail_filename) }}"
                             alt="sample"></a>
-                    <a href="{{ url_for('sample_page',sample_id=sample.id) }}"><div>{{ sample.filename }}</div></a>
+                    <a href="{{ url_for('main.sample_page',sample_id=sample.id) }}"><div>{{ sample.filename }}</div></a>
                     <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"
                        style="font-size: 14px;"></p>
                 </div>
