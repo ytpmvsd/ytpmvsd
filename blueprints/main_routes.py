@@ -137,7 +137,7 @@ def edit_sample(sample_id):
             flash("Failed to upload sample. Please reencode or try another video.", "error")
             return redirect(url_for("main.upload"))
 
-        return redirect(url_for("main.home_page"))
+        return redirect(url_for("main.sample_page", sample_id=sample_id))
 
     return render_template(
         "edit_sample.html",
@@ -208,7 +208,7 @@ def batch_edit_samples(sample_ids):
                 flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
                 return redirect(url_for("main.upload"))
 
-        return redirect(url_for("main.home_page"))
+        return redirect(url_for("main.user_page", user_id=current_user.id))
 
     return render_template(
         "batch_edit_samples.html",
