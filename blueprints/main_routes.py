@@ -293,10 +293,19 @@ def user_page(user_id):
         is_admin=current_user.is_authenticated and current_user.is_admin
     )
 
+    samples = []
+    private_samples = []
+    for sample in res_samples:
+        if not sample.is_public:
+            private_samples.append(sample)
+        else:
+            samples.append(sample)
+
     return render_template(
         "user.html",
         title=f"{user.username} - YTPMV Sample Database",
-        samples=res_samples,
+        samples=samples,
+        samples_under_review=private_samples,
         user=user,
     )
 
