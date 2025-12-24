@@ -39,10 +39,10 @@
                         <b>Source:</b>
                     </td>
                     <td align="left">
-                        <input type="text" id="source" name="source" autocomplete="off" placeholder="">
+                        <input type="text" id="source" name="source" autocomplete="off" placeholder="" value="{{ source_name }}" {% if source_name %}disabled="disabled"{% endif %}>
                     </td>
                     <td>
-                        <button type="button" id="clear-source" disabled="disabled">Clear</button>
+                        <button type="button" id="clear-source" {% if not source_name %}disabled="disabled"{% endif %}>Clear</button>
                     </td>
                 </tr>
                 <tr>
@@ -56,17 +56,18 @@
                             <ul id="source-suggestions">
                             </ul>
                         </span>
-                        <input type="hidden" id="source_id" name="source_id">
+                        <input type="hidden" id="source_id" name="source_id" value="{{ source_id if source_id else "" }}">
                     </td>
                 </tr>
             </table>
 
             <div>
                 <label for="tags"><b>Tags:</b></label>
-                <br><textarea id="tags" name="tags" rows="4" cols="45" maxlength="200"></textarea>
+                <br><textarea id="tags" name="tags" rows="4" cols="45" maxlength="200">{{ tags }}</textarea>
                 <br><label><small>Space separated. Use underscores for tags with spaces in them.</small></label>
             </div>
 
+            {% if is_initial_upload %}
             <div>
                 {% if force_reencode %}
                     <label for="reencode">Reencode <em>(required, <a href="{{ url_for('wiki.wiki_page',page='reencode') }}">learn more</a>)</em></label>
@@ -77,6 +78,7 @@
                      <br><small>This will ensure the sample is compatible with the website and will not cause errors.<br>You should only uncheck this if it's important the original sample's metadata remain intact.</small>
                 {% endif %}
             </div>
+            {% endif %}
 
             <div>
                 <button type="submit" class="submit_button">Save</button>
@@ -88,7 +90,7 @@
     <script>
     document.querySelector(".submit_button").onclick = function() {
         const reencode = document.getElementById('reencode');
-        if (reencode.checked) {
+        if (reencode && reencode.checked) {
             document.getElementById('changelog-popup').classList.remove('hidden');
             document.getElementById('changelog-background').classList.remove('hidden');
         }

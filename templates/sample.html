@@ -14,7 +14,11 @@
 
 {% block content %}
     <div class="warning-box">
-
+        {% if not sample.is_public %}
+            <div class="privacy-warning">
+                <b>Note:</b> This sample is private and only visible to you. It will be made public once it has been reviewed by a moderator.
+            </div>
+        {% endif %}
     </div>
     <div class="sample-page-layout">
         <aside class="tag-sidebar">
@@ -67,6 +71,10 @@
                         <span class="like-count">{{ sample.likes|length }}</span>
                     </a>
                     {% if current_user.is_admin or current_user.id == uploader.id %}
+                        <a href="{{ url_for('main.edit_sample', sample_id=sample.id) }}"
+                           class="sample-page-button" style="--hue: 40">
+                            <span>Edit sample</span>
+                        </a>
                         <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
                             <span>Delete sample</span>
                         </a>

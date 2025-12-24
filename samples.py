@@ -1,17 +1,16 @@
 import datetime
 import os
 import re
-import uuid
 import pathlib
 import secrets
 import file_type
 
 from flask import jsonify
-from sqlalchemy.exc import IntegrityError
+from flask_login import current_user
 
 from config import MB_UPLOAD_LIMIT
 from models import Metadata, Sample, db, Tag
-from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video, add_tag_to_db
+from utils import add_sample_to_db, check_video, create_thumbnail, reencode_video, add_tag_to_db, update_metadata
 
 from werkzeug.utils import secure_filename
 
@@ -19,26 +18,19 @@ ALLOWED_UPLOAD_EXTENSIONS=["mp4"]
 ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE=["m4v"]
 
 
-def edit_sample(filename, stored_as, thumbnail, uploader, source_id, tags, reencode):
-    if reencode:
-        reencode_video(stored_as)
-
-    try:
-        add_sample_to_db(
-            filename,
-            stored_as,
-            datetime.datetime.now(datetime.UTC),
-            str(thumbnail),
-            uploader,
-            source_id,
-        )
-    except Exception as e:
-        print(e)
+def edit_sample(sample_id, filename, source_id, tags, reencode):
+    sample = Sample.query.get(sample_id)
+    if not sample:
         return 1
 
-    sample = Sample.query.filter_by(stored_as=stored_as).first()
+    if reencode:
+        reencode_video(sample.stored_as)
+        update_metadata(sample.id)
 
-    print(tags)
+    sample.filename = filename
+    sample.source_id = source_id
+
+    sample.tags = [] # clear tags in the case of re-edits
     for sample_tag in tags:
         tag = Tag.query.filter_by(name=sample_tag).first()
         if tag is None:
@@ -46,11 +38,15 @@ def edit_sample(filename, stored_as, thumbnail, uploader, source_id, tags, reenc
                 continue
             add_tag_to_db(sample_tag, 5)
             tag = Tag.query.filter_by(name=sample_tag).first()
-        sample.tags.append(tag)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
+        if tag not in sample.tags:
+            sample.tags.append(tag)
+    
+    try:
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return 1
 
     return 0
 
@@ -104,9 +100,31 @@ def upload(file):
             os.remove(upload_path)
             raise Exception("One or more of your sample(s) exceeded the file limit. Max supported filesize is 10MB per file.")
 
-        create_thumbnail(upload_path, f"static/media/thumbs/{timestamp}.png")
+        thumbnail_filename = f"{timestamp}.png"
+        create_thumbnail(upload_path, f"static/media/thumbs/{thumbnail_filename}")
 
-        sample_id = str(uuid.uuid4())
+        is_public = current_user.is_uploader
+        
+        try:
+            sample_id = add_sample_to_db(
+                original_filename,
+                stored_as,
+                datetime.datetime.now(datetime.UTC),
+                thumbnail_filename,
+                current_user.id,
+                None,
+                is_public
+            )
+            update_metadata(sample_id)
+        except Exception as e:
+            print(e)
+            if os.path.exists(upload_path):
+                os.remove(upload_path)
+            thumb_path = f"static/media/thumbs/{thumbnail_filename}"
+            if os.path.exists(thumb_path):
+                os.remove(thumb_path)
+            raise Exception(f"Failed to add sample to database: {e}")
+
     else:
         raise Exception("No file")
 

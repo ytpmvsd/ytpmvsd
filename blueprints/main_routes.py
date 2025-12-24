@@ -71,6 +71,10 @@ def sample_page(sample_id):
     if sample is None:
         return render_template("404.html", title="YTPMV Sample Database")
 
+    if not sample.is_public:
+        if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
+            return render_template("404.html", title="YTPMV Sample Database")
+
     uploader = api.get_user_info(sample.uploader)
 
     metadata = api.get_metadata(sample.id)
@@ -89,21 +93,47 @@ def sample_page(sample_id):
 @main_bp.route("/sample/edit/<sample_id>/", methods=["GET", "POST"])
 @login_required
 def edit_sample(sample_id):
-    uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
-    old_filename = session.get(f"filename_{sample_id}")
-    thumbnail = session.get(f"thumbnail_{sample_id}")
-    stored_as = session.get(f"stored_as_{sample_id}")
-    force_reencode = session.get(f"force_reencode")
+    sample = Sample.query.get(sample_id)
 
-    if not uploaded_sample_id or uploaded_sample_id != sample_id:
-        flash("Invalid request.", "error")
+    # defaults
+    tags = ""
+    source_id = None
+    source_name = ""
+    force_reencode = False
+
+    uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
+    if uploaded_sample_id:
+        uploaded_sample_id = str(uploaded_sample_id)
+    
+    if uploaded_sample_id and uploaded_sample_id == sample_id:
+        is_initial_upload = True
+        old_filename = session.get(f"filename_{sample_id}")
+        thumbnail = session.get(f"thumbnail_{sample_id}")
+        stored_as = session.get(f"stored_as_{sample_id}")
+        force_reencode = session.get(f"force_reencode")
+
+    elif sample:
+        is_initial_upload = False
+        if not (current_user.is_admin or current_user.id == sample.uploader):
+            flash("You do not have permission to edit this sample.", "error")
+            return redirect(url_for("main.sample_page", sample_id=sample_id))
+            
+        old_filename = sample.filename
+        thumbnail = sample.thumbnail_filename
+        stored_as = sample.stored_as
+        tags = " ".join([tag.name for tag in sample.tags])
+        source_id = sample.source_id
+        source_name = sample.source.name if sample.source else ""
+
+    else:
+        flash("Sample not found.", "error")
         return redirect(url_for("main.upload"))
 
     if request.method == "POST":
         filename = request.form.get("filename")
         source_id = request.form.get("source_id")
         tags = request.form.get('tags', '').split(' ')
-        reencode = request.form.get("reencode")
+        reencode = request.form.get("reencode") if is_initial_upload else False
 
         filename = re.sub(r"[^\w\s]", "", filename)
         filename = re.sub(r"\s+", "_", filename) + ".mp4"
@@ -112,10 +142,8 @@ def edit_sample(sample_id):
             source_id = None
 
         edit_status = samples.edit_sample(
+            sample_id,
             filename,
-            stored_as,
-            str(thumbnail),
-            current_user.id,
             source_id,
             tags,
             reencode
@@ -128,10 +156,13 @@ def edit_sample(sample_id):
         session.pop(f"force_reencode", None)
 
         if edit_status:
-            flash("Failed to upload sample. Please reencode or try another video.", "error")
-            return redirect(url_for("main.upload"))
+            flash("Failed to edit sample.", "error")
+            if uploaded_sample_id:
+                return redirect(url_for("main.upload"))
+            else:
+                return redirect(url_for("main.sample_page", sample_id=sample_id))
 
-        return redirect(url_for("main.home_page"))
+        return redirect(url_for("main.sample_page", sample_id=sample_id))
 
     return render_template(
         "edit_sample.html",
@@ -141,6 +172,12 @@ def edit_sample(sample_id):
         thumbnail=thumbnail,
         filename_no_extension=os.path.splitext(old_filename)[0],
         force_reencode=force_reencode,
+
+        # relevant for post-upload edits only
+        is_initial_upload=is_initial_upload,
+        tags=tags,
+        source_id=source_id,
+        source_name=source_name
     )
 
 @main_bp.route("/sample/batch-edit/<sample_ids>/", methods=["GET", "POST"])
@@ -152,15 +189,19 @@ def batch_edit_samples(sample_ids):
     force_reencode = False
 
     for sample_id in sample_ids_list:
-        uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
+        uploaded_sample_id = str(session.get(f"uploaded_sample_id_{sample_id}"))
         filename = session.get(f"filename_{sample_id}")
         thumbnail = session.get(f"thumbnail_{sample_id}")
         stored_as = session.get(f"stored_as_{sample_id}")
         if not force_reencode:
             force_reencode = session.get(f"force_reencode")
 
-        if not uploaded_sample_id or uploaded_sample_id != sample_id:
-            flash("Invalid request.", "error")
+        if not uploaded_sample_id:
+            flash("Sample ID empty.", "error")
+            return redirect(url_for("main.upload"))
+
+        if uploaded_sample_id != sample_id:
+            flash("Sample ID doesn't match.", "error")
             return redirect(url_for("main.upload"))
 
         sample_data.append(
@@ -184,11 +225,9 @@ def batch_edit_samples(sample_ids):
 
         for sample_item in sample_data:
             filename = sample_item["filename"]
-            stored_as = sample_item["stored_as"]
-            thumbnail = sample_item["thumbnail"]
             sample_id = sample_item["sample_id"]
 
-            edit_status = samples.edit_sample(filename, stored_as, thumbnail, current_user.id, source_id, [], reencode)
+            edit_status = samples.edit_sample(sample_id, filename, source_id, [], reencode)
 
             session.pop(f"uploaded_sample_id_{sample_id}", None)
             session.pop(f"filename_{sample_id}", None)
@@ -200,7 +239,7 @@ def batch_edit_samples(sample_ids):
                 flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
                 return redirect(url_for("main.upload"))
 
-        return redirect(url_for("main.home_page"))
+        return redirect(url_for("main.user_page", user_id=current_user.id))
 
     return render_template(
         "batch_edit_samples.html",
@@ -239,22 +278,34 @@ def delete_sample(sample_id):
 @main_bp.route("/sample/<int:sample_id>/download/")
 def download_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
+    if not sample.is_public:
+        if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
+            return render_template("404.html", title="YTPMV Sample Database"), 404
     file_path = os.path.join("static/media/samps", sample.stored_as)
     return send_file(file_path, as_attachment=True, download_name=sample.filename)
 
 @main_bp.route("/user/<int:user_id>/")
 def user_page(user_id):
     user = User.query.get_or_404(user_id)
-    res_samples = (
-        Sample.query.filter_by(uploader=user_id)
-        .order_by(Sample.upload_date.desc())
-        .all()
+    res_samples = api.get_user_samples(
+        user_id,
+        viewer_id=current_user.id if current_user.is_authenticated else None,
+        is_admin=current_user.is_authenticated and current_user.is_admin
     )
+
+    samples = []
+    private_samples = []
+    for sample in res_samples:
+        if not sample.is_public:
+            private_samples.append(sample)
+        else:
+            samples.append(sample)
 
     return render_template(
         "user.html",
         title=f"{user.username} - YTPMV Sample Database",
-        samples=res_samples,
+        samples=samples,
+        samples_under_review=private_samples,
         user=user,
     )
 
@@ -270,7 +321,7 @@ def all_sources():
 def source_page(source_id):
     source = api.get_source_info(source_id)
     res_samples = (
-        Sample.query.filter_by(source=source).order_by(Sample.upload_date.desc()).all()
+        Sample.query.filter_by(source=source, is_public=True).order_by(Sample.upload_date.desc()).all()
     )
 
     return render_template(

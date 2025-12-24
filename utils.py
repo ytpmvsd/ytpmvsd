@@ -7,12 +7,12 @@ from sqlalchemy import create_engine, text
 from config import SQLALCHEMY_DATABASE_URI
 from models import Sample
 
-def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id):
+def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id, is_public):
     with engine.connect() as conn:
         try:
             sample = conn.execute(
                 text(
-                    "INSERT INTO sample (filename, stored_as, upload_date, thumbnail_filename, uploader, source_id) VALUES (:filename, :stored_as, :upload_date, :thumbnail_filename, :uploader, :source_id) RETURNING id"
+                    "INSERT INTO sample (filename, stored_as, upload_date, thumbnail_filename, uploader, source_id, is_public) VALUES (:filename, :stored_as, :upload_date, :thumbnail_filename, :uploader, :source_id, :is_public) RETURNING id"
                 ),
                 {
                     "filename": filename,
@@ -21,40 +21,12 @@ def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, sour
                     "thumbnail_filename": thumbnail,
                     "uploader": uploader,
                     "source_id": source_id,
+                    "is_public": is_public,
                 },
             )
             conn.commit()
-            try:
-                sample_id = sample.scalar()
-                metadata = get_metadata(sample_id)
-                for stream in metadata['streams']:
-                    if stream['codec_type'] == "video":
-                        video_stream = stream
-                        break
-                framerate = video_stream['r_frame_rate'].split('/')
-                framerate = int(framerate[0]) / int(framerate[1])
-                conn.execute(
-                    text(
-                        "INSERT INTO metadata (sample_id, filesize, width, height, aspect_ratio, framerate, codec) VALUES (:sample_id, :filesize, :width, :height, :aspect_ratio, :framerate, :codec)"
-                    ),
-                    {
-                        "sample_id": sample_id,
-                        "filesize": metadata['format']['size'],
-                        "width": video_stream['width'],
-                        "height": video_stream['height'],
-                        "aspect_ratio": video_stream['display_aspect_ratio'],
-                        "framerate": framerate,
-                        "codec": video_stream['codec_name'],
-                    },
-                )
-                conn.commit()
-            except Exception as e:
-                conn.execute(
-                    text("DELETE FROM sample WHERE id = :sample_id"),
-                    {"sample_id": sample_id},
-                )
-                conn.commit()
-                raise ValueError(f"Error adding metadata: {e}")
+            sample_id = sample.scalar()
+            return sample_id
         except Exception as e:
             print(f"Error adding sample: {e}")
             raise
