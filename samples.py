@@ -30,6 +30,7 @@ def edit_sample(sample_id, filename, source_id, tags, reencode):
     sample.filename = filename
     sample.source_id = source_id
 
+    sample.tags = [] # clear tags in the case of re-edits
     for sample_tag in tags:
         tag = Tag.query.filter_by(name=sample_tag).first()
         if tag is None:

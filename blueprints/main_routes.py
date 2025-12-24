@@ -93,25 +93,47 @@ def sample_page(sample_id):
 @main_bp.route("/sample/edit/<sample_id>/", methods=["GET", "POST"])
 @login_required
 def edit_sample(sample_id):
-    uploaded_sample_id = str(session.get(f"uploaded_sample_id_{sample_id}"))
-    old_filename = session.get(f"filename_{sample_id}")
-    thumbnail = session.get(f"thumbnail_{sample_id}")
-    stored_as = session.get(f"stored_as_{sample_id}")
-    force_reencode = session.get(f"force_reencode")
+    sample = Sample.query.get(sample_id)
 
-    if not uploaded_sample_id:
-        flash("Sample ID empty.", "error")
-        return redirect(url_for("main.upload"))
+    # defaults
+    tags = ""
+    source_id = None
+    source_name = ""
+    force_reencode = False
 
-    if uploaded_sample_id != sample_id:
-        flash("Sample ID doesn't match.", "error")
+    uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
+    if uploaded_sample_id:
+        uploaded_sample_id = str(uploaded_sample_id)
+    
+    if uploaded_sample_id and uploaded_sample_id == sample_id:
+        is_initial_upload = True
+        old_filename = session.get(f"filename_{sample_id}")
+        thumbnail = session.get(f"thumbnail_{sample_id}")
+        stored_as = session.get(f"stored_as_{sample_id}")
+        force_reencode = session.get(f"force_reencode")
+
+    elif sample:
+        is_initial_upload = False
+        if not (current_user.is_admin or current_user.id == sample.uploader):
+            flash("You do not have permission to edit this sample.", "error")
+            return redirect(url_for("main.sample_page", sample_id=sample_id))
+            
+        old_filename = sample.filename
+        thumbnail = sample.thumbnail_filename
+        stored_as = sample.stored_as
+        tags = " ".join([tag.name for tag in sample.tags])
+        source_id = sample.source_id
+        source_name = sample.source.name if sample.source else ""
+
+    else:
+        flash("Sample not found.", "error")
         return redirect(url_for("main.upload"))
 
     if request.method == "POST":
         filename = request.form.get("filename")
         source_id = request.form.get("source_id")
         tags = request.form.get('tags', '').split(' ')
-        reencode = request.form.get("reencode")
+        reencode = request.form.get("reencode") if is_initial_upload else False
 
         filename = re.sub(r"[^\w\s]", "", filename)
         filename = re.sub(r"\s+", "_", filename) + ".mp4"
@@ -134,8 +156,11 @@ def edit_sample(sample_id):
         session.pop(f"force_reencode", None)
 
         if edit_status:
-            flash("Failed to upload sample. Please reencode or try another video.", "error")
-            return redirect(url_for("main.upload"))
+            flash("Failed to edit sample.", "error")
+            if uploaded_sample_id:
+                return redirect(url_for("main.upload"))
+            else:
+                return redirect(url_for("main.sample_page", sample_id=sample_id))
 
         return redirect(url_for("main.sample_page", sample_id=sample_id))
 
@@ -147,6 +172,12 @@ def edit_sample(sample_id):
         thumbnail=thumbnail,
         filename_no_extension=os.path.splitext(old_filename)[0],
         force_reencode=force_reencode,
+
+        # relevant for post-upload edits only
+        is_initial_upload=is_initial_upload,
+        tags=tags,
+        source_id=source_id,
+        source_name=source_name
     )
 
 @main_bp.route("/sample/batch-edit/<sample_ids>/", methods=["GET", "POST"])

@@ -12,6 +12,11 @@ function initSourceSelector() {
     const isHiddenByDefault = window.getComputedStyle(clearButton).display === 'none';
 
     function sourceBoxFill() {
+        if (sourceInput.disabled) {
+            sourceList.innerHTML = "";
+            return;
+        }
+
         const query = sourceInput.value;
 
         if (query.length < 1) {
