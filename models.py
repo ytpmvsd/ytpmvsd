@@ -50,11 +50,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(80), unique=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    join_date = db.Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        default=datetime.datetime.now(datetime.UTC)
-    )
     is_admin = db.Column(db.Boolean, default=False)
     is_uploader = db.Column(db.Boolean, default=False)
     is_verified = db.Column(db.Boolean, default=False)
