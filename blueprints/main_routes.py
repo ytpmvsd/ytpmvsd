@@ -1,3 +1,4 @@
+import datetime
 import os
 import re
 import math
@@ -437,7 +438,7 @@ def register():
             flash("Username cannot be over 64 characters", "error")
             return redirect(url_for("main.register"))
 
-        user = User(username=username, email=email)
+        user = User(username=username, email=email, join_date=datetime.datetime.now(datetime.UTC))
         user.set_password(password)
 
         db.session.add(user)
