@@ -9,13 +9,15 @@ class SampleSort(Enum):
     LIKED = 2
     NONE = 3
 
+def _samples_public():
+    return Sample.query.filter_by(is_public=True)
+
 def get_recent_samples():
-    return Sample.query.filter_by(is_public=True).order_by(Sample.upload_date.desc()).limit(8).all()
+    return _samples_public().order_by(Sample.upload_date.desc()).limit(8).all()
 
 def get_top_samples():
     return (
-        db.session.query(Sample)
-        .filter(Sample.is_public == True)
+        _samples_public()
         .outerjoin(likes_table, Sample.id == likes_table.c.sample_id)
         .group_by(Sample.id)
         .order_by(func.count(likes_table.c.user_id).desc())
@@ -25,34 +27,32 @@ def get_top_samples():
 
 def get_samples(sort: SampleSort, index: int):
     index -= 1
-    query = Sample.query.filter_by(is_public=True)
     if sort is None:
-        return query.limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
+        return _samples_public().limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
     match sort:
         case SampleSort.LATEST:
-            return query.order_by(Sample.upload_date.desc()).limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
+            return _samples_public().order_by(Sample.upload_date.desc()).limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
         case SampleSort.OLDEST:
-            return query.order_by(Sample.upload_date.asc()).limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
+            return _samples_public().order_by(Sample.upload_date.asc()).limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
         case SampleSort.LIKED:
             return (
-            db.session.query(Sample)
-                .filter(Sample.is_public == True)
+            _samples_public()
                 .outerjoin(likes_table, Sample.id == likes_table.c.sample_id)
                 .group_by(Sample.id)
                 .order_by(func.count(likes_table.c.user_id).desc())
                 .limit(SAMPLES_PER_PAGE).offset(SAMPLES_PER_PAGE * index)
             )
         case _:
-            return query.limit(SAMPLES_PER_PAGE)
+            return _samples_public().limit(SAMPLES_PER_PAGE)
         
 def get_metadata(sample_id):
     return Metadata.query.get(sample_id)
 
 def get_samples_len():
-    return Sample.query.filter_by(is_public=True).count()
+    return _samples_public().count()
         
 def search_sources(query):
-    return (Source.query
+    return (_samples_public()
             .filter(Source.name.ilike(f"%{query}%"))
             .outerjoin(Sample, (Source.id == Sample.source_id) & (Sample.is_public == True))
             .group_by(Source.id)
@@ -82,7 +82,7 @@ def get_tag_categories():
 
 def search_samples(query):
     tags = query.split(',')
-    query_results = Sample.query.filter_by(is_public=True)
+    query_results = _samples_public()
     for tag in tags:
         if tag.startswith("-"):
             query_results = query_results.filter(~Sample.tags.any(Tag.name == tag[1:]))
