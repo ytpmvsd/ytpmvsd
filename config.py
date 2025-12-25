@@ -13,6 +13,7 @@ SAMPLES_PER_PAGE = settings["samples_per_page"]
 ALLOWED_UPLOAD_EXTENSIONS = settings["allowed_upload_extensions"]
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+USE_EMAIL_VERIFICATION = settings.get("use_email_verification", False)
 MAIL_SERVER = settings["mail_server"]
 MAIL_PORT = int(settings["mail_port"])
 MAIL_USE_TLS = settings["mail_use_tls"]

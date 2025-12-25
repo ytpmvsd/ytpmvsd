@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, redirect, session, url_fo
 from flask_login import login_required, current_user, login_user, logout_user
 from sqlalchemy import func
 
-from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE
+from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, USE_EMAIL_VERIFICATION
 from models import db, Sample, User, Source
 from utils import update_metadata
 from mail import generate_token, send_verification_email, confirm_token
@@ -441,14 +441,21 @@ def register():
         user = User(username=username, email=email, join_date=datetime.datetime.now(datetime.UTC))
         user.set_password(password)
 
+        if not USE_EMAIL_VERIFICATION:
+            user.is_verified = True
+
         db.session.add(user)
         db.session.commit()
 
-        token = generate_token(email)
-        verify_url = url_for("main.verify", token=token, _external=True)
-        send_verification_email(email, verify_url)
+        if USE_EMAIL_VERIFICATION:
+            token = generate_token(email)
+            verify_url = url_for("main.verify", token=token, _external=True)
+            send_verification_email(email, verify_url)
 
-        flash("Successfully registered. Please check your email to verify your account.", "success")
+            flash("Successfully registered. Please check your email to verify your account.", "success")
+        else:
+            flash("Successfully registered.", "success")
+
         return redirect(url_for("main.login"))
 
     return render_template("register.html")

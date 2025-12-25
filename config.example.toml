@@ -17,10 +17,11 @@ samples_per_page = 25
 allowed_upload_extensions = ["mp4"]
 
 # email login, for verification
-mail_server=""
-mail_port=587
+use_email_verification = false
+mail_server = ""
+mail_port = 587
 mail_use_tls = true  # Use TLS for most SMTP providers
 mail_use_ssl = false # Use SSL only if required (never enable both)
-mail_username=""
-mail_password=""
+mail_username = ""
+mail_password = ""
 
