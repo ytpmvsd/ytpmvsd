@@ -2,71 +2,62 @@ import os
 
 import ffmpeg
 import shutil
-from sqlalchemy import create_engine, text
-
-from config import SQLALCHEMY_DATABASE_URI
-from models import Sample
+from models import Sample, Metadata, Tag, db
 
 def add_sample_to_db(filename, stored_as, upload_date, thumbnail, uploader, source_id, is_public):
-    with engine.connect() as conn:
-        try:
-            sample = conn.execute(
-                text(
-                    "INSERT INTO sample (filename, stored_as, upload_date, thumbnail_filename, uploader, source_id, is_public) VALUES (:filename, :stored_as, :upload_date, :thumbnail_filename, :uploader, :source_id, :is_public) RETURNING id"
-                ),
-                {
-                    "filename": filename,
-                    "stored_as": stored_as,
-                    "upload_date": upload_date,
-                    "thumbnail_filename": thumbnail,
-                    "uploader": uploader,
-                    "source_id": source_id,
-                    "is_public": is_public,
-                },
-            )
-            conn.commit()
-            sample_id = sample.scalar()
-            return sample_id
-        except Exception as e:
-            print(f"Error adding sample: {e}")
-            raise
+    try:
+        sample = Sample(
+            filename=filename,
+            stored_as=stored_as,
+            upload_date=upload_date,
+            thumbnail_filename=thumbnail,
+            uploader=uploader,
+            source_id=source_id,
+            is_public=is_public,
+        )
+        db.session.add(sample)
+        db.session.commit()
+        return sample.id
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error adding sample: {e}")
+        raise
 
 
 def update_metadata(sample_id):
-    with engine.connect() as conn:
-        try:
-            sample = conn.execute(
-                text(
-                    "SELECT id from sample WHERE id = :sample_id"
-                ),
-                {"sample_id": sample_id},
-            )
-            sample_id = sample.scalar()
-            metadata = get_metadata(sample_id)
-            for stream in metadata['streams']:
-                if stream['codec_type'] == "video":
-                    video_stream = stream
-                    break
-            framerate = video_stream['r_frame_rate'].split('/')
-            framerate = int(framerate[0]) / int(framerate[1])
-            conn.execute(
-                text(
-                    "INSERT INTO metadata (sample_id, filesize, width, height, aspect_ratio, framerate, codec) VALUES (:sample_id, :filesize, :width, :height, :aspect_ratio, :framerate, :codec)"
-                ),
-                {
-                    "sample_id": sample_id,
-                    "filesize": metadata['format']['size'],
-                    "width": video_stream['width'],
-                    "height": video_stream['height'],
-                    "aspect_ratio": video_stream['display_aspect_ratio'],
-                    "framerate": framerate,
-                    "codec": video_stream['codec_name'],
-                },
-            )
-            conn.commit()
-        except Exception as e:
-            print(f"Error adding sample: {e}")
-            raise ValueError(f"Error adding metadata: {e}")
+    try:
+        sample = Sample.query.get(sample_id)
+        if not sample:
+            raise ValueError(f"Sample with id {sample_id} not found")
+
+        metadata = get_metadata(sample_id)
+        video_stream = None
+        for stream in metadata['streams']:
+            if stream['codec_type'] == "video":
+                video_stream = stream
+                break
+
+        if not video_stream:
+            raise ValueError("No video stream found in metadata")
+
+        framerate = video_stream['r_frame_rate'].split('/')
+        framerate = int(framerate[0]) / int(framerate[1])
+
+        sample_metadata = Metadata(
+            sample_id=sample.id,
+            filesize=metadata['format']['size'],
+            width=video_stream['width'],
+            height=video_stream['height'],
+            aspect_ratio=video_stream['display_aspect_ratio'],
+            framerate=framerate,
+            codec=video_stream['codec_name'],
+        )
+        db.session.add(sample_metadata)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error adding metadata: {e}")
+        raise ValueError(f"Error adding metadata: {e}")
 
 
 def create_thumbnail(video_path, thumbnail_path):
@@ -96,22 +87,14 @@ def create_thumbnail(video_path, thumbnail_path):
         print(f"An error occurred: {e}")
 
 def add_tag_to_db(name, category_id):
-    with engine.connect() as conn:
-        try:
-            tag = conn.execute(
-                text(
-                    "INSERT INTO tag (name, category_id) VALUES (:name, :category_id) RETURNING id"
-                ),
-                {
-                    "name": name,
-                    "category_id": category_id,
-                },
-            )
-            conn.commit()
-
-        except Exception as e:
-            print(f"Error adding tag: {e}")
-            raise
+    try:
+        tag = Tag(name=name, category_id=category_id)
+        db.session.add(tag)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error adding tag: {e}")
+        raise
 
 
 
@@ -181,4 +164,3 @@ def get_metadata(sample_id):
 
     return probe
 
-engine = create_engine(SQLALCHEMY_DATABASE_URI)
