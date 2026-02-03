@@ -81,8 +81,10 @@ def get_tag_categories():
     return TagCategory.query.order_by(TagCategory.id).all()
 
 def search_samples(query):
-    tags = query.split(',')
+    tags = list(filter(None, query.split(',')))
     query_results = _samples_public()
+    if tags is None:
+        return query_results.all()
     for tag in tags:
         if tag.startswith("-"):
             query_results = query_results.filter(~Sample.tags.any(Tag.name == tag[1:]))
