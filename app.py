@@ -2,6 +2,10 @@ from flask import (
     Flask,
     render_template,
     jsonify,
+    request,
+    session,
+    redirect,
+    url_for,
 )
 from flask_login import (
     LoginManager,
@@ -9,6 +13,7 @@ from flask_login import (
 )
 from flask_migrate import Migrate
 from flask_moment import Moment
+from flask_babel import Babel, _
 
 from config import VERSION
 from models import db, User
@@ -28,6 +33,23 @@ db.init_app(app)
 mail.init_app(app)
 migrate = Migrate(app, db)
 moment = Moment(app)
+
+
+def get_locale():
+    user_locale = session.get("locale")
+    if user_locale:
+        return user_locale
+    return request.accept_languages.best_match(["en", "ja", "fr"])
+
+
+babel = Babel(app, locale_selector=get_locale)
+
+@app.route("/set_locale/<locale>")
+def set_locale(locale):
+    if locale in ["en", "es", "ja", "fr"]:
+        session["locale"] = locale
+    return redirect(request.referrer or url_for("main.home_page"))
+
 
 app.register_blueprint(main_bp)
 app.register_blueprint(wiki_bp)

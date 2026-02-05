@@ -21,3 +21,21 @@ After setting that up and activating the environment, run `pip install -r requir
 > **NOTE**: If you are on a distro where development headers are in a separate package (Ubuntu, Fedora, etc.) you will have to download the development package for Python 3.12 in order to compile psycopg2
 
 After all that, do `flask run`.
+
+## Translations
+
+### Extracting strings
+To extract all translatable strings and update the template:
+`pybabel extract -F babel.cfg -o messages.pot .`
+
+### Initializing a new language
+To add a new language (e.g., Japanese):
+`pybabel init -i messages.pot -d translations -l ja`
+
+### Updating translations
+After adding new strings to the code or templates, update the catalogs:
+`pybabel update -i messages.pot -d translations`
+
+### Compiling translations
+To compile the translations for use:
+`pybabel compile -d translations`

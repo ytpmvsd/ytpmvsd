@@ -29,26 +29,26 @@
         </div>
     </div>
     <ul>
-        <li><a href="{{ url_for("main.home_page") }}">Home</a></li>
+        <li><a href="{{ url_for("main.home_page") }}">{{ _("Home") }}</a></li>
         •
-        <li><a href="{{ url_for("main.samples_list_base") }}">Samples</a></li>
+        <li><a href="{{ url_for("main.samples_list_base") }}">{{ _("Samples") }}</a></li>
         •
-        <li><a href="{{ url_for("main.all_sources") }}">Sources</a></li>
+        <li><a href="{{ url_for("main.all_sources") }}">{{ _("Sources") }}</a></li>
         •
-        <li><a href="{{ url_for("main.tags_list") }}">Tags</a></li>
+        <li><a href="{{ url_for("main.tags_list") }}">{{ _("Tags") }}</a></li>
         •
-        <li><a href="{{ url_for("main.upload") }}">Upload</a></li>
+        <li><a href="{{ url_for("main.upload") }}">{{ _("Upload") }}</a></li>
         •
         {% if current_user.is_authenticated %}
-            <li><a href="{{ url_for("main.logout") }}">Logout</a></li>
+            <li><a href="{{ url_for("main.logout") }}">{{ _("Logout") }}</a></li>
         {% else %}
-            <li><a href="{{ url_for("main.login") }}">Login</a></li>
+            <li><a href="{{ url_for("main.login") }}">{{ _("Login") }}</a></li>
         {% endif %}
     </ul>
     <form role="search" onsubmit="search(event)" class="search-form">
-        <label for="search-input">Search: </label>
+        <label for="search-input">{{ _("Search:") }} </label>
         <input type="search" placeholder="crossfade anime" id="search-input">
-        <button type="submit">Search</button>
+        <button type="submit">{{ _("Search") }}</button>
     </form>
 
     <script>
@@ -73,9 +73,20 @@
     <a class="fa-brands fa-discord footer-links" href="https://discord.gg/jGKaQWj8nC"></a>
 </footer>
 
+<footer style="padding: 10px 5px; font-size: 14px; gap: 10px;">
+    <form action="" method="get" id="locale-form">
+        <label for="locale-selector">{{ _("Language:") }} </label>
+        <select id="locale-selector" onchange="window.location.href='/set_locale/' + this.value">
+            <option value="en" {% if session.get('locale') == 'en' %}selected{% endif %}>English</option>
+            <option value="ja" {% if session.get('locale') == 'ja' %}selected{% endif %}>日本語</option>
+            <option value="fr" {% if session.get('locale') == 'fr' %}selected{% endif %}>Français</option>
+        </select>
+    </form>
+</footer>
+
 <footer style="padding: 0 5px 5px; font-size: 14px; gap: 10px;">
-    <a href="{{ url_for('wiki.wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">Privacy Policy</a>
-    <a href="{{ url_for('wiki.wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">DMCA</a>
+    <a href="{{ url_for('wiki.wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">{{ _("Privacy Policy") }}</a>
+    <a href="{{ url_for('wiki.wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">{{ _("DMCA") }}</a>
 </footer>
 
 </body>
