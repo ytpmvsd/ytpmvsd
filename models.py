@@ -59,6 +59,8 @@ class User(db.Model, UserMixin):
     is_uploader = db.Column(db.Boolean, default=False)
     is_verified = db.Column(db.Boolean, default=False)
 
+    notifications = db.relationship("Notification", back_populates="user", lazy=True)
+
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 
@@ -91,3 +93,14 @@ class Tag(db.Model):
 
     category = db.relationship("TagCategory", back_populates="tags")
     samples = db.relationship("Sample", secondary=tags_table, back_populates="tags")
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    message = db.Column(db.String, nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        default=datetime.datetime.now(datetime.UTC)
+    )
