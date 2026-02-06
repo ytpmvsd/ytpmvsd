@@ -9,6 +9,9 @@ class SampleSort(Enum):
     LIKED = 2
     NONE = 3
 
+def samples_private():
+    return Sample.query.filter_by(is_public=False)
+
 def _samples_public():
     return Sample.query.filter_by(is_public=True)
 
