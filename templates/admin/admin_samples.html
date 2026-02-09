@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <style>
+        :root {
+            --hue: 287;
+        }
+    </style>
+
+    <h1>Sample Management</h1>
+
+    <div style="flex-direction: column" class="admin-menu-container">
+        {% for sample in samples %}
+            <div class="admin-sample-container">
+                <div class="admin-sample-video-container">
+                    <video class="video" controls>
+                        <source src="{{ url_for('static', filename='media/samps/' + sample.stored_as) }}">
+                    </video>
+                </div>
+                <div class="admin-sample-info-container">
+                    <b>{{ sample.filename }}</b>
+                    <p class="uploader">Uploaded by <a
+                            href="{{ url_for('main.user_page',user_id=sample.uploader) }}">{{ sample.uploader }}</a></p>
+                    <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
+                    <script>
+                        document.querySelectorAll('.upload-date').forEach(element => {
+                            const utcDate = element.getAttribute('data-utc');
+                            const localTime = moment.utc(utcDate).local();
+                            element.innerText = 'Uploaded ' + localTime.fromNow();
+                        });
+                    </script>
+                </div>
+                <div class="admin-sample-tags-container">
+                    <b>Tags</b>
+                    <p>
+                        {% for tag in sample.tags %}
+                            <span class="tag">{{ tag.name }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="admin-sample-controls-container" style="flex: 1;">
+                    <button onclick="deleteSample({{ sample.id }})" style="background-color: red">X</button>
+                    <button onclick="approveSample({{ sample.id }})" style="background-color: green">✓</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function deleteSample(sampleId) {
+            const formData = new FormData();
+            formData.append('action', 'delete');
+            formData.append('sample_id', sampleId);
+
+            fetch("{{ url_for('admin.admin_samples') }}", {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to delete sample');
+                }
+            });
+        }
+
+        function approveSample(sampleId) {
+            const formData = new FormData();
+            formData.append('action', 'approve');
+            formData.append('sample_id', sampleId);
+
+            fetch("{{ url_for('admin.admin_samples') }}", {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to approve sample');
+                }
+            });
+        }
+    </script>
+
+    <div style="width: calc(30% - 100px)" class="admin-home-container">
+        <a style="padding: 5px;" href="/admin">Return to Admin Panel</a>
+    </div>
+
+{% endblock %}

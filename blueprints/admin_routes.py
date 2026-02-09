@@ -1,7 +1,6 @@
+import admin
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
-
-import admin
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -16,3 +15,8 @@ def admin_required():
 @admin_bp.route("/")
 def admin_main():
     return admin.admin_main()
+
+
+@admin_bp.route("/samples", methods=["GET", "POST"])
+def admin_samples():
+    return admin.admin_samples()
