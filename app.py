@@ -18,6 +18,7 @@ import datetime
 from blueprints.main_routes import main_bp
 from blueprints.wiki_routes import wiki_bp
 from blueprints.api_routes import api_bp
+from blueprints.admin_routes import admin_bp
 
 app = Flask(__name__)
 app.config.from_pyfile("config.py")
@@ -32,6 +33,7 @@ moment = Moment(app)
 app.register_blueprint(main_bp)
 app.register_blueprint(wiki_bp)
 app.register_blueprint(api_bp)
+app.register_blueprint(admin_bp)
 
 login_manager = LoginManager(app)
 login_manager.login_view = (
