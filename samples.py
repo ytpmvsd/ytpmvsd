@@ -153,6 +153,7 @@ def delete_sample(sample_id):
             try: 
                 db.session.commit()
             except Exception as ex:
+                db.session.rollback()
                 return jsonify({"success": False, "message": "Sample deletion could not be committed: "+str(ex)})
                 
             warnings = []
@@ -165,7 +166,7 @@ def delete_sample(sample_id):
             except FileNotFoundError as _:
                 warnings.append("Sample file wasn't found, couldn't be deleted")
 
-        return jsonify({"success": False, "message": "Sample deleted successfully.", "warnings": warnings})
+        return jsonify({"success": True, "message": "Sample deleted successfully.", "warnings": warnings})
     
     return jsonify({"success": False, "message": "Tried to delete a sample that doesn't exist."})
 
