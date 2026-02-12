@@ -496,3 +496,9 @@ def mark_notification_read(notification_id):
         db.session.commit()
     
     return jsonify({"success": True})
+
+@main_bp.route("/notifications/")
+@login_required
+def notifications():
+    notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).all()
+    return render_template("notifications.html", title="Notifications - YTPMV Sample Database", notifications=notifs)

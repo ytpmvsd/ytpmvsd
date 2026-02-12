@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="home-samples-box">
+        <h1>Notifications</h1>
+        {% if notifications %}
+            <div style="margin-top: 20px;">
+                {% for notif in notifications %}
+                    <div id="notification-{{ notif.id }}" class="notification {{ 'unread' if not notif.is_read else '' }}">
+                        <div class="notification-header" onclick="toggleNotification({{ notif.id }})">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                {% if not notif.is_read %}
+                                    <span class="unread-indicator"></span>
+                                {% endif %}
+                                <h3 style="margin: 0">{{ notif.subject }}</h3>
+                            </div>
+                            <small>{{ moment(notif.timestamp).fromNow() }}</small>
+                        </div>
+                        <div id="notification-message-{{ notif.id }}" class="notification-message">
+                            {{ notif.message | safe }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="margin-top: 20px;">You have no notifications.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleNotification(id) {
+            const notificationMessageDiv = document.getElementById('notification-message-' + id);
+            const notificationDiv = document.getElementById('notification-' + id);
+            const isOpening = !notificationMessageDiv.classList.contains('expanded');
+
+            if (isOpening) {
+                notificationMessageDiv.classList.add('expanded');
+
+                if (notificationDiv.classList.contains('unread')) {
+                    fetch('/notifications/read/' + id + '/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            notificationDiv.classList.remove('unread');
+                            const unreadIndicator = notificationDiv.querySelector('.unread-indicator');
+                            if (unreadIndicator) unreadIndicator.remove();
+                        }
+                    });
+                }
+            } else {
+                notificationMessageDiv.classList.remove('expanded');
+            }
+        }
+    </script>
+{% endblock %}
