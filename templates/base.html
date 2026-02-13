@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <title>
+        {% if unread_notifications_count > 0 %}
+            ({{ unread_notifications_count }})
+        {% endif %}
+        {{ title }}
+    </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     {{ moment.include_moment() }}
