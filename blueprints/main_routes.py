@@ -8,7 +8,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from sqlalchemy import func
 
 from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, USE_EMAIL_VERIFICATION
-from models import db, Sample, User, Source
+from models import db, Sample, User, Source, Notification
 from utils import update_metadata
 from mail import generate_token, send_verification_email, confirm_token
 import api
@@ -483,3 +483,22 @@ def verify(token):
         msg=msg,
         on_confirm_screen=on_confirm_screen
     )
+
+@main_bp.route("/notifications/read/<int:notification_id>/", methods=["POST"])
+@login_required
+def mark_notification_read(notification_id):
+    notif = Notification.query.get_or_404(notification_id)
+    if notif.user_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    if not notif.is_read:
+        notif.is_read = True
+        db.session.commit()
+    
+    return jsonify({"success": True})
+
+@main_bp.route("/notifications/")
+@login_required
+def notifications():
+    notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).all()
+    return render_template("notifications.html", title="Notifications - YTPMV Sample Database", notifications=notifs)

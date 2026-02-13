@@ -11,7 +11,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 
 from config import VERSION
-from models import db, User
+from models import db, User, Notification
 from mail import mail
 import datetime
 
@@ -43,9 +43,13 @@ login_manager.login_view = (
 
 @app.context_processor
 def inject_global_data():
+    unread_notifications_count = 0
+    if current_user.is_authenticated:
+        unread_notifications_count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
     return {
         "current_user": current_user,
         "date": datetime.datetime.now(datetime.UTC),
+        "unread_notifications_count": unread_notifications_count,
     }
 
 
