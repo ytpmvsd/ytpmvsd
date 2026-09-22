@@ -7,4 +7,3 @@ instance
 /*.mp4
 static/media/*
 config.toml
-migrations
