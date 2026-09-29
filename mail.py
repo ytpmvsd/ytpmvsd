@@ -52,7 +52,7 @@ def send_verification_email(to, verify_url, token):
             <table>
                 <tr align="center"><td style="padding: 0.5em;"><center><img src="https://ytpmvsd.com/static/img/logo.png"/ width="50%"></center></td></tr>
                 <tr align="center"><td style="padding: 0.5em;"><h3>Please confirm your email address to use YTPMVSD</h3></td></tr>
-                <tr align="center"><td style="padding: 0.5em;"><p>by entering the following code in the <a href="${verify_url}">verification page</a></p></td></tr>
+                <tr align="center"><td style="padding: 0.5em;"><p>by entering the following code in the <a href="{verify_url}">verification page</a></p></td></tr>
                 <tr align="center"><td style="padding: 0.5em;"><p style="display: block; background: #324ca8; padding: 1em; color: white; font-weight: bold; border-radius: 5px; width: 5em; text-decoration: none;" href="{token}">Verify</p></td></tr>
                 <tr align="center"><td>This link expires in 24 hours.</td></tr>
                 <tr align="center"><td>Do not click this link if you didn't sign up for this site.</td></tr>
