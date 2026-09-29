@@ -2,24 +2,46 @@ from flask_mail import Message, Mail
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from config import SECRET_KEY
 import secrets
+import string
+import time
 
 mail = Mail()
 
 s = URLSafeTimedSerializer(SECRET_KEY)
 email_hash = secrets.token_hex(4096)
 
-def generate_token(email):
-    return s.dumps(email, salt=email_hash)
+email_matches = {}
 
-def confirm_token(token, expiration=86400):
+def generate_id(email):
+    secure_str = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
+    epoch_time = int(time.time())
+    email_matches[secure_str] = (email, epoch_time)
+    verifier = s.dumps(email, salt=email_hash)
+    print((secure_str, verifier))
+    return (secure_str, verifier)
+
+def decode_email(verifier, expiration=86400):
     try:
-        return s.loads(token, salt=email_hash, max_age=expiration)
+        return s.loads(verifier, salt=email_hash, max_age=expiration)
     except SignatureExpired:
+        print("signature expired")
         return False
     except BadSignature:
+        print("bad signature")
         return False
 
-def send_verification_email(to, verify_url):
+def confirm_token(token, expiration=86400000):
+    if not token in email_matches:
+        return False
+    id = email_matches[token]
+    expr_time = int(time.time()) + expiration
+    if id[1] > expr_time:
+        return False
+    del email_matches[token]
+    return id[0]
+
+def send_verification_email(to, verify_url, token):
+    print(token, verify_url)
     try:
         msg = Message(
             subject="Verify your account at YTPMVSD",
@@ -29,8 +51,9 @@ def send_verification_email(to, verify_url):
             <div style="font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
             <table>
                 <tr align="center"><td style="padding: 0.5em;"><center><img src="https://ytpmvsd.com/static/img/logo.png"/ width="50%"></center></td></tr>
-                <tr align="center"><td style="padding: 0.5em;"><h3>Please confirm your email address to use YTPMVSD.</h3></td></tr>
-                <tr align="center"><td style="padding: 0.5em;"><a style="display: block; background: #324ca8; padding: 1em; color: white; font-weight: bold; border-radius: 5px; width: 5em; text-decoration: none;" href="{verify_url}">Verify</a></td></tr>
+                <tr align="center"><td style="padding: 0.5em;"><h3>Please confirm your email address to use YTPMVSD</h3></td></tr>
+                <tr align="center"><td style="padding: 0.5em;"><p>by entering the following code in the <a href="${verify_url}">verification page</a></p></td></tr>
+                <tr align="center"><td style="padding: 0.5em;"><p style="display: block; background: #324ca8; padding: 1em; color: white; font-weight: bold; border-radius: 5px; width: 5em; text-decoration: none;" href="{token}">Verify</p></td></tr>
                 <tr align="center"><td>This link expires in 24 hours.</td></tr>
                 <tr align="center"><td>Do not click this link if you didn't sign up for this site.</td></tr>
             </table>

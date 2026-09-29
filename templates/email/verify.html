@@ -4,7 +4,9 @@
 
     <div>{{ msg }}</div><br>
     {% if on_confirm_screen %}
-        <form method="POST">
+        <form action="/verify" method="GET">
+            <input type="hidden" name="verifier" id="verifier" value="{{ verifier }}"/>
+            <input type="text" placeholder="XXXXXX" name="token" id="token"/>
             <button type="submit">Confirm</button>
         </form>
     {% else %}
