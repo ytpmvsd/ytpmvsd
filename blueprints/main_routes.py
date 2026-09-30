@@ -450,7 +450,7 @@ def register():
         if USE_EMAIL_VERIFICATION:
             (token, verifier) = generate_id(email)
             verify_url = url_for("main.verify", _external=True) + "?verifier=" + verifier
-            send_verification_email(email, token, verify_url)
+            send_verification_email(email, verify_url, token)
 
             flash("Successfully registered. Please check your email to verify your account.", "success")
         else:
