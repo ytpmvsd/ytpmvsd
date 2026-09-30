@@ -10,7 +10,7 @@ from sqlalchemy import func
 from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, USE_EMAIL_VERIFICATION
 from models import db, Sample, User, Source, Notification
 from utils import update_metadata
-from mail import generate_token, send_verification_email, confirm_token
+from mail import generate_id, send_verification_email, confirm_token, decode_email
 import api
 import samples
 
@@ -105,7 +105,7 @@ def edit_sample(sample_id):
     uploaded_sample_id = session.get(f"uploaded_sample_id_{sample_id}")
     if uploaded_sample_id:
         uploaded_sample_id = str(uploaded_sample_id)
-    
+
     if uploaded_sample_id and uploaded_sample_id == sample_id:
         is_initial_upload = True
         old_filename = session.get(f"filename_{sample_id}")
@@ -118,7 +118,7 @@ def edit_sample(sample_id):
         if not (current_user.is_admin or current_user.id == sample.uploader):
             flash("You do not have permission to edit this sample.", "error")
             return redirect(url_for("main.sample_page", sample_id=sample_id))
-            
+
         old_filename = sample.filename
         thumbnail = sample.thumbnail_filename
         stored_as = sample.stored_as
@@ -433,7 +433,7 @@ def register():
         if User.query.filter(User.email.ilike(email)).first():
             flash("Email is already in use.", "error")
             return redirect(url_for("main.register"))
-        
+
         if len(username) >= 64:
             flash("Username cannot be over 64 characters", "error")
             return redirect(url_for("main.register"))
@@ -448,9 +448,9 @@ def register():
         db.session.commit()
 
         if USE_EMAIL_VERIFICATION:
-            token = generate_token(email)
-            verify_url = url_for("main.verify", token=token, _external=True)
-            send_verification_email(email, verify_url)
+            (token, verifier) = generate_id(email)
+            verify_url = url_for("main.verify", _external=True) + "?verifier=" + verifier
+            send_verification_email(email, verify_url, token)
 
             flash("Successfully registered. Please check your email to verify your account.", "success")
         else:
@@ -460,28 +460,39 @@ def register():
 
     return render_template("register.html")
 
-@main_bp.route("/verify/<token>", methods=["GET", "POST"])
-def verify(token):
-    msg = "Click below to confirm your email."
-    email = confirm_token(token)
+@main_bp.route("/verify/", methods=["GET", "POST"])
+def verify():
+    token = request.args.get("token")
+    verifier = request.args.get("verifier")
     on_confirm_screen = True
-    if not email:
-        msg = "Invalid or expired verification link."
+    if verifier is None:
+        print("verifier is None")
+        return redirect(url_for("main.home_page"))
+    if decode_email(verifier) is False:
+        msg = "Invalid verification URL."
         on_confirm_screen = False
-    elif request.method == "POST":
-        user = User.query.filter_by(email=email).first()
-        if user and not user.is_verified:
-            user.is_verified = True
-            db.session.commit()
-            msg = "Your account is now verified."
-            on_confirm_screen = False
-        else:
-            # no message saying your account is already verified, in case somehow
-            # the link shows up in search results.
-            return redirect(url_for("main.home_page"))
+    else:
+        msg = "Enter the code given to you below:"
+        if token is not None:
+            email = confirm_token(token)
+            if decode_email(verifier) != email:
+                msg = "Invalid verification URL."
+                on_confirm_screen = False
+            elif not email:
+                msg = "Invalid or expired code."
+            else:
+                user = User.query.filter_by(email=email).first()
+                if user and not user.is_verified:
+                    user.is_verified = True
+                    db.session.commit()
+                    msg = "Your account is now verified."
+                    on_confirm_screen = False
+                else:
+                    return redirect(url_for("main.home_page"))
     return render_template("email/verify.html",
         msg=msg,
-        on_confirm_screen=on_confirm_screen
+        on_confirm_screen=on_confirm_screen,
+        verifier=verifier
     )
 
 @main_bp.route("/notifications/read/<int:notification_id>/", methods=["POST"])
@@ -490,11 +501,11 @@ def mark_notification_read(notification_id):
     notif = Notification.query.get_or_404(notification_id)
     if notif.user_id != current_user.id:
         return jsonify({"error": "Unauthorized"}), 403
-    
+
     if not notif.is_read:
         notif.is_read = True
         db.session.commit()
-    
+
     return jsonify({"success": True})
 
 @main_bp.route("/notifications/")
