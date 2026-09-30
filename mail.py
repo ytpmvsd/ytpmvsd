@@ -1,35 +1,49 @@
 from flask_mail import Message, Mail
+from itsdangerous import URLSafeSerializer, BadSignature
+from config import SECRET_KEY
+import hashlib
+import hmac
 import secrets
 import string
 import time
 
 mail = Mail()
 
-pending_verifications = {}
+s = URLSafeSerializer(SECRET_KEY, salt="email-verification")
+
+def _sign(token, email, epoch):
+    msg = f"{token}:{email}:{epoch}".encode()
+    return hmac.new(SECRET_KEY.encode(), msg, hashlib.sha256).hexdigest()
 
 def generate_id(email):
-    code = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
-    verifier = secrets.token_urlsafe(32)
-    pending_verifications[verifier] = (email, code, int(time.time()))
-    return (code, verifier)
+    token = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
+    epoch_time = int(time.time())
+    verifier = s.dumps({"email": email, "epoch": epoch_time, "hash": _sign(token, email, epoch_time)})
+    return (token, verifier)
+
+def _load_verifier(verifier, expiration):
+    try:
+        data = s.loads(verifier)
+        email, epoch, digest = data["email"], int(data["epoch"]), data["hash"]
+    except (BadSignature, KeyError, TypeError, ValueError):
+        return None
+    if int(time.time()) > epoch + expiration:
+        return None
+    return (email, epoch, digest)
 
 def decode_email(verifier, expiration=86400):
-    entry = pending_verifications.get(verifier)
-    if entry is None:
+    data = _load_verifier(verifier, expiration)
+    if data is None:
         return False
-    email, _, created = entry
-    if int(time.time()) - created > expiration:
-        del pending_verifications[verifier]
-        return False
-    return email
+    return data[0]
 
 def confirm_token(verifier, token, expiration=86400):
-    email = decode_email(verifier, expiration)
-    if not email:
+    data = _load_verifier(verifier, expiration)
+    if data is None:
         return False
-    if not secrets.compare_digest(pending_verifications[verifier][1].encode(), token.encode()):
+    email, epoch, digest = data
+    if not hmac.compare_digest(_sign(token, email, epoch), digest):
         return False
-    del pending_verifications[verifier]
     return email
 
 def send_verification_email(to, verify_url, token):
