@@ -1,44 +1,50 @@
 from flask_mail import Message, Mail
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+from itsdangerous import URLSafeSerializer, BadSignature
 from config import SECRET_KEY
+import hashlib
+import hmac
 import secrets
 import string
 import time
 
 mail = Mail()
 
-s = URLSafeTimedSerializer(SECRET_KEY)
-email_hash = secrets.token_hex(4096)
+s = URLSafeSerializer(SECRET_KEY, salt="email-verification")
 
-email_matches = {}
+def _sign(token, email, epoch):
+    msg = f"{token}:{email}:{epoch}".encode()
+    return hmac.new(SECRET_KEY.encode(), msg, hashlib.sha256).hexdigest()
 
 def generate_id(email):
-    secure_str = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
+    token = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
     epoch_time = int(time.time())
-    email_matches[secure_str] = (email, epoch_time)
-    verifier = s.dumps(email, salt=email_hash)
-    print((secure_str, verifier))
-    return (secure_str, verifier)
+    verifier = s.dumps({"email": email, "epoch": epoch_time, "hash": _sign(token, email, epoch_time)})
+    return (token, verifier)
+
+def _load_verifier(verifier, expiration):
+    try:
+        data = s.loads(verifier)
+        email, epoch, digest = data["email"], int(data["epoch"]), data["hash"]
+    except (BadSignature, KeyError, TypeError, ValueError):
+        return None
+    if int(time.time()) > epoch + expiration:
+        return None
+    return (email, epoch, digest)
 
 def decode_email(verifier, expiration=86400):
-    try:
-        return s.loads(verifier, salt=email_hash, max_age=expiration)
-    except SignatureExpired:
-        print("signature expired")
+    data = _load_verifier(verifier, expiration)
+    if data is None:
         return False
-    except BadSignature:
-        print("bad signature")
-        return False
+    return data[0]
 
-def confirm_token(token, expiration=86400000):
-    if not token in email_matches:
+def confirm_token(verifier, token, expiration=86400):
+    data = _load_verifier(verifier, expiration)
+    if data is None:
         return False
-    id = email_matches[token]
-    expr_time = int(time.time()) + expiration
-    if id[1] > expr_time:
+    email, epoch, digest = data
+    if not hmac.compare_digest(_sign(token, email, epoch), digest):
         return False
-    del email_matches[token]
-    return id[0]
+    return email
 
 def send_verification_email(to, verify_url, token):
     print(token, verify_url)
