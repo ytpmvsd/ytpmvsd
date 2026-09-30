@@ -4,10 +4,10 @@ from config import SECRET_KEY
 import secrets
 import string
 import time
+import urllib.parse
 
 mail = Mail()
 
-s = URLSafeTimedSerializer(SECRET_KEY)
 email_hash = secrets.token_hex(4096)
 
 email_matches = {}
@@ -16,19 +16,12 @@ def generate_id(email):
     secure_str = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
     epoch_time = int(time.time())
     email_matches[secure_str] = (email, epoch_time)
-    verifier = s.dumps(email, salt=email_hash)
+    verifier = urllib.parse.quote_plus(email)
     print((secure_str, verifier))
     return (secure_str, verifier)
 
 def decode_email(verifier, expiration=86400):
-    try:
-        return s.loads(verifier, salt=email_hash, max_age=expiration)
-    except SignatureExpired:
-        print("signature expired")
-        return False
-    except BadSignature:
-        print("bad signature")
-        return False
+    return urllib.parse.quote_plus(verifier)
 
 def confirm_token(token, expiration=86400000):
     if not token in email_matches:
