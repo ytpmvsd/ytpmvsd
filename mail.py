@@ -5,7 +5,6 @@ import time
 
 mail = Mail()
 
-# verifier -> (email, code, creation epoch)
 pending_verifications = {}
 
 def generate_id(email):
