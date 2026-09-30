@@ -469,14 +469,14 @@ def verify():
         print("verifier is None")
         return redirect(url_for("main.home_page"))
     if decode_email(verifier) is False:
-        msg = "Invalid verification url"
+        msg = "Invalid verification URL."
         on_confirm_screen = False
     else:
         msg = "Enter the code given to you below:"
         if token is not None:
             email = confirm_token(token)
             if decode_email(verifier) != email:
-                msg = "Invalid verification url."
+                msg = "Invalid verification URL."
                 on_confirm_screen = False
             elif not email:
                 msg = "Invalid or expired code."
