@@ -8,7 +8,7 @@ import time
 mail = Mail()
 
 s = URLSafeTimedSerializer(SECRET_KEY)
-email_hash = secrets.token_hex(4096)
+email_hash = SECRET_KEY
 
 email_matches = {}
 
