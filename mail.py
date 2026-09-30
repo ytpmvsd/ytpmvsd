@@ -1,44 +1,36 @@
 from flask_mail import Message, Mail
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-from config import SECRET_KEY
 import secrets
 import string
 import time
 
 mail = Mail()
 
-s = URLSafeTimedSerializer(SECRET_KEY)
-email_hash = secrets.token_hex(4096)
-
-email_matches = {}
+pending_verifications = {}
 
 def generate_id(email):
-    secure_str = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
-    epoch_time = int(time.time())
-    email_matches[secure_str] = (email, epoch_time)
-    verifier = s.dumps(email, salt=email_hash)
-    print((secure_str, verifier))
-    return (secure_str, verifier)
+    code = ''.join((secrets.choice(string.ascii_letters) for i in range(6)))
+    verifier = secrets.token_urlsafe(32)
+    pending_verifications[verifier] = (email, code, int(time.time()))
+    return (code, verifier)
 
 def decode_email(verifier, expiration=86400):
-    try:
-        return s.loads(verifier, salt=email_hash, max_age=expiration)
-    except SignatureExpired:
-        print("signature expired")
+    entry = pending_verifications.get(verifier)
+    if entry is None:
         return False
-    except BadSignature:
-        print("bad signature")
+    email, _, created = entry
+    if int(time.time()) - created > expiration:
+        del pending_verifications[verifier]
         return False
+    return email
 
-def confirm_token(token, expiration=86400000):
-    if not token in email_matches:
+def confirm_token(verifier, token, expiration=86400):
+    email = decode_email(verifier, expiration)
+    if not email:
         return False
-    id = email_matches[token]
-    expr_time = int(time.time()) + expiration
-    if id[1] > expr_time:
+    if not secrets.compare_digest(pending_verifications[verifier][1].encode(), token.encode()):
         return False
-    del email_matches[token]
-    return id[0]
+    del pending_verifications[verifier]
+    return email
 
 def send_verification_email(to, verify_url, token):
     print(token, verify_url)
