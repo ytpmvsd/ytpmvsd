@@ -474,11 +474,8 @@ def verify():
     else:
         msg = "Enter the code given to you below:"
         if token is not None:
-            email = confirm_token(token)
-            if decode_email(verifier) != email:
-                msg = "Invalid verification URL."
-                on_confirm_screen = False
-            elif not email:
+            email = confirm_token(verifier, token)
+            if not email:
                 msg = "Invalid or expired code."
             else:
                 user = User.query.filter_by(email=email).first()
