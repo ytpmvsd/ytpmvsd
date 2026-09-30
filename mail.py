@@ -21,7 +21,7 @@ def generate_id(email):
     return (secure_str, verifier)
 
 def decode_email(verifier, expiration=86400):
-    return urllib.parse.quote_plus(verifier)
+    return urllib.parse.unquote(verifier)
 
 def confirm_token(token, expiration=86400000):
     if not token in email_matches:
