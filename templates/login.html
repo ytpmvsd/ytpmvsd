@@ -3,9 +3,19 @@
 {% block content %}
 
     <form method="POST">
-        <label>Username/email: <input type="text" name="login" required></label><br>
-        <label>Password: <input type="password" name="password" required></label><br>
-        <button type="submit">Login</button>
+        <table align="center">
+            <tr class="reglog-box">
+                <td><label>Username/email:</label></td>
+                <td><input type="text" name="login" required></td>
+            </tr>
+            <tr class="reglog-box">
+                <td><label>Password:</label></td>
+                <td><input type="password" name="password" required></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="submit">Login</button></td>
+            </tr>
+        </table>
     </form>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
