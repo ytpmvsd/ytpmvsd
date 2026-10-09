@@ -470,6 +470,7 @@ main {
 .search-form {
     border-top: 1px solid rgba(.15,.15,.15,.15);
     border-bottom: 1px solid rgba(.15,.15,.15,.15);
+    padding: 0.25em 0;
 }
 
 .filename-box input,
