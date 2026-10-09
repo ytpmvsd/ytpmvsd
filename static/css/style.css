@@ -460,6 +460,18 @@ main {
     flex: 1;
 }
 
+.filename-box,
+.source-box,
+.search-box,
+.reglog-box {
+    text-align: right;
+}
+
+.search-form {
+    border-top: 1px solid rgba(.15,.15,.15,.15);
+    border-bottom: 1px solid rgba(.15,.15,.15,.15);
+}
+
 .filename-box input,
 .source-box input,
 .source-box .suggestions:has(li),
