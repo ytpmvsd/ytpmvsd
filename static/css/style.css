@@ -109,9 +109,6 @@ p {
     text-overflow: ellipsis;
 }
 
-.home-sample {
-}
-
 .privacy-warning {
     color: red;
     background: #fee;
@@ -467,16 +464,11 @@ main {
     text-align: right;
 }
 
-.search-form {
-    border-top: 1px solid rgba(.15,.15,.15,.15);
-    border-bottom: 1px solid rgba(.15,.15,.15,.15);
-    padding: 0.1em 0;
-}
 
 .filename-box input,
 .source-box input,
 .source-box .suggestions:has(li),
-.search-box input,
+.search-form input,
 .reglog-box input {
     background: white;
     border-radius: 0px;
@@ -522,10 +514,16 @@ main {
 }
 .search-form {
     justify-content: center;
+    align-items: center;
     gap: 5px;
-    display: flex;
     margin-bottom: 40px;
     font-size: 0.8em;
+    width: 100%;
+    display: grid;
+    grid-template-areas: "a b c";
+    border-top: 1px solid rgba(0.15, 0.15, 0.15, 0.15);
+    border-bottom: 1px solid rgba(0.15, 0.15, 0.15, 0.15);
+    padding: 5px 0;
 }
 
 .search-form b,
