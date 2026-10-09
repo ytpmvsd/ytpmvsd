@@ -14,9 +14,6 @@
             </tr>
         </table>
     </form>
-    <center>
-        <button style="display: block;margin: 1em;" type="submit">Login</button><a href="{{ url_for('main.register') }}">Need an account? Register</a>
-    </center>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -26,5 +23,8 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+    <center>
+        <button style="display: block;margin: 1em;" type="submit">Login</button><a href="{{ url_for('main.register') }}">Need an account? Register</a>
+    </center>
 
 {% endblock %}
