@@ -459,11 +459,23 @@ main {
 
 .filename-box,
 .source-box,
-.search-box,
-.reglog-box {
+.search-box {
     text-align: right;
 }
+.reglog-box button {
+    padding-top: 1em;
+}
 
+.loginheader {
+    margin: 0em;
+    padding: 0em;
+    padding-bottom: 10px;
+}
+
+.reglog-submit {
+    display: grid;
+    grid-template-areas: "a b c";
+}
 
 .filename-box input,
 .source-box input,
@@ -516,8 +528,8 @@ main {
     justify-content: center;
     align-items: center;
     gap: 5px;
-    margin-bottom: 40px;
-    font-size: 0.8em;
+    margin-bottom: 10px;
+    font-size: 0.9em;
     width: 100%;
     display: grid;
     grid-template-areas: "a b c";
@@ -526,9 +538,9 @@ main {
     padding: 5px 0;
 }
 
-.search-form b,
 .search-form button {
     padding: 3px 5px;
+    font-size: 0.9em;
 }
 
 .loading-spinner {
