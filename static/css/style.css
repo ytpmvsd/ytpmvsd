@@ -466,6 +466,13 @@ main {
     padding-top: 1em;
 }
 
+.reglog-box.r {
+    text-align: right;
+}
+
+.reglog-box.l {
+    text-align: left;
+}
 .loginheader {
     margin: 0em;
     padding: 0em;
