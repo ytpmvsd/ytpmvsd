@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Register</h1>
-    <br>
+    <h2 class="loginheader">Register</h2>
     <form method="POST">
         <table align="center">
             <tr class="reglog-box">
@@ -17,11 +16,11 @@
                 <td><label>Password:</label></td>
                 <td><input type="password" name="password" required /></td>
             </tr>
-            <tr>
-                <td colspan="2"><button type="submit">Register</button></td>
-            </tr>
         </table>
     </form>
+    <center>
+        <button style="display: block;margin: 1em;" type="submit">Register</button><a href="{{ url_for('main.login') }}">Have an account? Login</a>
+    </center>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -33,6 +32,5 @@
         {% endif %}
     {% endwith %}
     <br>
-    <small><a href="{{ url_for('main.login') }}">Have an account? Login</a></small>
 
 {% endblock %}
