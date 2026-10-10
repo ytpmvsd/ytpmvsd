@@ -56,7 +56,7 @@ def samples_list(index):
 
     return render_template(
         "samples.html",
-        title=_("title_samples"),
+        title=_("title_samples") + " - YTPMV Sample Database",
         samples=res_samples,
         index=index,
         page_num = int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))
@@ -316,7 +316,7 @@ def all_sources():
     sources = Source.query.order_by(Source.name.asc()).all()
 
     return render_template(
-        "sources.html", title=_("title_sources"), sources=sources
+        "sources.html", title=_("title_sources") + " - YTPMV Sample Database", sources=sources
     )
 
 @main_bp.route("/source/<int:source_id>/")

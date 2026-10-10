@@ -90,7 +90,7 @@ msgstr "Access denied"
 
 #: blueprints/main_routes.py:59
 msgid "title_samples"
-msgstr "Samples - YTPMV Sample Database"
+msgstr "Samples"
 
 
 #: blueprints/main_routes.py:120
@@ -123,7 +123,7 @@ msgstr "Please verify your account to like samples."
 
 #: blueprints/main_routes.py:319
 msgid "title_sources"
-msgstr "Sources - YTPMV Sample Database"
+msgstr "Sources"
 
 #: blueprints/main_routes.py:360
 msgid "title_tags"
