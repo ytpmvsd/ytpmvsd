@@ -1,4 +1,5 @@
 from flask_mail import Message, Mail
+from flask_babel import gettext as _
 from itsdangerous import URLSafeSerializer, BadSignature
 from config import SECRET_KEY
 import hashlib
@@ -50,18 +51,18 @@ def send_verification_email(to, verify_url, token):
     print(token, verify_url)
     try:
         msg = Message(
-            subject="Verify your account at YTPMVSD",
+            subject=_("email_verify_subject"),
             recipients=[to],
             sender="account@ytpmvsd.com",
             html=f"""
             <div style="font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
             <table>
                 <tr align="center"><td style="padding: 0.5em;"><center><img src="https://ytpmvsd.com/static/img/logo.png"/ width="50%"></center></td></tr>
-                <tr align="center"><td><h3 style="margin: 0">Please confirm your email address to use YTPMVSD</h3></td></tr>
-                <tr align="center"><td><p style="margin: 0">by entering the following code in the <a href="{verify_url}">verification page</a></p></td></tr>
+                <tr align="center"><td><h3 style="margin: 0">{_("email_verify_heading")}</h3></td></tr>
+                <tr align="center"><td><p style="margin: 0">{_("email_verify_instructions", url=verify_url)}</p></td></tr>
                 <tr align="center"><td style="padding: 0.5em;"><p style="display: block; background: #324ca8; padding: 0.5em; color: white; font-weight: bold; border-radius: 5px; width: 5em; text-decoration: none; font-size: 2em">{token}</p></td></tr>
-                <tr align="center"><td>This link expires in 24 hours.</td></tr>
-                <tr align="center"><td>Do not click this link if you didn't sign up for this site.</td></tr>
+                <tr align="center"><td>{_("email_verify_expiry")}</td></tr>
+                <tr align="center"><td>{_("email_verify_ignore")}</td></tr>
             </table>
             """
         )

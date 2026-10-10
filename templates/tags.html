@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block metadescription %}<meta name="description" content="View all tags available on the YTPMV Sample Database.">{% endblock %}
+{% block metadescription %}<meta name="description" content="{{ _("meta_description_tags") }}">{% endblock %}
 
 {% block content %}
 
     <div class="home-samples-box">
         <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
             <div class="flexbox">
-              <h1 style="text-align: center">All Tags</h1>
+              <h1 style="text-align: center">{{ _("tags_header") }}</h1>
             </div>
         </div>
 

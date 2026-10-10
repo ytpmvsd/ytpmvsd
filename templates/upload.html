@@ -4,8 +4,8 @@
 
     <div id="changelog-background" class="popup-background hidden"></div>
     <div id="changelog-popup" class="popup hidden" style="height: calc(75% - 150px);">
-        <h2>Uploading...</h2>
-        <p>Please do not leave this page...</p>
+        <h2>{{ _("upload_popup_uploading") }}</h2>
+        <p>{{ _("common_do_not_leave_page") }}</p>
         <div class="popup-content">
             <table style="width: 100%; table-layout: fixed;">
             </table>
@@ -15,15 +15,15 @@
     <div class="upload-form">
         {% if not current_user.is_authenticated %}
             {% if require_user_approval %}
-                Only approved registered users can upload samples.
+                {{ _("upload_requires_approved_registered") }}
             {% else %}
-                Only registered users can upload samples.
+                {{ _("upload_requires_registered") }}
             {% endif %}
         {% elif not current_user.is_verified %}
             {% if require_user_approval %}
-                Only approved users can upload samples.
+                {{ _("upload_requires_approved") }}
             {% else %}
-                Please verify your account to upload samples.
+                {{ _("upload_requires_verified") }}
             {% endif %}
         {% elif current_user.is_uploader or not require_user_approval %}
             <form id="uploadForm" action="" method="post" enctype="multipart/form-data">
@@ -78,10 +78,10 @@
                                     const popup = document.querySelector('.popup');
                                     const errormessage = document.createElement('p');
                                     const resp = JSON.parse(xhr.responseText);
-                                    errormessage.innerHTML = "Error: " + resp.error;
+                                    errormessage.innerHTML = {{ _("upload_error_message", error="{error}")|tojson }}.replace("{error}", resp.error);
                                     errormessage.style.color = "red";
                                     const returnbutton = document.createElement('button');
-                                    returnbutton.innerHTML = "Return to upload page";
+                                    returnbutton.innerHTML = {{ _("upload_return_button")|tojson }};
                                     returnbutton.onclick = () => window.location.href = "/upload/"
                                     popup.appendChild(errormessage);
                                     popup.appendChild(returnbutton);
@@ -112,10 +112,10 @@
                     if (files.length > 10) {
                         const popup = document.querySelector('.popup');
                         const errormessage = document.createElement('p');
-                        errormessage.innerHTML = "Error: Too many files. Please upload a maximum of 10 files at a time.";
+                        errormessage.innerHTML = {{ _("upload_error_max_files")|tojson }};
                         errormessage.style.color = "red";
                         const returnbutton = document.createElement('button');
-                        returnbutton.innerHTML = "Return to upload page";
+                        returnbutton.innerHTML = {{ _("upload_return_button")|tojson }};
                         returnbutton.onclick = () => window.location.href = "/upload/"
                         popup.appendChild(errormessage);
                         popup.appendChild(returnbutton);
@@ -133,8 +133,8 @@
                     }
                 });
             </script>
-            Only .mp4 files are currently supported.
-            Max file size is 10MB.
+            {{ _("upload_supported_formats") }}
+            {{ _("upload_max_filesize") }}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -145,7 +145,7 @@
                 {% endif %}
             {% endwith %}
         {% else %}
-            Only approved users can upload samples.
+            {{ _("upload_requires_approved") }}
         {% endif %}
     </div>
 

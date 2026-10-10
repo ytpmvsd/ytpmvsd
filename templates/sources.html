@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block metadescription %}<meta name="description" content="View all sources available on the YTPMV Sample Database.">{% endblock %}
+{% block metadescription %}<meta name="description" content="{{ _("meta_description_sources") }}">{% endblock %}
 
 {% block content %}
 
     <div class="home-samples-box">
         <div class="home-samples-header" style="display: flex; align-items: center; padding-bottom: 10px;">
-            <h1>All sources</h1>
+            <h1>{{ _("sources_header") }}</h1>
         </div>
 
         <div class="sources-grid">

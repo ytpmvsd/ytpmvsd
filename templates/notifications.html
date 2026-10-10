@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="home-samples-box">
-        <h1>Notifications</h1>
+        <h1>{{ _("notifications_header") }}</h1>
         {% if notifications %}
             <div style="margin-top: 20px;">
                 {% for notif in notifications %}
@@ -23,7 +23,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p style="margin-top: 20px;">You have no notifications.</p>
+            <p style="margin-top: 20px;">{{ _("notifications_empty") }}</p>
         {% endif %}
     </div>
 

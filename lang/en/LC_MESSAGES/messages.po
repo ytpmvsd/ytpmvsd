@@ -1,0 +1,633 @@
+# English translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-09 22:19-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: admin.py:31
+msgid "notif_sample_approved_subject"
+msgstr "Sample approved: %(filename)s"
+
+#: admin.py:40
+msgid "notif_sample_denied_subject"
+msgstr "Sample denied: %(filename)s"
+
+#: app.py:66 blueprints/main_routes.py:37 blueprints/main_routes.py:74
+#: blueprints/main_routes.py:78 blueprints/main_routes.py:285
+#: blueprints/main_routes.py:344
+msgid "title_default"
+msgstr "YTPMV Sample Database"
+
+#: app.py:71 samples.py:102
+msgid "upload_error_file_too_large"
+msgstr "One or more of your sample(s) exceeded the file limit. Max supported filesize is 10MB per file."
+
+#: mail.py:54
+msgid "email_verify_subject"
+msgstr "Verify your account at YTPMVSD"
+
+#: mail.py:61
+msgid "email_verify_heading"
+msgstr "Please confirm your email address to use YTPMVSD"
+
+#: mail.py:62
+msgid "email_verify_instructions"
+msgstr "by entering the following code in the <a href=\"%(url)s\">verification page</a>"
+
+#: mail.py:64
+msgid "email_verify_expiry"
+msgstr "This link expires in 24 hours."
+
+#: mail.py:65
+msgid "email_verify_ignore"
+msgstr "Do not click this link if you didn't sign up for this site."
+
+#: samples.py:61
+msgid "upload_error_filename_too_long"
+msgstr "Filename must not exceed 100 bytes"
+
+#: samples.py:98
+msgid "upload_error_invalid_file"
+msgstr "There is an error one of your files. Please make sure it is a valid .mp4 file."
+
+#: samples.py:127
+msgid "upload_error_database"
+msgstr "Failed to add sample to database: %(error)s"
+
+#: samples.py:130
+msgid "upload_error_no_file"
+msgstr "No file"
+
+#: samples.py:139 samples.py:144 samples.py:153
+msgid "delete_error_failed"
+msgstr "Sample could not be deleted: %(error)s"
+
+#: samples.py:149
+msgid "delete_error_metadata_failed"
+msgstr "Sample metadata could not be deleted: %(error)s"
+
+#: samples.py:158
+msgid "delete_error_commit_failed"
+msgstr "Sample deletion could not be committed: %(error)s"
+
+#: samples.py:164
+msgid "delete_warning_thumbnail_missing"
+msgstr "Thumbnail file wasn't found, couldn't be deleted"
+
+#: samples.py:168
+msgid "delete_warning_file_missing"
+msgstr "Sample file wasn't found, couldn't be deleted"
+
+#: samples.py:170
+msgid "delete_success"
+msgstr "Sample deleted successfully."
+
+#: samples.py:172
+msgid "delete_error_not_found"
+msgstr "Tried to delete a sample that doesn't exist."
+
+#: wiki.py:21
+msgid "title_wiki_page"
+msgstr "%(name)s - YTPMVSD Wiki"
+
+#: blueprints/admin_routes.py:13 blueprints/main_routes.py:276
+msgid "error_access_denied"
+msgstr "Access denied"
+
+#: blueprints/main_routes.py:59
+msgid "title_samples"
+msgstr "Samples - YTPMV Sample Database"
+
+#: blueprints/main_routes.py:89 blueprints/main_routes.py:308
+#: blueprints/main_routes.py:331
+msgid "title_named_page"
+msgstr "%(name)s - YTPMV Sample Database"
+
+#: blueprints/main_routes.py:120
+msgid "edit_error_no_permission"
+msgstr "You do not have permission to edit this sample."
+
+#: blueprints/main_routes.py:131
+msgid "edit_error_sample_not_found"
+msgstr "Sample not found."
+
+#: blueprints/main_routes.py:161
+msgid "edit_error_failed"
+msgstr "Failed to edit sample."
+
+#: blueprints/main_routes.py:202
+msgid "edit_error_sample_id_empty"
+msgstr "Sample ID empty."
+
+#: blueprints/main_routes.py:206
+msgid "edit_error_sample_id_mismatch"
+msgstr "Sample ID doesn't match."
+
+#: blueprints/main_routes.py:241
+msgid "upload_error_batch_failed"
+msgstr "Failed to upload one or more sample(s). Please reencode or try another video."
+
+#: blueprints/main_routes.py:259
+msgid "like_error_unverified"
+msgstr "Please verify your account to like samples."
+
+#: blueprints/main_routes.py:319
+msgid "title_sources"
+msgstr "Sources - YTPMV Sample Database"
+
+#: blueprints/main_routes.py:360
+msgid "title_tags"
+msgstr "Tags - YTPMV Sample Database"
+
+#: blueprints/main_routes.py:371
+msgid "error_bad_request"
+msgstr "Bad request"
+
+#: blueprints/main_routes.py:376
+msgid "upload_error_no_files_selected"
+msgstr "No files selected"
+
+#: blueprints/main_routes.py:379
+msgid "upload_error_too_many_files"
+msgstr "Too many files"
+
+#: blueprints/main_routes.py:396
+msgid "title_upload"
+msgstr "Upload - YTPMV Sample Database"
+
+#: blueprints/main_routes.py:413
+msgid "login_error_incorrect"
+msgstr "Login or password incorrect."
+
+#: blueprints/main_routes.py:431
+msgid "register_error_username_taken"
+msgstr "Username is already in use."
+
+#: blueprints/main_routes.py:435
+msgid "register_error_email_taken"
+msgstr "Email is already in use."
+
+#: blueprints/main_routes.py:439
+msgid "register_error_username_too_long"
+msgstr "Username cannot be over 64 characters"
+
+#: blueprints/main_routes.py:456
+msgid "register_success_check_email"
+msgstr "Successfully registered. Please check your email to verify your account."
+
+#: blueprints/main_routes.py:458
+msgid "register_success"
+msgstr "Successfully registered."
+
+#: blueprints/main_routes.py:473
+msgid "verify_error_invalid_url"
+msgstr "Invalid verification URL."
+
+#: blueprints/main_routes.py:476
+msgid "verify_enter_code"
+msgstr "Enter the code given to you below:"
+
+#: blueprints/main_routes.py:480
+msgid "verify_error_invalid_code"
+msgstr "Invalid or expired code."
+
+#: blueprints/main_routes.py:486
+msgid "verify_success"
+msgstr "Your account is now verified."
+
+#: blueprints/main_routes.py:501
+msgid "error_unauthorized"
+msgstr "Unauthorized"
+
+#: blueprints/main_routes.py:513
+msgid "title_notifications"
+msgstr "Notifications - YTPMV Sample Database"
+
+#: templates/404.html:6
+msgid "error_page_not_found"
+msgstr "Page not found. If you're seeing this, I most likely haven't implemented this page yet."
+
+#: templates/base.html:20
+msgid "meta_description_default"
+msgstr "The YTPMV Sample Database is the best place to find samples to use in your next YTPMV."
+
+#: templates/base.html:29
+msgid "image_alt_logo"
+msgstr "logo"
+
+#: templates/base.html:31
+msgid "header_site_name"
+msgstr "the ytpmv sample database"
+
+#: templates/base.html:37
+msgid "nav_home"
+msgstr "Home"
+
+#: templates/base.html:39
+msgid "nav_samples"
+msgstr "Samples"
+
+#: templates/base.html:41
+msgid "nav_sources"
+msgstr "Sources"
+
+#: templates/base.html:43
+msgid "nav_tags"
+msgstr "Tags"
+
+#: templates/base.html:45
+msgid "nav_upload"
+msgstr "Upload"
+
+#: templates/base.html:49
+msgid "nav_notifications"
+msgstr "Notifications"
+
+#: templates/base.html:52
+msgid "nav_logout"
+msgstr "Logout"
+
+#: templates/base.html:54
+msgid "nav_login"
+msgstr "Login"
+
+#: templates/base.html:58
+msgid "search_label"
+msgstr "Search:"
+
+#: templates/base.html:59
+msgid "search_placeholder"
+msgstr "crossfade anime"
+
+#: templates/base.html:60
+msgid "search_button"
+msgstr "Search"
+
+#: templates/base.html:86
+msgid "footer_privacy_policy"
+msgstr "Privacy Policy"
+
+#: templates/base.html:87
+msgid "footer_dmca"
+msgstr "DMCA"
+
+#: templates/batch_edit_samples.html:7 templates/edit_sample.html:7
+msgid "edit_popup_reencoding"
+msgstr "Reencoding..."
+
+#: templates/batch_edit_samples.html:8 templates/edit_sample.html:8
+#: templates/upload.html:8
+msgid "common_do_not_leave_page"
+msgstr "Please do not leave this page..."
+
+#: templates/batch_edit_samples.html:14 templates/edit_sample.html:14
+msgid "edit_header"
+msgstr "Edit Sample Details"
+
+#: templates/batch_edit_samples.html:29 templates/edit_sample.html:39
+#: templates/sample.html:92
+msgid "form_label_source"
+msgstr "Source:"
+
+#: templates/batch_edit_samples.html:35 templates/edit_sample.html:45
+msgid "common_clear"
+msgstr "Clear"
+
+#: templates/batch_edit_samples.html:40 templates/edit_sample.html:50
+msgid "edit_source_instructions"
+msgstr "Search and select from list below"
+
+#: templates/batch_edit_samples.html:59
+msgid "edit_reencode_all_required"
+msgstr "Reencode All <em>(required due to one or more of the samples, <a href=\"%(url)s\">learn more</a>)</em>"
+
+#: templates/batch_edit_samples.html:62 templates/edit_sample.html:76
+msgid "edit_reencode_recommended"
+msgstr "Reencode (recommended)"
+
+#: templates/batch_edit_samples.html:64 templates/edit_sample.html:78
+msgid "edit_reencode_hint"
+msgstr "This will ensure the sample is compatible with the website and will not cause errors.<br>You should only uncheck this if it's important the original sample's metadata remain intact."
+
+#: templates/batch_edit_samples.html:69 templates/edit_sample.html:84
+msgid "common_save"
+msgstr "Save"
+
+#: templates/edit_sample.html:23
+msgid "edit_label_filename"
+msgstr "Filename:"
+
+#: templates/edit_sample.html:34
+msgid "edit_filename_guidelines"
+msgstr "Check out the <a href=\"%(url)s\">filename guidelines</a>"
+
+#: templates/edit_sample.html:65
+msgid "edit_label_tags"
+msgstr "Tags:"
+
+#: templates/edit_sample.html:67
+msgid "edit_tags_hint"
+msgstr "Space separated. Use underscores for tags with spaces in them."
+
+#: templates/edit_sample.html:73
+msgid "edit_reencode_required"
+msgstr "Reencode <em>(required, <a href=\"%(url)s\">learn more</a>)</em>"
+
+#: templates/home.html:8
+msgid "home_changelog_header"
+msgstr "Welcome back!"
+
+#: templates/home.html:12
+msgid "common_close"
+msgstr "Close"
+
+#: templates/home.html:17
+msgid "home_top_samples"
+msgstr "Top Samples"
+
+#: templates/home.html:23 templates/home.html:41 templates/samples.html:34
+#: templates/search.html:15 templates/source.html:15 templates/user.html:16
+#: templates/user.html:36
+msgid "image_alt_sample_thumbnail"
+msgstr "sample"
+
+#: templates/home.html:35
+msgid "home_recent_samples"
+msgstr "Recent Samples"
+
+#: templates/login.html:4
+msgid "login_header"
+msgstr "Login"
+
+#: templates/login.html:17
+msgid "login_label_username_or_email"
+msgstr "Username/email:"
+
+#: templates/login.html:21 templates/register.html:25
+msgid "form_label_password"
+msgstr "Password:"
+
+#: templates/login.html:27
+msgid "login_button"
+msgstr "Login"
+
+#: templates/login.html:27
+msgid "login_register_link"
+msgstr "Need an account? Register"
+
+#: templates/notifications.html:5
+msgid "notifications_header"
+msgstr "Notifications"
+
+#: templates/notifications.html:26
+msgid "notifications_empty"
+msgstr "You have no notifications."
+
+#: templates/register.html:4
+msgid "register_header"
+msgstr "Register"
+
+#: templates/register.html:17
+msgid "form_label_username"
+msgstr "Username:"
+
+#: templates/register.html:21
+msgid "form_label_email"
+msgstr "Email:"
+
+#: templates/register.html:33
+msgid "register_button"
+msgstr "Register"
+
+#: templates/register.html:33
+msgid "register_login_link"
+msgstr "Have an account? Login"
+
+#: templates/sample.html:19
+msgid "sample_private_notice"
+msgstr "<b>Note:</b> This sample is private and only visible to you. It will be made public once it has been reviewed by a moderator."
+
+#: templates/admin/admin_samples.html:34 templates/sample.html:26
+msgid "sample_tags_header"
+msgstr "Tags"
+
+#: templates/admin/admin_samples.html:23 templates/sample.html:52
+msgid "sample_uploaded_by"
+msgstr "Uploaded by <a href=\"%(url)s\">%(username)s</a>"
+
+#: templates/admin/admin_samples.html:29 templates/sample.html:58
+msgid "sample_uploaded_relative"
+msgstr "Uploaded %(time)s"
+
+#: templates/sample.html:66
+msgid "sample_download"
+msgstr "Download sample"
+
+#: templates/sample.html:69 templates/sample.html:129
+msgid "sample_unlike"
+msgstr "Unlike"
+
+#: templates/sample.html:69 templates/sample.html:129
+msgid "sample_like"
+msgstr "Like"
+
+#: templates/sample.html:75
+msgid "sample_edit"
+msgstr "Edit sample"
+
+#: templates/sample.html:78
+msgid "sample_delete"
+msgstr "Delete sample"
+
+#: templates/sample.html:96
+msgid "sample_metadata_filesize"
+msgstr "Filesize:"
+
+#: templates/sample.html:96
+msgid "sample_filesize_value"
+msgstr "%(size).2f MB"
+
+#: templates/sample.html:98
+msgid "sample_metadata_resolution"
+msgstr "Resolution:"
+
+#: templates/sample.html:101
+msgid "sample_metadata_framerate"
+msgstr "Frame rate:"
+
+#: templates/sample.html:101
+msgid "sample_framerate_value"
+msgstr "%(fps)s FPS"
+
+#: templates/sample.html:135
+msgid "sample_like_error_not_logged_in"
+msgstr "You are not logged in!"
+
+#: templates/samples.html:3
+msgid "meta_description_samples"
+msgstr "View all samples available on the YTPMV Sample Database."
+
+#: templates/samples.html:10
+msgid "samples_header"
+msgstr "Samples"
+
+#: templates/samples.html:15
+msgid "sort_latest"
+msgstr "Latest"
+
+#: templates/samples.html:18
+msgid "sort_oldest"
+msgstr "Oldest"
+
+#: templates/samples.html:21
+msgid "sort_most_liked"
+msgstr "Most Liked"
+
+#: templates/search.html:7
+msgid "search_results_header"
+msgstr "Search results"
+
+#: templates/source.html:7
+msgid "source_samples_header"
+msgstr "%(name)s samples"
+
+#: templates/sources.html:3
+msgid "meta_description_sources"
+msgstr "View all sources available on the YTPMV Sample Database."
+
+#: templates/sources.html:9
+msgid "sources_header"
+msgstr "All sources"
+
+#: templates/tags.html:3
+msgid "meta_description_tags"
+msgstr "View all tags available on the YTPMV Sample Database."
+
+#: templates/tags.html:10
+msgid "tags_header"
+msgstr "All Tags"
+
+#: templates/upload.html:7
+msgid "upload_popup_uploading"
+msgstr "Uploading..."
+
+#: templates/upload.html:18
+msgid "upload_requires_approved_registered"
+msgstr "Only approved registered users can upload samples."
+
+#: templates/upload.html:20
+msgid "upload_requires_registered"
+msgstr "Only registered users can upload samples."
+
+#: templates/upload.html:24 templates/upload.html:148
+msgid "upload_requires_approved"
+msgstr "Only approved users can upload samples."
+
+#: templates/upload.html:26
+msgid "upload_requires_verified"
+msgstr "Please verify your account to upload samples."
+
+#: templates/upload.html:81
+msgid "upload_error_message"
+msgstr "Error: %(error)s"
+
+#: templates/upload.html:84 templates/upload.html:118
+msgid "upload_return_button"
+msgstr "Return to upload page"
+
+#: templates/upload.html:115
+msgid "upload_error_max_files"
+msgstr "Error: Too many files. Please upload a maximum of 10 files at a time."
+
+#: templates/upload.html:136
+msgid "upload_supported_formats"
+msgstr "Only .mp4 files are currently supported."
+
+#: templates/upload.html:137
+msgid "upload_max_filesize"
+msgstr "Max file size is 10MB."
+
+#: templates/user.html:8
+msgid "user_samples_under_review"
+msgstr "Samples currently under review"
+
+#: templates/user.html:28
+msgid "user_public_samples"
+msgstr "Public Samples by %(username)s"
+
+#: templates/admin/admin_home.html:11
+msgid "admin_panel_header"
+msgstr "Admin Panel"
+
+#: templates/admin/admin_home.html:14
+msgid "admin_user_management"
+msgstr "User Management"
+
+#: templates/admin/admin_home.html:15 templates/admin/admin_samples.html:11
+msgid "admin_sample_management"
+msgstr "Sample Management"
+
+#: templates/admin/admin_home.html:16
+msgid "admin_source_management"
+msgstr "Source Management"
+
+#: templates/admin/admin_home.html:17
+msgid "admin_temp_button"
+msgstr "Temp Button"
+
+#: templates/admin/admin_samples.html:62
+msgid "admin_error_delete_failed"
+msgstr "Failed to delete sample"
+
+#: templates/admin/admin_samples.html:79
+msgid "admin_error_approve_failed"
+msgstr "Failed to approve sample"
+
+#: templates/admin/admin_samples.html:86
+msgid "admin_return_to_panel"
+msgstr "Return to Admin Panel"
+
+#: templates/email/verify.html:10
+msgid "verify_confirm_button"
+msgstr "Confirm"
+
+#: templates/email/verify.html:14
+msgid "verify_back_home_button"
+msgstr "Back to home page"
+
+#: templates/notifications/approval.html:1
+#: templates/notifications/denial.html:1
+msgid "notif_greeting"
+msgstr "Hi %(username)s,"
+
+#: templates/notifications/approval.html:3
+msgid "notif_sample_approved_body"
+msgstr "Your sample, <a href=\"%(url)s\"><b>%(filename)s</b></a>, was approved and is now public."
+
+#: templates/notifications/approval.html:5
+#: templates/notifications/denial.html:5
+msgid "notif_thanks"
+msgstr "Thanks for submitting to YTPMVSD!"
+
+#: templates/notifications/denial.html:3
+msgid "notif_sample_denied_body"
+msgstr "Your sample, <b>%(filename)s</b>, has been denied for public viewing and has been deleted. Please ensure any sample you upload is compatible with the website and that you have the rights to upload it."
+
+#: templates/wiki/wiki_home.html:5
+msgid "wiki_home_placeholder"
+msgstr "You shouldn't be here yet :)"
+

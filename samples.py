@@ -6,6 +6,7 @@ import secrets
 import file_type
 
 from flask import jsonify
+from flask_babel import gettext as _
 from flask_login import current_user
 
 from config import MB_UPLOAD_LIMIT
@@ -57,7 +58,7 @@ def upload(file):
 
         filename = os.path.splitext(original_filename)[0]
         if len(filename) >= 100:
-            raise Exception("Filename must not exceed 100 bytes")
+            raise Exception(_("upload_error_filename_too_long"))
 
         random_id = secrets.token_hex(10)
         
@@ -94,11 +95,11 @@ def upload(file):
             
         if invalid_file:
             os.remove(upload_path)
-            raise Exception("There is an error one of your files. Please make sure it is a valid .mp4 file.")
+            raise Exception(_("upload_error_invalid_file"))
         
         if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
             os.remove(upload_path)
-            raise Exception("One or more of your sample(s) exceeded the file limit. Max supported filesize is 10MB per file.")
+            raise Exception(_("upload_error_file_too_large"))
 
         thumbnail_filename = f"{timestamp}.png"
         create_thumbnail(upload_path, f"static/media/thumbs/{thumbnail_filename}")
@@ -123,10 +124,10 @@ def upload(file):
             thumb_path = f"static/media/thumbs/{thumbnail_filename}"
             if os.path.exists(thumb_path):
                 os.remove(thumb_path)
-            raise Exception(f"Failed to add sample to database: {e}")
+            raise Exception(_("upload_error_database", error=e))
 
     else:
-        raise Exception("No file")
+        raise Exception(_("upload_error_no_file"))
 
     return sample_id, original_filename, timestamp, stored_as, force_reencode
 
@@ -135,38 +136,38 @@ def delete_sample(sample_id):
     try:
         sample = Sample.query.get(sample_id)
     except Exception as ex:
-        return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
+        return jsonify({"success": False, "message": _("delete_error_failed", error=str(ex))})
     if sample:
         try:
             metadata = Metadata.query.get(sample_id)
         except Exception as ex:
-            return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
+            return jsonify({"success": False, "message": _("delete_error_failed", error=str(ex))})
         if sample:
             try:
                 db.session.delete(metadata)
             except Exception as ex:
-                return jsonify({"success": False, "message": "Sample metadata could not be deleted: "+str(ex)})
+                return jsonify({"success": False, "message": _("delete_error_metadata_failed", error=str(ex))})
             try:
                 db.session.delete(sample)
             except Exception as ex:
-                return jsonify({"success": False, "message": "Sample could not be deleted: "+str(ex)})
+                return jsonify({"success": False, "message": _("delete_error_failed", error=str(ex))})
             try: 
                 db.session.commit()
             except Exception as ex:
                 db.session.rollback()
-                return jsonify({"success": False, "message": "Sample deletion could not be committed: "+str(ex)})
+                return jsonify({"success": False, "message": _("delete_error_commit_failed", error=str(ex))})
                 
             warnings = []
             try:
                 os.remove(os.path.join("static/media/thumbs", sample.thumbnail_filename))
-            except FileNotFoundError as _:
-                warnings.append("Thumbnail file wasn't found, couldn't be deleted")
+            except FileNotFoundError:
+                warnings.append(_("delete_warning_thumbnail_missing"))
             try:
                 os.remove(os.path.join("static/media/samps", sample.stored_as))
-            except FileNotFoundError as _:
-                warnings.append("Sample file wasn't found, couldn't be deleted")
+            except FileNotFoundError:
+                warnings.append(_("delete_warning_file_missing"))
 
-        return jsonify({"success": True, "message": "Sample deleted successfully.", "warnings": warnings})
+        return jsonify({"success": True, "message": _("delete_success"), "warnings": warnings})
     
-    return jsonify({"success": False, "message": "Tried to delete a sample that doesn't exist."})
+    return jsonify({"success": False, "message": _("delete_error_not_found")})
 

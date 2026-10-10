@@ -5,6 +5,7 @@ import math
 import markdown
 from flask import Blueprint, render_template, request, redirect, session, url_for, jsonify, flash, send_file
 from flask_login import login_required, current_user, login_user, logout_user
+from flask_babel import gettext as _
 from sqlalchemy import func
 
 from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, USE_EMAIL_VERIFICATION
@@ -33,7 +34,7 @@ def home_page():
 
     return render_template(
         "home.html",
-        title="YTPMV Sample Database",
+        title=_("title_default"),
         top_samples=top_samples,
         recent_samples=recent_samples,
         changelog=changelog if changelog else None,
@@ -55,7 +56,7 @@ def samples_list(index):
 
     return render_template(
         "samples.html",
-        title="Samples - YTPMV Sample Database",
+        title=_("title_samples"),
         samples=res_samples,
         index=index,
         page_num = int(math.ceil(api.get_samples_len() / SAMPLES_PER_PAGE))
@@ -70,11 +71,11 @@ def sample_page(sample_id):
     sample = api.get_sample_info(sample_id)
 
     if sample is None:
-        return render_template("404.html", title="YTPMV Sample Database")
+        return render_template("404.html", title=_("title_default"))
 
     if not sample.is_public:
         if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
-            return render_template("404.html", title="YTPMV Sample Database")
+            return render_template("404.html", title=_("title_default"))
 
     uploader = api.get_user_info(sample.uploader)
 
@@ -85,7 +86,7 @@ def sample_page(sample_id):
 
     return render_template(
         "sample.html",
-        title=f"{sample.filename} - YTPMV Sample Database",
+        title=_("title_named_page", name=sample.filename),
         sample=sample,
         uploader=uploader,
         metadata=metadata,
@@ -116,7 +117,7 @@ def edit_sample(sample_id):
     elif sample:
         is_initial_upload = False
         if not (current_user.is_admin or current_user.id == sample.uploader):
-            flash("You do not have permission to edit this sample.", "error")
+            flash(_("edit_error_no_permission"), "error")
             return redirect(url_for("main.sample_page", sample_id=sample_id))
 
         old_filename = sample.filename
@@ -127,7 +128,7 @@ def edit_sample(sample_id):
         source_name = sample.source.name if sample.source else ""
 
     else:
-        flash("Sample not found.", "error")
+        flash(_("edit_error_sample_not_found"), "error")
         return redirect(url_for("main.upload"))
 
     if request.method == "POST":
@@ -157,7 +158,7 @@ def edit_sample(sample_id):
         session.pop(f"force_reencode", None)
 
         if edit_status:
-            flash("Failed to edit sample.", "error")
+            flash(_("edit_error_failed"), "error")
             if uploaded_sample_id:
                 return redirect(url_for("main.upload"))
             else:
@@ -198,11 +199,11 @@ def batch_edit_samples(sample_ids):
             force_reencode = session.get(f"force_reencode")
 
         if not uploaded_sample_id:
-            flash("Sample ID empty.", "error")
+            flash(_("edit_error_sample_id_empty"), "error")
             return redirect(url_for("main.upload"))
 
         if uploaded_sample_id != sample_id:
-            flash("Sample ID doesn't match.", "error")
+            flash(_("edit_error_sample_id_mismatch"), "error")
             return redirect(url_for("main.upload"))
 
         sample_data.append(
@@ -237,7 +238,7 @@ def batch_edit_samples(sample_ids):
             session.pop(f"force_reencode", None)
 
             if edit_status:
-                flash("Failed to upload one or more sample(s). Please reencode or try another video.", "error")
+                flash(_("upload_error_batch_failed"), "error")
                 return redirect(url_for("main.upload"))
 
         return redirect(url_for("main.user_page", user_id=current_user.id))
@@ -255,7 +256,7 @@ def like_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
 
     if not current_user.is_verified:
-        return jsonify(success=False, message="Please verify your account to like samples.")
+        return jsonify(success=False, message=_("like_error_unverified"))
 
     if current_user in sample.likes:
         sample.likes.remove(current_user)
@@ -272,7 +273,7 @@ def like_sample(sample_id):
 def delete_sample(sample_id):
     sample = Sample.query.get(sample_id)
     if not current_user or (not current_user.is_admin and sample.uploader != current_user.id):
-        return jsonify({"message": "Access denied"}), 403
+        return jsonify({"message": _("error_access_denied")}), 403
 
     return samples.delete_sample(sample_id)
 
@@ -281,7 +282,7 @@ def download_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
     if not sample.is_public:
         if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
-            return render_template("404.html", title="YTPMV Sample Database"), 404
+            return render_template("404.html", title=_("title_default")), 404
     file_path = os.path.join("static/media/samps", sample.stored_as)
     return send_file(file_path, as_attachment=True, download_name=sample.filename)
 
@@ -304,7 +305,7 @@ def user_page(user_id):
 
     return render_template(
         "user.html",
-        title=f"{user.username} - YTPMV Sample Database",
+        title=_("title_named_page", name=user.username),
         samples=samples,
         samples_under_review=private_samples,
         user=user,
@@ -315,7 +316,7 @@ def all_sources():
     sources = Source.query.order_by(Source.name.asc()).all()
 
     return render_template(
-        "sources.html", title="Sources - YTPMV Sample Database", sources=sources
+        "sources.html", title=_("title_sources"), sources=sources
     )
 
 @main_bp.route("/source/<int:source_id>/")
@@ -327,7 +328,7 @@ def source_page(source_id):
 
     return render_template(
         "source.html",
-        title=f"{source.name} - YTPMV Sample Database",
+        title=_("title_named_page", name=source.name),
         samples=res_samples,
         source=source,
     )
@@ -340,7 +341,7 @@ def search_results():
 
     return render_template(
         "search.html",
-        title="YTPMV Sample Database",
+        title=_("title_default"),
         samples=results,
     )
 
@@ -356,7 +357,7 @@ def tags_list():
 
     return render_template(
         "tags.html",
-        title="Tags - YTPMV Sample Database",
+        title=_("title_tags"),
         categories=categories,
         tags=grouped_tags,
     )
@@ -367,15 +368,15 @@ def upload():
         sample_ids = []
 
         if "file" not in request.files:
-            return jsonify({"error": "Bad request"}), 400
+            return jsonify({"error": _("error_bad_request")}), 400
 
         files = request.files.getlist("file")
 
         if len(files) == 0 or files[0].filename == "":
-            return jsonify({"error": "No files selected"}), 400
+            return jsonify({"error": _("upload_error_no_files_selected")}), 400
 
         if len(files) > 10:
-            return jsonify({"error": "Too many files"}), 400
+            return jsonify({"error": _("upload_error_too_many_files")}), 400
 
         for file in files:
             try:
@@ -392,7 +393,7 @@ def upload():
 
         return jsonify({"sample_id": sample_ids[0]})
 
-    return render_template("upload.html", title="Upload - YTPMV Sample Database", require_user_approval=REQUIRE_USER_APPROVAL)
+    return render_template("upload.html", title=_("title_upload"), require_user_approval=REQUIRE_USER_APPROVAL)
 
 @main_bp.route("/login/", methods=["GET", "POST"])
 def login():
@@ -409,7 +410,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for("main.home_page"))
-        flash("Login or password incorrect.", "error")
+        flash(_("login_error_incorrect"), "error")
         return redirect(url_for("main.login"))
 
     return render_template("login.html")
@@ -427,15 +428,15 @@ def register():
         password = request.form["password"]
 
         if User.query.filter(User.username.ilike(username)).first():
-            flash("Username is already in use.", "error")
+            flash(_("register_error_username_taken"), "error")
             return redirect(url_for("main.register"))
 
         if User.query.filter(User.email.ilike(email)).first():
-            flash("Email is already in use.", "error")
+            flash(_("register_error_email_taken"), "error")
             return redirect(url_for("main.register"))
 
         if len(username) >= 64:
-            flash("Username cannot be over 64 characters", "error")
+            flash(_("register_error_username_too_long"), "error")
             return redirect(url_for("main.register"))
 
         user = User(username=username, email=email, join_date=datetime.datetime.now(datetime.UTC))
@@ -452,9 +453,9 @@ def register():
             verify_url = url_for("main.verify", _external=True) + "?verifier=" + verifier
             send_verification_email(email, verify_url, token)
 
-            flash("Successfully registered. Please check your email to verify your account.", "success")
+            flash(_("register_success_check_email"), "success")
         else:
-            flash("Successfully registered.", "success")
+            flash(_("register_success"), "success")
 
         return redirect(url_for("main.login"))
 
@@ -469,20 +470,20 @@ def verify():
         print("verifier is None")
         return redirect(url_for("main.home_page"))
     if decode_email(verifier) is False:
-        msg = "Invalid verification URL."
+        msg = _("verify_error_invalid_url")
         on_confirm_screen = False
     else:
-        msg = "Enter the code given to you below:"
+        msg = _("verify_enter_code")
         if token is not None:
             email = confirm_token(verifier, token)
             if not email:
-                msg = "Invalid or expired code."
+                msg = _("verify_error_invalid_code")
             else:
                 user = User.query.filter_by(email=email).first()
                 if user and not user.is_verified:
                     user.is_verified = True
                     db.session.commit()
-                    msg = "Your account is now verified."
+                    msg = _("verify_success")
                     on_confirm_screen = False
                 else:
                     return redirect(url_for("main.home_page"))
@@ -497,7 +498,7 @@ def verify():
 def mark_notification_read(notification_id):
     notif = Notification.query.get_or_404(notification_id)
     if notif.user_id != current_user.id:
-        return jsonify({"error": "Unauthorized"}), 403
+        return jsonify({"error": _("error_unauthorized")}), 403
 
     if not notif.is_read:
         notif.is_read = True
@@ -509,4 +510,4 @@ def mark_notification_read(notification_id):
 @login_required
 def notifications():
     notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.timestamp.desc()).all()
-    return render_template("notifications.html", title="Notifications - YTPMV Sample Database", notifications=notifs)
+    return render_template("notifications.html", title=_("title_notifications"), notifications=notifs)

@@ -14,3 +14,4 @@ gunicorn
 Markdown~=3.8
 filetype_py~=1.0
 flask_mail~=0.10.0
+Flask-Babel~=4.0.0

@@ -4,14 +4,14 @@
 
     <div id="changelog-background" class="popup-background hidden"></div>
     <div id="changelog-popup" class="popup hidden" style="height: calc(45% - 150px);">
-        <h2>Reencoding...</h2>
-        <p>Please do not leave this page...</p>
+        <h2>{{ _("edit_popup_reencoding") }}</h2>
+        <p>{{ _("common_do_not_leave_page") }}</p>
         <div class="popup-content">
             <div class="loading-spinner"></div>
         </div>
     </div>
 
-    <h2>Edit Sample Details</h2>
+    <h2>{{ _("edit_header") }}</h2>
     <div class="multiple-upload-samples">
         {% for sample in samples %}
             <div class="multiple-upload-sample-container">
@@ -26,18 +26,18 @@
             <table align="center">
                 <tr class="source-box">
                     <td align="right">
-                        <b>Source:</b>
+                        <b>{{ _("form_label_source") }}</b>
                     </td>
                     <td align="left">
                         <input type="text" id="source" name="source" autocomplete="off" placeholder="">
                     </td>
                     <td>
-                        <button type="button" id="clear-source" disabled="disabled">Clear</button>
+                        <button type="button" id="clear-source" disabled="disabled">{{ _("common_clear") }}</button>
                     </td>
                 </tr>
                 <tr>
                     <td align="center" colspan=3>
-                        <small id="instruction-text">Search and select from list below</small>
+                        <small id="instruction-text">{{ _("edit_source_instructions") }}</small>
                     </td>
                 </tr>
                 <tr class="source-box">
@@ -56,17 +56,17 @@
 
             <div>
                 {% if force_reencode %}
-                    <label for="reencode">Reencode All <em>(required due to one or more of the samples, <a href="{{ url_for('wiki.wiki_page',page='reencode') }}">learn more</a>)</em></label>
+                    <label for="reencode">{{ _("edit_reencode_all_required", url=url_for('wiki.wiki_page',page='reencode')) }}</label>
                     <input type="checkbox" id="reencode" name="reencode" checked disabled="disabled">
                 {% else %}
-                    <label for="reencode">Reencode (recommended)</label>
+                    <label for="reencode">{{ _("edit_reencode_recommended") }}</label>
                     <input type="checkbox" id="reencode" name="reencode" checked>
-                     <br><small>This will ensure the sample is compatible with the website and will not cause errors.<br>You should only uncheck this if it's important the original sample's metadata remain intact.</small>
+                     <br><small>{{ _("edit_reencode_hint") }}</small>
                 {% endif %}
             </div>
 
             <div>
-                <button type="submit" class="submit_button">Save</button>
+                <button type="submit" class="submit_button">{{ _("common_save") }}</button>
             </div>
         </div>
     </form>

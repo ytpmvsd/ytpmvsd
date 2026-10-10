@@ -1,5 +1,5 @@
-<p>Hi {{ username }},</p>
+<p>{{ _("notif_greeting", username=username) }}</p>
 <br>
-<p>Your sample, <a href="{{ sample_url }}"><b>{{ filename }}</b></a>, was approved and is now public.</p>
+<p>{{ _("notif_sample_approved_body", url=sample_url, filename=filename) }}</p>
 <br>
-<p>Thanks for submitting to YTPMVSD!</p>
+<p>{{ _("notif_thanks") }}</p>
