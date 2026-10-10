@@ -5,22 +5,22 @@
     {% if changelog %}
         <div id="changelog-background" class="popup-background hidden"></div>
         <div id="changelog-popup" class="popup hidden">
-            <h2>Welcome back!</h2>
+            <h2>{{ _("home_changelog_header") }}</h2>
             <div class="popup-content">
                 {{ changelog | safe }}
             </div>
-            <button onclick="closeChangelog()">Close</button>
+            <button onclick="closeChangelog()">{{ _("common_close") }}</button>
         </div>
     {% endif %}
 
     <div class="home-samples-box">
-        <h1 style="padding-bottom: 10px">Top Samples</h1>
+        <h1 style="padding-bottom: 10px">{{ _("home_top_samples") }}</h1>
         <div class="home-samples-grid">
             {% for sample in top_samples %}
                 <div class="home-sample">
                     <a href="../sample/{{ sample.id }}"><img
                             src="{{ url_for('static', filename='media/thumbs/' + sample.thumbnail_filename) }}"
-                            alt="sample"></a>
+                            alt="{{ _("image_alt_sample_thumbnail") }}"></a>
                     <a href="../sample/{{ sample.id }}">
                         <div>{{ sample.filename }}</div>
                     </a>
@@ -32,13 +32,13 @@
     </div>
 
     <div class="home-samples-box">
-        <h1 style="padding-bottom: 10px">Recent Samples</h1>
+        <h1 style="padding-bottom: 10px">{{ _("home_recent_samples") }}</h1>
         <div class="home-samples-grid">
             {% for sample in recent_samples %}
                 <div class="home-sample">
                     <a href="../sample/{{ sample.id }}"><img
                             src="{{ url_for('static', filename='media/thumbs/' + sample.thumbnail_filename) }}"
-                            alt="sample"></a>
+                            alt="{{ _("image_alt_sample_thumbnail") }}"></a>
                     <a href="../sample/{{ sample.id }}">
                         <div>{{ sample.filename }}</div>
                     </a>

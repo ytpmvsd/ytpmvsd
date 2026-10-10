@@ -1,0 +1,539 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-09 23:53-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: app.py:71 samples.py:102
+msgid "upload_error_file_too_large"
+msgstr ""
+
+#: samples.py:61
+msgid "upload_error_filename_too_long"
+msgstr ""
+
+#: samples.py:98
+msgid "upload_error_invalid_file"
+msgstr ""
+
+#: samples.py:127
+msgid "upload_error_database"
+msgstr ""
+
+#: samples.py:130
+msgid "upload_error_no_file"
+msgstr ""
+
+#: samples.py:139 samples.py:144 samples.py:153
+msgid "delete_error_failed"
+msgstr ""
+
+#: samples.py:149
+msgid "delete_error_metadata_failed"
+msgstr ""
+
+#: samples.py:158
+msgid "delete_error_commit_failed"
+msgstr ""
+
+#: samples.py:164
+msgid "delete_warning_thumbnail_missing"
+msgstr ""
+
+#: samples.py:168
+msgid "delete_warning_file_missing"
+msgstr ""
+
+#: samples.py:170
+msgid "delete_success"
+msgstr ""
+
+#: samples.py:172
+msgid "delete_error_not_found"
+msgstr ""
+
+#: wiki.py:21
+msgid "title_wiki_page"
+msgstr ""
+
+#: blueprints/admin_routes.py:13 blueprints/main_routes.py:276
+msgid "error_access_denied"
+msgstr ""
+
+#: blueprints/main_routes.py:59
+msgid "title_samples"
+msgstr ""
+
+#: blueprints/main_routes.py:120
+msgid "edit_error_no_permission"
+msgstr ""
+
+#: blueprints/main_routes.py:131
+msgid "edit_error_sample_not_found"
+msgstr ""
+
+#: blueprints/main_routes.py:161
+msgid "edit_error_failed"
+msgstr ""
+
+#: blueprints/main_routes.py:202
+msgid "edit_error_sample_id_empty"
+msgstr ""
+
+#: blueprints/main_routes.py:206
+msgid "edit_error_sample_id_mismatch"
+msgstr ""
+
+#: blueprints/main_routes.py:241
+msgid "upload_error_batch_failed"
+msgstr ""
+
+#: blueprints/main_routes.py:259
+msgid "like_error_unverified"
+msgstr ""
+
+#: blueprints/main_routes.py:319
+msgid "title_sources"
+msgstr ""
+
+#: blueprints/main_routes.py:360
+msgid "title_tags"
+msgstr ""
+
+#: blueprints/main_routes.py:371
+msgid "error_bad_request"
+msgstr ""
+
+#: blueprints/main_routes.py:376
+msgid "upload_error_no_files_selected"
+msgstr ""
+
+#: blueprints/main_routes.py:379
+msgid "upload_error_too_many_files"
+msgstr ""
+
+#: blueprints/main_routes.py:396 templates/base.html:45
+msgid "upload"
+msgstr ""
+
+#: blueprints/main_routes.py:413
+msgid "login_error_incorrect"
+msgstr ""
+
+#: blueprints/main_routes.py:431
+msgid "register_error_username_taken"
+msgstr ""
+
+#: blueprints/main_routes.py:435
+msgid "register_error_email_taken"
+msgstr ""
+
+#: blueprints/main_routes.py:439
+msgid "register_error_username_too_long"
+msgstr ""
+
+#: blueprints/main_routes.py:456
+msgid "register_success_check_email"
+msgstr ""
+
+#: blueprints/main_routes.py:458
+msgid "register_success"
+msgstr ""
+
+#: blueprints/main_routes.py:473
+msgid "verify_error_invalid_url"
+msgstr ""
+
+#: blueprints/main_routes.py:476
+msgid "verify_enter_code"
+msgstr ""
+
+#: blueprints/main_routes.py:480
+msgid "verify_error_invalid_code"
+msgstr ""
+
+#: blueprints/main_routes.py:486
+msgid "verify_success"
+msgstr ""
+
+#: blueprints/main_routes.py:501
+msgid "error_unauthorized"
+msgstr ""
+
+#: blueprints/main_routes.py:513
+msgid "title_notifications"
+msgstr ""
+
+#: templates/404.html:6
+msgid "error_page_not_found"
+msgstr ""
+
+#: templates/base.html:29
+msgid "image_alt_logo"
+msgstr ""
+
+#: templates/base.html:37
+msgid "nav_home"
+msgstr ""
+
+#: templates/base.html:39
+msgid "nav_samples"
+msgstr ""
+
+#: templates/base.html:41
+msgid "nav_sources"
+msgstr ""
+
+#: templates/base.html:43
+msgid "nav_tags"
+msgstr ""
+
+#: templates/base.html:49
+msgid "nav_notifications"
+msgstr ""
+
+#: templates/base.html:52
+msgid "nav_logout"
+msgstr ""
+
+#: templates/base.html:54
+msgid "nav_login"
+msgstr ""
+
+#: templates/base.html:58
+msgid "search_label"
+msgstr ""
+
+#: templates/base.html:59
+msgid "search_placeholder"
+msgstr ""
+
+#: templates/base.html:60
+msgid "search_button"
+msgstr ""
+
+#: templates/base.html:86
+msgid "footer_privacy_policy"
+msgstr ""
+
+#: templates/batch_edit_samples.html:7 templates/edit_sample.html:7
+msgid "edit_popup_reencoding"
+msgstr ""
+
+#: templates/batch_edit_samples.html:8 templates/edit_sample.html:8
+#: templates/upload.html:8
+msgid "common_do_not_leave_page"
+msgstr ""
+
+#: templates/batch_edit_samples.html:14 templates/edit_sample.html:14
+msgid "edit_header"
+msgstr ""
+
+#: templates/batch_edit_samples.html:29 templates/edit_sample.html:43
+#: templates/sample.html:92
+msgid "form_label_source"
+msgstr ""
+
+#: templates/batch_edit_samples.html:35 templates/edit_sample.html:49
+msgid "common_clear"
+msgstr ""
+
+#: templates/batch_edit_samples.html:40 templates/edit_sample.html:54
+msgid "edit_source_instructions"
+msgstr ""
+
+#: templates/batch_edit_samples.html:59
+msgid "edit_reencode_all_text"
+msgstr ""
+
+#: templates/batch_edit_samples.html:59
+msgid "edit_reencode_expl"
+msgstr ""
+
+#: templates/batch_edit_samples.html:59 templates/edit_sample.html:77
+msgid "edit_reencode_learn_more"
+msgstr ""
+
+#: templates/batch_edit_samples.html:62 templates/edit_sample.html:80
+msgid "edit_reencode_recommended"
+msgstr ""
+
+#: templates/batch_edit_samples.html:64 templates/edit_sample.html:82
+msgid "edit_reencode_hint_p1"
+msgstr ""
+
+#: templates/batch_edit_samples.html:65 templates/edit_sample.html:83
+msgid "edit_reencode_hint_p2"
+msgstr ""
+
+#: templates/batch_edit_samples.html:70 templates/edit_sample.html:89
+msgid "common_save"
+msgstr ""
+
+#: templates/edit_sample.html:23
+msgid "edit_label_filename"
+msgstr ""
+
+#: templates/edit_sample.html:35
+msgid "edit_filename_guidelines_checkout_the"
+msgstr ""
+
+#: templates/edit_sample.html:36
+msgid "edit_filename_guidelines_filename_guidelines"
+msgstr ""
+
+#: templates/edit_sample.html:69
+msgid "edit_label_tags"
+msgstr ""
+
+#: templates/edit_sample.html:71
+msgid "edit_tags_hint"
+msgstr ""
+
+#: templates/edit_sample.html:77
+msgid "edit_reencode_text"
+msgstr ""
+
+#: templates/edit_sample.html:77
+msgid "edit_reencode_required_expl"
+msgstr ""
+
+#: templates/home.html:8
+msgid "home_changelog_header"
+msgstr ""
+
+#: templates/home.html:12
+msgid "common_close"
+msgstr ""
+
+#: templates/home.html:17
+msgid "home_top_samples"
+msgstr ""
+
+#: templates/home.html:23 templates/home.html:41 templates/samples.html:34
+#: templates/search.html:15 templates/source.html:15 templates/user.html:16
+#: templates/user.html:36
+msgid "image_alt_sample_thumbnail"
+msgstr ""
+
+#: templates/home.html:35
+msgid "home_recent_samples"
+msgstr ""
+
+#: templates/login.html:4
+msgid "login_header"
+msgstr ""
+
+#: templates/login.html:17
+msgid "login_label_username_or_email"
+msgstr ""
+
+#: templates/login.html:21 templates/register.html:25
+msgid "form_label_password"
+msgstr ""
+
+#: templates/login.html:26
+msgid "login_button"
+msgstr ""
+
+#: templates/login.html:26
+msgid "login_register_link"
+msgstr ""
+
+#: templates/notifications.html:5
+msgid "notifications_header"
+msgstr ""
+
+#: templates/notifications.html:26
+msgid "notifications_empty"
+msgstr ""
+
+#: templates/register.html:4
+msgid "register_header"
+msgstr ""
+
+#: templates/register.html:17
+msgid "form_label_username"
+msgstr ""
+
+#: templates/register.html:21
+msgid "form_label_email"
+msgstr ""
+
+#: templates/register.html:30
+msgid "register_button"
+msgstr ""
+
+#: templates/register.html:30
+msgid "register_login_link"
+msgstr ""
+
+#: templates/sample.html:19
+msgid "sample_private_notice_label"
+msgstr ""
+
+#: templates/sample.html:19
+msgid "sample_private_notice"
+msgstr ""
+
+#: templates/sample.html:26
+msgid "sample_tags_header"
+msgstr ""
+
+#: templates/sample.html:52
+msgid "sample_uploaded_by"
+msgstr ""
+
+#: templates/sample.html:58
+msgid "sample_uploaded_relative"
+msgstr ""
+
+#: templates/sample.html:66
+msgid "sample_download"
+msgstr ""
+
+#: templates/sample.html:69 templates/sample.html:129
+msgid "sample_unlike"
+msgstr ""
+
+#: templates/sample.html:69 templates/sample.html:129
+msgid "sample_like"
+msgstr ""
+
+#: templates/sample.html:75
+msgid "sample_edit"
+msgstr ""
+
+#: templates/sample.html:78
+msgid "sample_delete"
+msgstr ""
+
+#: templates/sample.html:96
+msgid "sample_metadata_filesize"
+msgstr ""
+
+#: templates/sample.html:96
+msgid "sample_filesize_value"
+msgstr ""
+
+#: templates/sample.html:98
+msgid "sample_metadata_resolution"
+msgstr ""
+
+#: templates/sample.html:101
+msgid "sample_metadata_framerate"
+msgstr ""
+
+#: templates/sample.html:101
+msgid "sample_framerate_value"
+msgstr ""
+
+#: templates/sample.html:135
+msgid "sample_like_error_not_logged_in"
+msgstr ""
+
+#: templates/samples.html:10
+msgid "samples_header"
+msgstr ""
+
+#: templates/samples.html:15
+msgid "sort_latest"
+msgstr ""
+
+#: templates/samples.html:18
+msgid "sort_oldest"
+msgstr ""
+
+#: templates/samples.html:21
+msgid "sort_most_liked"
+msgstr ""
+
+#: templates/search.html:7
+msgid "search_results_header"
+msgstr ""
+
+#: templates/source.html:7
+msgid "source_samples_header"
+msgstr ""
+
+#: templates/sources.html:9
+msgid "sources_header"
+msgstr ""
+
+#: templates/tags.html:10
+msgid "tags_header"
+msgstr ""
+
+#: templates/upload.html:7
+msgid "upload_popup_uploading"
+msgstr ""
+
+#: templates/upload.html:18
+msgid "upload_requires_approved_registered"
+msgstr ""
+
+#: templates/upload.html:20
+msgid "upload_requires_registered"
+msgstr ""
+
+#: templates/upload.html:24 templates/upload.html:148
+msgid "upload_requires_approved"
+msgstr ""
+
+#: templates/upload.html:26
+msgid "upload_requires_verified"
+msgstr ""
+
+#: templates/upload.html:81
+msgid "upload_error_message"
+msgstr ""
+
+#: templates/upload.html:84 templates/upload.html:118
+msgid "upload_return_button"
+msgstr ""
+
+#: templates/upload.html:115
+msgid "upload_error_max_files"
+msgstr ""
+
+#: templates/upload.html:136
+msgid "upload_supported_formats"
+msgstr ""
+
+#: templates/upload.html:137
+msgid "upload_max_filesize"
+msgstr ""
+
+#: templates/user.html:8
+msgid "user_samples_under_review"
+msgstr ""
+
+#: templates/user.html:28
+msgid "user_public_samples"
+msgstr ""
+
+#: templates/email/verify.html:10
+msgid "verify_confirm_button"
+msgstr ""
+
+#: templates/email/verify.html:14
+msgid "verify_back_home_button"
+msgstr ""
+
+#: templates/wiki/wiki_home.html:5
+msgid "wiki_home_placeholder"
+msgstr ""
+

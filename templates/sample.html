@@ -16,14 +16,14 @@
     <div class="warning-box">
         {% if not sample.is_public %}
             <div class="privacy-warning">
-                <b>Note:</b> This sample is private and only visible to you. It will be made public once it has been reviewed by a moderator.
+                <b>{{ _("sample_private_notice_label") }}:</b> {{ _("sample_private_notice") }}
             </div>
         {% endif %}
     </div>
     <div class="sample-page-layout">
         <aside class="tag-sidebar">
             <div class="tag-sidebar-inner">
-                <span class="tags-header"><b>Tags</b></span>
+                <span class="tags-header"><b>{{ _("sample_tags_header") }}</b></span>
                 {% for category, tags in sample.tags|groupby("category.id") %}
                     <span class="tags-category-header">{{ tags[0].category.name }}</span>
                     {% for tag in tags|sort(attribute='name') %}
@@ -49,14 +49,13 @@
                     <source src="{{ url_for('static', filename='media/samps/' + sample.stored_as) }}">
                 </video>
                 <h1>{{ sample.filename }}</h1>
-                <p class="uploader">Uploaded by <a
-                        href="{{ url_for('main.user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
+                <p class="uploader">{{ _("sample_uploaded_by") }} <a href="{{ url_for('main.user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
                 <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
                 <script>
                     document.querySelectorAll('.upload-date').forEach(element => {
                         const utcDate = element.getAttribute('data-utc');
                         const localTime = moment.utc(utcDate).local();
-                        element.innerText = 'Uploaded ' + localTime.fromNow();
+                        element.innerText = {{ _("sample_uploaded_relative", time="{time}")|tojson }}.replace("{time}", localTime.fromNow());
                     });
                 </script>
             </div>
@@ -64,19 +63,19 @@
                 <div class="sample-buttons">
                     <a href="{{ url_for('main.download_sample', sample_id=sample.id) }}"
                        class="sample-page-button" style="--hue: 100">
-                        <span>Download sample</span>
+                        <span>{{ _("sample_download") }}</span>
                     </a>
                     <a class="sample-page-button like-button" data-sample-id="{{ sample.id }}" style="--hue: 200">
-                        <span>{% if current_user in sample.likes %}Unlike{% else %}Like{% endif %}</span>
+                        <span>{% if current_user in sample.likes %}{{ _("sample_unlike") }}{% else %}{{ _("sample_like") }}{% endif %}</span>
                         <span class="like-count">{{ sample.likes|length }}</span>
                     </a>
                     {% if current_user.is_admin or current_user.id == uploader.id %}
                         <a href="{{ url_for('main.edit_sample', sample_id=sample.id) }}"
                            class="sample-page-button" style="--hue: 40">
-                            <span>Edit sample</span>
+                            <span>{{ _("sample_edit") }}</span>
                         </a>
                         <a class="sample-page-button delete-button" data-sample-id="{{ sample.id }}" style="--hue: 0">
-                            <span>Delete sample</span>
+                            <span>{{ _("sample_delete") }}</span>
                         </a>
                     {% endif %}
                 </div>
@@ -90,16 +89,16 @@
                     {% endfor %}
 
                     {% if sample.source_id %}
-                        <span><b>Source:</b> <a
+                        <span><b>{{ _("form_label_source") }}:</b> <a
                                 href="{{ url_for('main.source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
                     {% endif %}
 
-                    <span><b>Filesize:</b> {{ "%.2f MB" | format( metadata.filesize|int/1000/1000 ) }}</span>
+                    <span><b>{{ _("sample_metadata_filesize") }}:</b> {{ _("sample_filesize_value", size=metadata.filesize|int/1000/1000) }}</span>
 
-                    <span><b>Resolution:</b> {{ metadata.width }}x{{ metadata.height }}
+                    <span><b>{{ _("sample_metadata_resolution") }}:</b> {{ metadata.width }}x{{ metadata.height }}
                                     ({{ metadata.aspect_ratio }})</span>
 
-                    <span><b>Frame rate:</b> {{ metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3) }} FPS</span>
+                    <span><b>{{ _("sample_metadata_framerate") }}:</b> {{ _("sample_framerate_value", fps=metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3)) }}</span>
 
                 </div>
             </div>
@@ -127,13 +126,13 @@
                             .then(data => {
                                 if (data.success) {
                                     likeCountSpan.textContent = data["likes"];
-                                    this.querySelector("span").textContent = data["liked"] ? "Unlike" : "Like";  // Change text
+                                    this.querySelector("span").textContent = data["liked"] ? {{ _("sample_unlike")|tojson }} : {{ _("sample_like")|tojson }};  // Change text
                                 } else {
                                     window.alert(data.message);
                                 }
                             });
                     {% else %}
-                        window.alert("You are not logged in!");
+                        window.alert({{ _("sample_like_error_not_logged_in")|tojson }});
                     {% endif %}
                 });
             });

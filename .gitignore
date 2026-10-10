@@ -8,3 +8,5 @@ instance
 static/media/*
 config.toml
 *.pyc
+
+*.mo

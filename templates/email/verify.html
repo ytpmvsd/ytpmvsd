@@ -7,11 +7,11 @@
         <form action="/verify" method="GET">
             <input type="hidden" name="verifier" id="verifier" value="{{ verifier }}"/>
             <input type="text" placeholder="XXXXXX" name="token" id="token"/>
-            <button type="submit">Confirm</button>
+            <button type="submit">{{ _("verify_confirm_button") }}</button>
         </form>
     {% else %}
         <form action="{{ url_for('main.home_page') }}" method="GET">
-            <button type="submit">Back to home page</button>
+            <button type="submit">{{ _("verify_back_home_button") }}</button>
         </form>
     {% endif %}
 

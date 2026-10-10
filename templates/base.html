@@ -26,7 +26,7 @@
 
 <div class="home-header">
     <div style="max-width: 500px; display: flex; margin: 25px auto auto; flex-direction: column;">
-        <img src="{{ url_for('static', filename='img/logo-beta.png') }}" alt="logo">
+        <img src="{{ url_for('static', filename='img/logo-beta.png') }}" alt="{{ _("image_alt_logo") }}">
         <div class="home-header-text">
             {% for i in "the ytpmv sample database" %}
                 <div>{{ i }}</div>
@@ -34,30 +34,30 @@
         </div>
     </div>
     <ul>
-        <li><a href="{{ url_for("main.home_page") }}">Home</a></li>
+        <li><a href="{{ url_for("main.home_page") }}">{{ _("nav_home") }}</a></li>
         •
-        <li><a href="{{ url_for("main.samples_list_base") }}">Samples</a></li>
+        <li><a href="{{ url_for("main.samples_list_base") }}">{{ _("nav_samples") }}</a></li>
         •
-        <li><a href="{{ url_for("main.all_sources") }}">Sources</a></li>
+        <li><a href="{{ url_for("main.all_sources") }}">{{ _("nav_sources") }}</a></li>
         •
-        <li><a href="{{ url_for("main.tags_list") }}">Tags</a></li>
+        <li><a href="{{ url_for("main.tags_list") }}">{{ _("nav_tags") }}</a></li>
         •
-        <li><a href="{{ url_for("main.upload") }}">Upload</a></li>
+        <li><a href="{{ url_for("main.upload") }}">{{ _("upload") }}</a></li>
         •
         {% if current_user.is_authenticated %}
             <li>
-                <a href="{{ url_for("main.notifications") }}">Notifications{% if unread_notifications_count > 0 %} ({{ unread_notifications_count }}){% endif %}</a>
+                <a href="{{ url_for("main.notifications") }}">{{ _("nav_notifications") }}{% if unread_notifications_count > 0 %} ({{ unread_notifications_count }}){% endif %}</a>
             </li>
             •
-            <li><a href="{{ url_for("main.logout") }}">Logout</a></li>
+            <li><a href="{{ url_for("main.logout") }}">{{ _("nav_logout") }}</a></li>
         {% else %}
-            <li><a href="{{ url_for("main.login") }}">Login</a></li>
+            <li><a href="{{ url_for("main.login") }}">{{ _("nav_login") }}</a></li>
         {% endif %}
     </ul>
     <form role="search" onsubmit="search(event)" class="search-form">
-        <span>Search:</span>
-        <input type="search" placeholder="crossfade anime" id="search-input">
-        <button type="submit">Search</button>
+        <span>{{ _("search_label") }}:</span>
+        <input type="search" placeholder="{{ _("search_placeholder") }}" id="search-input">
+        <button type="submit">{{ _("search_button") }}</button>
     </form>
 
     <script>
@@ -83,7 +83,7 @@
 </footer>
 
 <footer style="padding: 0 5px 5px; font-size: 14px; gap: 10px;">
-    <a href="{{ url_for('wiki.wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">Privacy Policy</a>
+    <a href="{{ url_for('wiki.wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">{{ _("footer_privacy_policy") }}</a>
     <a href="{{ url_for('wiki.wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">DMCA</a>
 </footer>
 

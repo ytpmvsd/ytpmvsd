@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2 class="loginheader">Login</h2>
+    <h2 class="loginheader">{{ _("login_header") }}</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -14,16 +14,16 @@
     <form method="POST">
         <table align="center">
             <tr class="reglog-box">
-                <td align="right"><label>Username/email:</label></td>
+                <td align="right"><label>{{ _("login_label_username_or_email") }}:</label></td>
                 <td align="left"><input type="text" name="login" required></td>
             </tr>
             <tr class="reglog-box">
-                <td align="right"><label>Password:</label></td>
+                <td align="right"><label>{{ _("form_label_password") }}:</label></td>
                 <td align="left"><input type="password" name="password" required></td>
             </tr>
         </table>
         <center>
-            <button style="display: block;margin: 1em;" type="submit">Login</button><a href="{{ url_for('main.register') }}">Need an account? Register</a>
+            <button style="display: block;margin: 1em;" type="submit">{{ _("login_button") }}</button><a href="{{ url_for('main.register') }}">{{ _("login_register_link") }}</a>
         </center>
     </form>
 
