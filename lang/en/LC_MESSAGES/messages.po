@@ -299,8 +299,12 @@ msgid "edit_reencode_recommended"
 msgstr "Reencode (recommended)"
 
 #: templates/batch_edit_samples.html:64 templates/edit_sample.html:82
-msgid "edit_reencode_hint"
-msgstr "This will ensure the sample is compatible with the website and will not cause errors. You should only uncheck this if it's important the original sample's metadata remain intact."
+msgid "edit_reencode_hint_p1"
+msgstr "This will ensure the sample is compatible with the website and will not cause errors."
+
+#: templates/batch_edit_samples.html:65 templates/edit_sample.html:83
+msgid "edit_reencode_hint_p2"
+msgstr "You should only uncheck this if it's important the original sample's metadata remain intact."
 
 #: templates/batch_edit_samples.html:69 templates/edit_sample.html:88
 msgid "common_save"

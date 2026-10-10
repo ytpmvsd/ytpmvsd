@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-09 23:05-0700\n"
+"POT-Creation-Date: 2026-10-09 23:46-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: admin.py:31
 msgid "notif_sample_approved_subject"
@@ -200,7 +200,6 @@ msgstr ""
 msgid "error_page_not_found"
 msgstr ""
 
-
 #: templates/base.html:29
 msgid "image_alt_logo"
 msgstr ""
@@ -296,10 +295,14 @@ msgid "edit_reencode_recommended"
 msgstr ""
 
 #: templates/batch_edit_samples.html:64 templates/edit_sample.html:82
-msgid "edit_reencode_hint"
+msgid "edit_reencode_hint_p1"
 msgstr ""
 
-#: templates/batch_edit_samples.html:69 templates/edit_sample.html:88
+#: templates/batch_edit_samples.html:65 templates/edit_sample.html:83
+msgid "edit_reencode_hint_p2"
+msgstr ""
+
+#: templates/batch_edit_samples.html:70 templates/edit_sample.html:89
 msgid "common_save"
 msgstr ""
 
@@ -489,11 +492,9 @@ msgstr ""
 msgid "source_samples_header"
 msgstr ""
 
-
 #: templates/sources.html:9
 msgid "sources_header"
 msgstr ""
-
 
 #: templates/tags.html:10
 msgid "tags_header"
