@@ -86,7 +86,7 @@ def sample_page(sample_id):
 
     return render_template(
         "sample.html",
-        title=_("title_named_page", name=sample.filename),
+        title=f"{sample.filename} - YTPMV Sample Database",
         sample=sample,
         uploader=uploader,
         metadata=metadata,
@@ -305,7 +305,7 @@ def user_page(user_id):
 
     return render_template(
         "user.html",
-        title=_("title_named_page", name=user.username),
+        title=f"{user.username} - YTPMV Sample Database",
         samples=samples,
         samples_under_review=private_samples,
         user=user,
@@ -328,7 +328,7 @@ def source_page(source_id):
 
     return render_template(
         "source.html",
-        title=_("title_named_page", name=source.name),
+        title=f"{source.name} - YTPMV Sample Database",
         samples=res_samples,
         source=source,
     )
@@ -393,7 +393,7 @@ def upload():
 
         return jsonify({"sample_id": sample_ids[0]})
 
-    return render_template("upload.html", title=_("title_upload"), require_user_approval=REQUIRE_USER_APPROVAL, mb_upload_limit=MB_UPLOAD_LIMIT)
+    return render_template("upload.html", title=_("upload") + "- YTPMV Sample Database", require_user_approval=REQUIRE_USER_APPROVAL, mb_upload_limit=MB_UPLOAD_LIMIT)
 
 @main_bp.route("/login/", methods=["GET", "POST"])
 def login():

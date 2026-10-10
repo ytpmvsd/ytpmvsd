@@ -92,10 +92,6 @@ msgstr "Access denied"
 msgid "title_samples"
 msgstr "Samples - YTPMV Sample Database"
 
-#: blueprints/main_routes.py:89 blueprints/main_routes.py:308
-#: blueprints/main_routes.py:331
-msgid "title_named_page"
-msgstr "%(name)s - YTPMV Sample Database"
 
 #: blueprints/main_routes.py:120
 msgid "edit_error_no_permission"
@@ -145,9 +141,7 @@ msgstr "No files selected"
 msgid "upload_error_too_many_files"
 msgstr "Too many files"
 
-#: blueprints/main_routes.py:396
-msgid "title_upload"
-msgstr "Upload - YTPMV Sample Database"
+
 
 #: blueprints/main_routes.py:413
 msgid "login_error_incorrect"
@@ -223,7 +217,7 @@ msgid "nav_tags"
 msgstr "Tags"
 
 #: templates/base.html:45
-msgid "nav_upload"
+msgid "upload"
 msgstr "Upload"
 
 #: templates/base.html:49
@@ -416,18 +410,6 @@ msgstr "Note"
 msgid "sample_private_notice"
 msgstr "This sample is private and only visible to you. It will be made public once it has been reviewed by a moderator."
 
-#: templates/admin/admin_samples.html:34 templates/sample.html:26
-msgid "sample_tags_header"
-msgstr "Tags"
-
-#: templates/admin/admin_samples.html:23 templates/sample.html:52
-msgid "sample_uploaded_by"
-msgstr "Uploaded by"
-
-#: templates/admin/admin_samples.html:29 templates/sample.html:58
-msgid "sample_uploaded_relative"
-msgstr "Uploaded %(time)s"
-
 #: templates/sample.html:66
 msgid "sample_download"
 msgstr "Download sample"
@@ -560,38 +542,6 @@ msgstr "Samples currently under review"
 #: templates/user.html:28
 msgid "user_public_samples"
 msgstr "Public Samples by %(username)s"
-
-#: templates/admin/admin_home.html:11
-msgid "admin_panel_header"
-msgstr "Admin Panel"
-
-#: templates/admin/admin_home.html:14
-msgid "admin_user_management"
-msgstr "User Management"
-
-#: templates/admin/admin_home.html:15 templates/admin/admin_samples.html:11
-msgid "admin_sample_management"
-msgstr "Sample Management"
-
-#: templates/admin/admin_home.html:16
-msgid "admin_source_management"
-msgstr "Source Management"
-
-#: templates/admin/admin_home.html:17
-msgid "admin_temp_button"
-msgstr "Temp Button"
-
-#: templates/admin/admin_samples.html:62
-msgid "admin_error_delete_failed"
-msgstr "Failed to delete sample"
-
-#: templates/admin/admin_samples.html:79
-msgid "admin_error_approve_failed"
-msgstr "Failed to approve sample"
-
-#: templates/admin/admin_samples.html:86
-msgid "admin_return_to_panel"
-msgstr "Return to Admin Panel"
 
 #: templates/email/verify.html:10
 msgid "verify_confirm_button"

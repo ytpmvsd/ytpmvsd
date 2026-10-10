@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-09 23:46-0700\n"
+"POT-Creation-Date: 2026-10-09 23:53-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,12 +23,6 @@ msgstr ""
 
 #: admin.py:40
 msgid "notif_sample_denied_subject"
-msgstr ""
-
-#: app.py:66 blueprints/main_routes.py:37 blueprints/main_routes.py:74
-#: blueprints/main_routes.py:78 blueprints/main_routes.py:285
-#: blueprints/main_routes.py:344
-msgid "title_default"
 msgstr ""
 
 #: app.py:71 samples.py:102
@@ -91,11 +85,6 @@ msgstr ""
 msgid "title_samples"
 msgstr ""
 
-#: blueprints/main_routes.py:89 blueprints/main_routes.py:308
-#: blueprints/main_routes.py:331
-msgid "title_named_page"
-msgstr ""
-
 #: blueprints/main_routes.py:120
 msgid "edit_error_no_permission"
 msgstr ""
@@ -144,8 +133,8 @@ msgstr ""
 msgid "upload_error_too_many_files"
 msgstr ""
 
-#: blueprints/main_routes.py:396
-msgid "title_upload"
+#: blueprints/main_routes.py:396 templates/base.html:45
+msgid "upload"
 msgstr ""
 
 #: blueprints/main_routes.py:413
@@ -218,10 +207,6 @@ msgstr ""
 
 #: templates/base.html:43
 msgid "nav_tags"
-msgstr ""
-
-#: templates/base.html:45
-msgid "nav_upload"
 msgstr ""
 
 #: templates/base.html:49
@@ -412,15 +397,15 @@ msgstr ""
 msgid "sample_private_notice"
 msgstr ""
 
-#: templates/admin/admin_samples.html:34 templates/sample.html:26
+#: templates/sample.html:26
 msgid "sample_tags_header"
 msgstr ""
 
-#: templates/admin/admin_samples.html:23 templates/sample.html:52
+#: templates/sample.html:52
 msgid "sample_uploaded_by"
 msgstr ""
 
-#: templates/admin/admin_samples.html:29 templates/sample.html:58
+#: templates/sample.html:58
 msgid "sample_uploaded_relative"
 msgstr ""
 
@@ -546,38 +531,6 @@ msgstr ""
 
 #: templates/user.html:28
 msgid "user_public_samples"
-msgstr ""
-
-#: templates/admin/admin_home.html:11
-msgid "admin_panel_header"
-msgstr ""
-
-#: templates/admin/admin_home.html:14
-msgid "admin_user_management"
-msgstr ""
-
-#: templates/admin/admin_home.html:15 templates/admin/admin_samples.html:11
-msgid "admin_sample_management"
-msgstr ""
-
-#: templates/admin/admin_home.html:16
-msgid "admin_source_management"
-msgstr ""
-
-#: templates/admin/admin_home.html:17
-msgid "admin_temp_button"
-msgstr ""
-
-#: templates/admin/admin_samples.html:62
-msgid "admin_error_delete_failed"
-msgstr ""
-
-#: templates/admin/admin_samples.html:79
-msgid "admin_error_approve_failed"
-msgstr ""
-
-#: templates/admin/admin_samples.html:86
-msgid "admin_return_to_panel"
 msgstr ""
 
 #: templates/email/verify.html:10
