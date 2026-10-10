@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <h2 class="loginheader">Login</h2>
     <form method="POST">
         <table align="center">
@@ -14,15 +23,6 @@
             </tr>
         </table>
     </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
     <center>
         <button style="display: block;margin: 1em;" type="submit">Login</button><a href="{{ url_for('main.register') }}">Need an account? Register</a>
     </center>
