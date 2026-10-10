@@ -20,4 +20,6 @@ After setting that up and activating the environment, run `pip install -r requir
 
 > **NOTE**: If you are on a distro where development headers are in a separate package (Ubuntu, Fedora, etc.) you will have to download the development package for Python 3.12 in order to compile psycopg2
 
+You'll then need to run `pybabel compile -d lang` to generate the proper translation files.
+
 After all that, do `flask run`.
