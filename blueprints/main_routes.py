@@ -34,7 +34,7 @@ def home_page():
 
     return render_template(
         "home.html",
-        title=_("title_default"),
+        title="YTPMV Sample Database",
         top_samples=top_samples,
         recent_samples=recent_samples,
         changelog=changelog if changelog else None,
@@ -71,11 +71,11 @@ def sample_page(sample_id):
     sample = api.get_sample_info(sample_id)
 
     if sample is None:
-        return render_template("404.html", title=_("title_default"))
+        return render_template("404.html", title="YTPMV Sample Database")
 
     if not sample.is_public:
         if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
-            return render_template("404.html", title=_("title_default"))
+            return render_template("404.html", title="YTPMV Sample Database")
 
     uploader = api.get_user_info(sample.uploader)
 
@@ -282,7 +282,7 @@ def download_sample(sample_id):
     sample = Sample.query.get_or_404(sample_id)
     if not sample.is_public:
         if not current_user.is_authenticated or (not current_user.is_admin and current_user.id != sample.uploader):
-            return render_template("404.html", title=_("title_default")), 404
+            return render_template("404.html", title="YTPMV Sample Database"), 404
     file_path = os.path.join("static/media/samps", sample.stored_as)
     return send_file(file_path, as_attachment=True, download_name=sample.filename)
 
@@ -341,7 +341,7 @@ def search_results():
 
     return render_template(
         "search.html",
-        title=_("title_default"),
+        title="YTPMV Sample Database",
         samples=results,
     )
 

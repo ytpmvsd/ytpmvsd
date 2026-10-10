@@ -63,7 +63,7 @@ def inject_global_data():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("404.html", title=_("title_default"))
+    return render_template("404.html", title="YTPMV Sample Database")
 
 
 @app.errorhandler(413)
