@@ -2,6 +2,15 @@
 
 {% block content %}
     <h2 class="loginheader">Register</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <form method="POST">
         <table align="center">
             <tr class="reglog-box">
@@ -19,15 +28,7 @@
         </table>
     </form>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    
     <center>
         <button style="display: block;margin: 1em;" type="submit">Register</button><a href="{{ url_for('main.login') }}">Have an account? Login</a>
     </center>
