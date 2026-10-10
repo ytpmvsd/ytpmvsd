@@ -1,5 +1,4 @@
 from flask import render_template, request, jsonify, url_for
-from flask_babel import gettext as _
 
 import api
 import samples
