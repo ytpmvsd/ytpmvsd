@@ -253,10 +253,6 @@ msgstr ""
 msgid "footer_privacy_policy"
 msgstr ""
 
-#: templates/base.html:87
-msgid "footer_dmca"
-msgstr ""
-
 #: templates/batch_edit_samples.html:7 templates/edit_sample.html:7
 msgid "edit_popup_reencoding"
 msgstr ""

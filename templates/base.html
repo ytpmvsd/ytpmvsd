@@ -55,7 +55,7 @@
         {% endif %}
     </ul>
     <form role="search" onsubmit="search(event)" class="search-form">
-        <span>{{ _("search_label") }}</span>
+        <span>{{ _("search_label") }}:</span>
         <input type="search" placeholder="{{ _("search_placeholder") }}" id="search-input">
         <button type="submit">{{ _("search_button") }}</button>
     </form>
@@ -84,7 +84,7 @@
 
 <footer style="padding: 0 5px 5px; font-size: 14px; gap: 10px;">
     <a href="{{ url_for('wiki.wiki_page',page='privacy_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">{{ _("footer_privacy_policy") }}</a>
-    <a href="{{ url_for('wiki.wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">{{ _("footer_dmca") }}</a>
+    <a href="{{ url_for('wiki.wiki_page',page='dmca_policy') }}" style="padding: 0 5px; color: hsl(var(--hue), 85%, 30%);">DMCA</a>
 </footer>
 
 </body>

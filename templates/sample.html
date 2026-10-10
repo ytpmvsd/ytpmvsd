@@ -16,7 +16,7 @@
     <div class="warning-box">
         {% if not sample.is_public %}
             <div class="privacy-warning">
-                <b>{{ _("sample_private_notice_label") }}</b> {{ _("sample_private_notice") }}
+                <b>{{ _("sample_private_notice_label") }}:</b> {{ _("sample_private_notice") }}
             </div>
         {% endif %}
     </div>
@@ -89,16 +89,16 @@
                     {% endfor %}
 
                     {% if sample.source_id %}
-                        <span><b>{{ _("form_label_source") }}</b> <a
+                        <span><b>{{ _("form_label_source") }}:</b> <a
                                 href="{{ url_for('main.source_page',source_id=sample.source_id) }}">{{ sample.source.name }}</a></span>
                     {% endif %}
 
-                    <span><b>{{ _("sample_metadata_filesize") }}</b> {{ _("sample_filesize_value", size=metadata.filesize|int/1000/1000) }}</span>
+                    <span><b>{{ _("sample_metadata_filesize") }}:</b> {{ _("sample_filesize_value", size=metadata.filesize|int/1000/1000) }}</span>
 
-                    <span><b>{{ _("sample_metadata_resolution") }}</b> {{ metadata.width }}x{{ metadata.height }}
+                    <span><b>{{ _("sample_metadata_resolution") }}:</b> {{ metadata.width }}x{{ metadata.height }}
                                     ({{ metadata.aspect_ratio }})</span>
 
-                    <span><b>{{ _("sample_metadata_framerate") }}</b> {{ _("sample_framerate_value", fps=metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3)) }}</span>
+                    <span><b>{{ _("sample_metadata_framerate") }}:</b> {{ _("sample_framerate_value", fps=metadata.framerate|int if metadata.framerate.is_integer() else metadata.framerate|round(3)) }}</span>
 
                 </div>
             </div>

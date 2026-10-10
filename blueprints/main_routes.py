@@ -473,7 +473,7 @@ def verify():
         msg = _("verify_error_invalid_url")
         on_confirm_screen = False
     else:
-        msg = _("verify_enter_code")
+        msg = _("verify_enter_code") + ":"
         if token is not None:
             email = confirm_token(verifier, token)
             if not email:

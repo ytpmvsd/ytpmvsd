@@ -179,7 +179,7 @@ msgstr "Invalid verification URL."
 
 #: blueprints/main_routes.py:476
 msgid "verify_enter_code"
-msgstr "Enter the code given to you below:"
+msgstr "Enter the code given to you below"
 
 #: blueprints/main_routes.py:480
 msgid "verify_error_invalid_code"
@@ -240,7 +240,7 @@ msgstr "Login"
 
 #: templates/base.html:58
 msgid "search_label"
-msgstr "Search:"
+msgstr "Search"
 
 #: templates/base.html:59
 msgid "search_placeholder"
@@ -254,9 +254,7 @@ msgstr "Search"
 msgid "footer_privacy_policy"
 msgstr "Privacy Policy"
 
-#: templates/base.html:87
-msgid "footer_dmca"
-msgstr "DMCA"
+
 
 #: templates/batch_edit_samples.html:7 templates/edit_sample.html:7
 msgid "edit_popup_reencoding"
@@ -274,7 +272,7 @@ msgstr "Edit Sample Details"
 #: templates/batch_edit_samples.html:29 templates/edit_sample.html:43
 #: templates/sample.html:92
 msgid "form_label_source"
-msgstr "Source:"
+msgstr "Source"
 
 #: templates/batch_edit_samples.html:35 templates/edit_sample.html:49
 msgid "common_clear"
@@ -310,7 +308,7 @@ msgstr "Save"
 
 #: templates/edit_sample.html:23
 msgid "edit_label_filename"
-msgstr "Filename:"
+msgstr "Filename"
 
 #: templates/edit_sample.html:35
 msgid "edit_filename_guidelines_checkout_the"
@@ -322,7 +320,7 @@ msgstr "filename guidelines"
 
 #: templates/edit_sample.html:69
 msgid "edit_label_tags"
-msgstr "Tags:"
+msgstr "Tags"
 
 #: templates/edit_sample.html:71
 msgid "edit_tags_hint"
@@ -364,11 +362,11 @@ msgstr "Login"
 
 #: templates/login.html:17
 msgid "login_label_username_or_email"
-msgstr "Username/email:"
+msgstr "Username/email"
 
 #: templates/login.html:21 templates/register.html:25
 msgid "form_label_password"
-msgstr "Password:"
+msgstr "Password"
 
 #: templates/login.html:26
 msgid "login_button"
@@ -392,11 +390,11 @@ msgstr "Register"
 
 #: templates/register.html:17
 msgid "form_label_username"
-msgstr "Username:"
+msgstr "Username"
 
 #: templates/register.html:21
 msgid "form_label_email"
-msgstr "Email:"
+msgstr "Email"
 
 #: templates/register.html:30
 msgid "register_button"
@@ -408,7 +406,7 @@ msgstr "Have an account? Login"
 
 #: templates/sample.html:19
 msgid "sample_private_notice_label"
-msgstr "Note:"
+msgstr "Note"
 
 #: templates/sample.html:19
 msgid "sample_private_notice"
@@ -448,7 +446,7 @@ msgstr "Delete sample"
 
 #: templates/sample.html:96
 msgid "sample_metadata_filesize"
-msgstr "Filesize:"
+msgstr "Filesize"
 
 #: templates/sample.html:96
 msgid "sample_filesize_value"
@@ -456,11 +454,11 @@ msgstr "%(size).2f MB"
 
 #: templates/sample.html:98
 msgid "sample_metadata_resolution"
-msgstr "Resolution:"
+msgstr "Resolution"
 
 #: templates/sample.html:101
 msgid "sample_metadata_framerate"
-msgstr "Frame rate:"
+msgstr "Frame rate"
 
 #: templates/sample.html:101
 msgid "sample_framerate_value"
