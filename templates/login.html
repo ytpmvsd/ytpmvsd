@@ -22,9 +22,9 @@
                 <td align="left"><input type="password" name="password" required></td>
             </tr>
         </table>
+        <center>
+            <button style="display: block;margin: 1em;" type="submit">Login</button><a href="{{ url_for('main.register') }}">Need an account? Register</a>
+        </center>
     </form>
-    <center>
-        <button style="display: block;margin: 1em;" type="submit">Login</button><a href="{{ url_for('main.register') }}">Need an account? Register</a>
-    </center>
 
 {% endblock %}
