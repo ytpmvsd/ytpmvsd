@@ -17,7 +17,7 @@ body {
 }
 
 a:visited {
-    color: #0000FF;
+    color: #0000ff;
 }
 
 .home-header {
@@ -51,13 +51,6 @@ a:visited {
     justify-content: space-between;
 }
 
-.search-form {
-    justify-content: center;
-    gap: 5px;
-    display: flex;
-    margin-bottom: 20px
-}
-
 .home-header li {
     display: inline;
     margin: 0 20px;
@@ -86,8 +79,6 @@ p {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
-
-
 }
 
 .home-sample {
@@ -104,7 +95,6 @@ p {
     border-radius: 10px;
 }
 
-
 .home-sample a {
     text-decoration: none;
     display: flex;
@@ -117,10 +107,6 @@ p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.home-sample {
-
 }
 
 .privacy-warning {
@@ -159,7 +145,7 @@ p {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    max-height: 420px
+    max-height: 420px;
 }
 
 .sample-info-box {
@@ -213,7 +199,7 @@ p {
     top: 20px;
     width: 100%;
     justify-self: end;
-    text-align: end
+    text-align: end;
 }
 
 .tag-sidebar-inner {
@@ -227,7 +213,7 @@ p {
 }
 
 .tags-category-header {
-    padding-top: 5px
+    padding-top: 5px;
 }
 
 .flash {
@@ -326,7 +312,7 @@ p {
     right: 0;
     bottom: 0;
     left: 0;
-    backdrop-filter: blur(2px)
+    backdrop-filter: blur(2px);
 }
 
 .popup-background.hidden {
@@ -437,14 +423,14 @@ p {
     text-align: right;
 }
 
-.nav-btn, .nav-btn:visited {
+.nav-btn,
+.nav-btn:visited {
     text-decoration: none;
     border-bottom: 1px dashed #03c;
 }
 .nav-btn.disabled {
     color: black;
     border-bottom: 1px dashed black;
-
 }
 
 footer {
@@ -471,7 +457,38 @@ main {
     flex: 1;
 }
 
-.filename-box input, .source-box input, .source-box .suggestions:has(li) {
+.filename-box,
+.source-box,
+.search-box {
+    text-align: right;
+}
+.reglog-box button {
+    padding-top: 1em;
+}
+
+.reglog-box.r {
+    text-align: right;
+}
+
+.reglog-box.l {
+    text-align: left;
+}
+.loginheader {
+    margin: 0em;
+    padding: 0em;
+    padding-bottom: 10px;
+}
+
+.reglog-submit {
+    display: grid;
+    grid-template-areas: "a b c";
+}
+
+.filename-box input,
+.source-box input,
+.source-box .suggestions:has(li),
+.search-form input,
+.reglog-box input {
     background: white;
     border-radius: 0px;
     border: 1px solid #aaa;
@@ -488,7 +505,7 @@ main {
 }
 
 .source-box .suggestions:has(li) {
-    display: block!important;
+    display: block !important;
     margin: 0;
 }
 
@@ -511,8 +528,26 @@ main {
     cursor: pointer;
     background: blue;
     color: white;
-    overflow: visible!important;
+    overflow: visible !important;
     background: #324ca8;
+}
+.search-form {
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    width: 100%;
+    display: grid;
+    grid-template-areas: "a b c";
+    border-top: 1px solid rgba(0.15, 0.15, 0.15, 0.15);
+    border-bottom: 1px solid rgba(0.15, 0.15, 0.15, 0.15);
+    padding: 5px 0;
+}
+
+.search-form button {
+    padding: 3px 5px;
+    font-size: 0.9em;
 }
 
 .loading-spinner {
@@ -549,7 +584,7 @@ main {
 
 .admin-home-container a {
     display: flex;
-    flex: 0 0 calc(50% - (15px/2));
+    flex: 0 0 calc(50% - (15px / 2));
     color: black;
     background-color: hsl(var(--hue), 60%, 65%);
     border-radius: 20px;
@@ -634,7 +669,11 @@ main {
     padding: 0 15px;
     font-size: 0;
     border-top: 1px solid hsla(var(--hue), 60%, 65%, 0);
-    transition: max-height 0.3s, padding 0.3s, font-size 0.3s, border-top 0.3s;
+    transition:
+        max-height 0.3s,
+        padding 0.3s,
+        font-size 0.3s,
+        border-top 0.3s;
 }
 
 .notification-message.expanded {

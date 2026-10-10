@@ -1,13 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <form method="POST">
-        <label>Username: <input type="text" name="username" required></label><br>
-        <label>Email: <input type="email" name="email" required></label><br>
-        <label>Password: <input type="password" name="password" required></label><br>
-        <button type="submit">Register</button>
-    </form>
+    <h2 class="loginheader">Register</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -17,6 +11,26 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <a href="{{ url_for('main.login') }}">Have an account? Login</a>
+    <form method="POST">
+        <table align="center">
+            <tr class="reglog-box">
+                <td align="right"><label>Username:</label></td>
+                <td align="left"><input type="text" name="username" required /></td>
+            </tr>
+            <tr class="reglog-box">
+                <td align="right"><label>Email:</label></td>
+                <td align="left"><input type="email" name="email" required /></td>
+            </tr>
+            <tr class="reglog-box">
+                <td align="right"><label>Password:</label></td>
+                <td align="left"><input type="password" name="password" required /></td>
+            </tr>
+        </table>
+    </form>
+
+    
+    <center>
+        <button style="display: block;margin: 1em;" type="submit">Register</button><a href="{{ url_for('main.login') }}">Have an account? Login</a>
+    </center>
 
 {% endblock %}
