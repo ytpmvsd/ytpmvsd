@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h2 class="loginheader">Login</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -10,7 +11,6 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <h2 class="loginheader">Login</h2>
     <form method="POST">
         <table align="center">
             <tr class="reglog-box">
