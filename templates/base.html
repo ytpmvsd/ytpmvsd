@@ -28,7 +28,7 @@
     <div style="max-width: 500px; display: flex; margin: 25px auto auto; flex-direction: column;">
         <img src="{{ url_for('static', filename='img/logo-beta.png') }}" alt="{{ _("image_alt_logo") }}">
         <div class="home-header-text">
-            {% for i in _("header_site_name") %}
+            {% for i in "the ytpmv sample database" %}
                 <div>{{ i }}</div>
             {% endfor %}
         </div>

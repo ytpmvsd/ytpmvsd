@@ -205,10 +205,6 @@ msgstr ""
 msgid "image_alt_logo"
 msgstr ""
 
-#: templates/base.html:31
-msgid "header_site_name"
-msgstr ""
-
 #: templates/base.html:37
 msgid "nav_home"
 msgstr ""
