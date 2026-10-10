@@ -16,7 +16,7 @@
     <div class="warning-box">
         {% if not sample.is_public %}
             <div class="privacy-warning">
-                {{ _("sample_private_notice") }}
+                <b>{{ _("sample_private_notice_label") }}</b> {{ _("sample_private_notice") }}
             </div>
         {% endif %}
     </div>
@@ -49,7 +49,7 @@
                     <source src="{{ url_for('static', filename='media/samps/' + sample.stored_as) }}">
                 </video>
                 <h1>{{ sample.filename }}</h1>
-                <p class="uploader">{{ _("sample_uploaded_by", url=url_for('main.user_page',user_id=uploader.id), username=uploader.username) }}</p>
+                <p class="uploader">{{ _("sample_uploaded_by") }} <a href="{{ url_for('main.user_page',user_id=uploader.id) }}">{{ uploader.username }}</a></p>
                 <p class="upload-date" data-utc="{{ sample.upload_date.isoformat() }}"></p>
                 <script>
                     document.querySelectorAll('.upload-date').forEach(element => {

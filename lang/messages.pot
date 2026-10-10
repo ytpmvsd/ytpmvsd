@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-09 22:19-0700\n"
+"POT-Creation-Date: 2026-10-09 23:05-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.18.0\n"
+"Generated-By: Babel 2.9.1\n"
 
 #: admin.py:31
 msgid "notif_sample_approved_subject"
@@ -33,26 +33,6 @@ msgstr ""
 
 #: app.py:71 samples.py:102
 msgid "upload_error_file_too_large"
-msgstr ""
-
-#: mail.py:54
-msgid "email_verify_subject"
-msgstr ""
-
-#: mail.py:61
-msgid "email_verify_heading"
-msgstr ""
-
-#: mail.py:62
-msgid "email_verify_instructions"
-msgstr ""
-
-#: mail.py:64
-msgid "email_verify_expiry"
-msgstr ""
-
-#: mail.py:65
-msgid "email_verify_ignore"
 msgstr ""
 
 #: samples.py:61
@@ -297,32 +277,40 @@ msgstr ""
 msgid "edit_header"
 msgstr ""
 
-#: templates/batch_edit_samples.html:29 templates/edit_sample.html:39
+#: templates/batch_edit_samples.html:29 templates/edit_sample.html:43
 #: templates/sample.html:92
 msgid "form_label_source"
 msgstr ""
 
-#: templates/batch_edit_samples.html:35 templates/edit_sample.html:45
+#: templates/batch_edit_samples.html:35 templates/edit_sample.html:49
 msgid "common_clear"
 msgstr ""
 
-#: templates/batch_edit_samples.html:40 templates/edit_sample.html:50
+#: templates/batch_edit_samples.html:40 templates/edit_sample.html:54
 msgid "edit_source_instructions"
 msgstr ""
 
 #: templates/batch_edit_samples.html:59
-msgid "edit_reencode_all_required"
+msgid "edit_reencode_all_text"
 msgstr ""
 
-#: templates/batch_edit_samples.html:62 templates/edit_sample.html:76
+#: templates/batch_edit_samples.html:59
+msgid "edit_reencode_expl"
+msgstr ""
+
+#: templates/batch_edit_samples.html:59 templates/edit_sample.html:77
+msgid "edit_reencode_learn_more"
+msgstr ""
+
+#: templates/batch_edit_samples.html:62 templates/edit_sample.html:80
 msgid "edit_reencode_recommended"
 msgstr ""
 
-#: templates/batch_edit_samples.html:64 templates/edit_sample.html:78
+#: templates/batch_edit_samples.html:64 templates/edit_sample.html:82
 msgid "edit_reencode_hint"
 msgstr ""
 
-#: templates/batch_edit_samples.html:69 templates/edit_sample.html:84
+#: templates/batch_edit_samples.html:69 templates/edit_sample.html:88
 msgid "common_save"
 msgstr ""
 
@@ -330,20 +318,28 @@ msgstr ""
 msgid "edit_label_filename"
 msgstr ""
 
-#: templates/edit_sample.html:34
-msgid "edit_filename_guidelines"
+#: templates/edit_sample.html:35
+msgid "edit_filename_guidelines_checkout_the"
 msgstr ""
 
-#: templates/edit_sample.html:65
+#: templates/edit_sample.html:36
+msgid "edit_filename_guidelines_filename_guidelines"
+msgstr ""
+
+#: templates/edit_sample.html:69
 msgid "edit_label_tags"
 msgstr ""
 
-#: templates/edit_sample.html:67
+#: templates/edit_sample.html:71
 msgid "edit_tags_hint"
 msgstr ""
 
-#: templates/edit_sample.html:73
-msgid "edit_reencode_required"
+#: templates/edit_sample.html:77
+msgid "edit_reencode_text"
+msgstr ""
+
+#: templates/edit_sample.html:77
+msgid "edit_reencode_required_expl"
 msgstr ""
 
 #: templates/home.html:8
@@ -380,11 +376,11 @@ msgstr ""
 msgid "form_label_password"
 msgstr ""
 
-#: templates/login.html:27
+#: templates/login.html:26
 msgid "login_button"
 msgstr ""
 
-#: templates/login.html:27
+#: templates/login.html:26
 msgid "login_register_link"
 msgstr ""
 
@@ -408,12 +404,16 @@ msgstr ""
 msgid "form_label_email"
 msgstr ""
 
-#: templates/register.html:33
+#: templates/register.html:30
 msgid "register_button"
 msgstr ""
 
-#: templates/register.html:33
+#: templates/register.html:30
 msgid "register_login_link"
+msgstr ""
+
+#: templates/sample.html:19
+msgid "sample_private_notice_label"
 msgstr ""
 
 #: templates/sample.html:19
@@ -474,10 +474,6 @@ msgstr ""
 
 #: templates/sample.html:135
 msgid "sample_like_error_not_logged_in"
-msgstr ""
-
-#: templates/samples.html:3
-msgid "meta_description_samples"
 msgstr ""
 
 #: templates/samples.html:10
@@ -606,24 +602,6 @@ msgstr ""
 
 #: templates/email/verify.html:14
 msgid "verify_back_home_button"
-msgstr ""
-
-#: templates/notifications/approval.html:1
-#: templates/notifications/denial.html:1
-msgid "notif_greeting"
-msgstr ""
-
-#: templates/notifications/approval.html:3
-msgid "notif_sample_approved_body"
-msgstr ""
-
-#: templates/notifications/approval.html:5
-#: templates/notifications/denial.html:5
-msgid "notif_thanks"
-msgstr ""
-
-#: templates/notifications/denial.html:3
-msgid "notif_sample_denied_body"
 msgstr ""
 
 #: templates/wiki/wiki_home.html:5
