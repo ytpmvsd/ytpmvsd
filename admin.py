@@ -28,7 +28,7 @@ def admin_samples():
                 filename=sample.filename,
                 sample_url=sample_url
             )
-            notify_user(uploader.id, _("notif_sample_approved_subject", filename=sample.filename), message)
+            notify_user(uploader.id, f"Sample approved: {sample.filename}", message)
 
             return jsonify({"success": True})
         elif action == "delete":
@@ -37,7 +37,7 @@ def admin_samples():
                 username=uploader.username,
                 filename=sample.filename
             )
-            notify_user(uploader.id, _("notif_sample_denied_subject", filename=sample.filename), message)
+            notify_user(uploader.id, f"Sample denied: {sample.filename}", message)
 
             return samples.delete_sample(sample_id)
 

@@ -18,14 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: admin.py:31
-msgid "notif_sample_approved_subject"
-msgstr "Sample approved: %(filename)s"
-
-#: admin.py:40
-msgid "notif_sample_denied_subject"
-msgstr "Sample denied: %(filename)s"
-
 #: app.py:66 blueprints/main_routes.py:37 blueprints/main_routes.py:74
 #: blueprints/main_routes.py:78 blueprints/main_routes.py:285
 #: blueprints/main_routes.py:344
@@ -550,32 +542,6 @@ msgstr "Confirm"
 #: templates/email/verify.html:14
 msgid "verify_back_home_button"
 msgstr "Back to home page"
-
-#: templates/notifications/approval.html:1
-#: templates/notifications/denial.html:1
-msgid "notif_greeting"
-msgstr "Hi %(username)s,"
-
-#: templates/notifications/approval.html:3
-msgid "notif_sample_approved_prefix"
-msgstr "Your sample,"
-
-#: templates/notifications/approval.html:3
-msgid "notif_sample_approved_suffix"
-msgstr ", was approved and is now public."
-
-#: templates/notifications/approval.html:5
-#: templates/notifications/denial.html:5
-msgid "notif_thanks"
-msgstr "Thanks for submitting to YTPMVSD!"
-
-#: templates/notifications/denial.html:3
-msgid "notif_sample_denied_prefix"
-msgstr "Your sample,"
-
-#: templates/notifications/denial.html:3
-msgid "notif_sample_denied_suffix"
-msgstr ", has been denied for public viewing and has been deleted. Please ensure any sample you upload is compatible with the website and that you have the rights to upload it."
 
 #: templates/wiki/wiki_home.html:5
 msgid "wiki_home_placeholder"

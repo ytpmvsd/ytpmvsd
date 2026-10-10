@@ -17,14 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: admin.py:31
-msgid "notif_sample_approved_subject"
-msgstr ""
-
-#: admin.py:40
-msgid "notif_sample_denied_subject"
-msgstr ""
-
 #: app.py:71 samples.py:102
 msgid "upload_error_file_too_large"
 msgstr ""
