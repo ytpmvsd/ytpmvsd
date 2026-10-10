@@ -41,7 +41,7 @@ def edit_sample(sample_id, filename, source_id, tags, reencode):
             tag = Tag.query.filter_by(name=sample_tag).first()
         if tag not in sample.tags:
             sample.tags.append(tag)
-    
+
     try:
         db.session.commit()
     except Exception as e:
@@ -61,7 +61,7 @@ def upload(file):
             raise Exception(_("upload_error_filename_too_long"))
 
         random_id = secrets.token_hex(10)
-        
+
         stored_as = f"{filename}_{random_id}.mp4"
         stored_as = re.sub(r"[^\w\s.-]", "", stored_as)
 
@@ -80,7 +80,7 @@ def upload(file):
             if allowed_ext in ext:
                 invalid_file = False
                 break
-        
+
         # if we hit an invalid file, go through the extensions that can be submitted but with a reencode
         if invalid_file:
             for allowed_ext in ALLOWED_UPLOAD_EXTENSIONS_WITH_REENCODE:
@@ -92,20 +92,20 @@ def upload(file):
 
         if not check_video(upload_path):
             invalid_file = True
-            
+
         if invalid_file:
             os.remove(upload_path)
             raise Exception(_("upload_error_invalid_file"))
-        
+
         if os.path.getsize(upload_path) > MB_UPLOAD_LIMIT * 1000 * 1000:
             os.remove(upload_path)
-            raise Exception(_("upload_error_file_too_large"))
+            raise Exception(_("upload_error_file_too_large", mb_upload_limit=MB_UPLOAD_LIMIT))
 
         thumbnail_filename = f"{timestamp}.png"
         create_thumbnail(upload_path, f"static/media/thumbs/{thumbnail_filename}")
 
         is_public = current_user.is_uploader
-        
+
         try:
             sample_id = add_sample_to_db(
                 original_filename,
@@ -151,12 +151,12 @@ def delete_sample(sample_id):
                 db.session.delete(sample)
             except Exception as ex:
                 return jsonify({"success": False, "message": _("delete_error_failed", error=str(ex))})
-            try: 
+            try:
                 db.session.commit()
             except Exception as ex:
                 db.session.rollback()
                 return jsonify({"success": False, "message": _("delete_error_commit_failed", error=str(ex))})
-                
+
             warnings = []
             try:
                 os.remove(os.path.join("static/media/thumbs", sample.thumbnail_filename))
@@ -168,6 +168,6 @@ def delete_sample(sample_id):
                 warnings.append(_("delete_warning_file_missing"))
 
         return jsonify({"success": True, "message": _("delete_success"), "warnings": warnings})
-    
+
     return jsonify({"success": False, "message": _("delete_error_not_found")})
 

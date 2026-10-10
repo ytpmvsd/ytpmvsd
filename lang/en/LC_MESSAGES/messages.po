@@ -34,7 +34,7 @@ msgstr "YTPMV Sample Database"
 
 #: app.py:71 samples.py:102
 msgid "upload_error_file_too_large"
-msgstr "One or more of your sample(s) exceeded the file limit. Max supported filesize is 10MB per file."
+msgstr "One or more of your sample(s) exceeded the file limit. Max supported filesize is %(mb_upload_limit)sMB per file."
 
 #: samples.py:61
 msgid "upload_error_filename_too_long"
@@ -559,7 +559,7 @@ msgstr "Only .mp4 files are currently supported."
 
 #: templates/upload.html:137
 msgid "upload_max_filesize"
-msgstr "Max file size is 10MB."
+msgstr "Max file size is %(mb_upload_limit)sMB."
 
 #: templates/user.html:8
 msgid "user_samples_under_review"

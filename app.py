@@ -68,7 +68,7 @@ def page_not_found(e):
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    return jsonify({"error": _("upload_error_file_too_large")}), 400
+    return jsonify({"error": _("upload_error_file_too_large", mb_upload_limit=MB_UPLOAD_LIMIT)}), 400
 
 
 @login_manager.user_loader

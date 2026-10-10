@@ -8,7 +8,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from flask_babel import gettext as _
 from sqlalchemy import func
 
-from config import REQUIRE_USER_APPROVAL, VERSION, SAMPLES_PER_PAGE, USE_EMAIL_VERIFICATION
+from config import REQUIRE_USER_APPROVAL, MB_UPLOAD_LIMIT, VERSION, SAMPLES_PER_PAGE, USE_EMAIL_VERIFICATION
 from models import db, Sample, User, Source, Notification
 from utils import update_metadata
 from mail import generate_id, send_verification_email, confirm_token, decode_email
@@ -393,7 +393,7 @@ def upload():
 
         return jsonify({"sample_id": sample_ids[0]})
 
-    return render_template("upload.html", title=_("title_upload"), require_user_approval=REQUIRE_USER_APPROVAL)
+    return render_template("upload.html", title=_("title_upload"), require_user_approval=REQUIRE_USER_APPROVAL, mb_upload_limit=MB_UPLOAD_LIMIT)
 
 @main_bp.route("/login/", methods=["GET", "POST"])
 def login():

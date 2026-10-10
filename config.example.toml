@@ -10,7 +10,7 @@ flask_secret_key = ""
 database_url = ""
 
 # upload limit for files (measured in megabytes)
-mb_upload_limit = 10
+mb_upload_limit = 120
 # the number of samples to show per each page of samples.
 samples_per_page = 25
 # file extensions allowed for upload

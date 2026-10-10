@@ -134,7 +134,7 @@
                 });
             </script>
             {{ _("upload_supported_formats") }}
-            {{ _("upload_max_filesize") }}
+            {{ _("upload_max_filesize", mb_upload_limit=mb_upload_limit) }}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
