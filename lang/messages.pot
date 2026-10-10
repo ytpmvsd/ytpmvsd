@@ -200,9 +200,6 @@ msgstr ""
 msgid "error_page_not_found"
 msgstr ""
 
-#: templates/base.html:20
-msgid "meta_description_default"
-msgstr ""
 
 #: templates/base.html:29
 msgid "image_alt_logo"
@@ -500,17 +497,11 @@ msgstr ""
 msgid "source_samples_header"
 msgstr ""
 
-#: templates/sources.html:3
-msgid "meta_description_sources"
-msgstr ""
 
 #: templates/sources.html:9
 msgid "sources_header"
 msgstr ""
 
-#: templates/tags.html:3
-msgid "meta_description_tags"
-msgstr ""
 
 #: templates/tags.html:10
 msgid "tags_header"

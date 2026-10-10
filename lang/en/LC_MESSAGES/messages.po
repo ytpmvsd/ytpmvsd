@@ -201,9 +201,6 @@ msgstr "Notifications - YTPMV Sample Database"
 msgid "error_page_not_found"
 msgstr "Page not found. If you're seeing this, I most likely haven't implemented this page yet."
 
-#: templates/base.html:20
-msgid "meta_description_default"
-msgstr "The YTPMV Sample Database is the best place to find samples to use in your next YTPMV."
 
 #: templates/base.html:29
 msgid "image_alt_logo"
@@ -513,9 +510,6 @@ msgstr "View all sources available on the YTPMV Sample Database."
 msgid "sources_header"
 msgstr "All sources"
 
-#: templates/tags.html:3
-msgid "meta_description_tags"
-msgstr "View all tags available on the YTPMV Sample Database."
 
 #: templates/tags.html:10
 msgid "tags_header"
